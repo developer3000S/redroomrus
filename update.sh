@@ -24,7 +24,9 @@ git commit -m "$COMMIT_MSG"
 
 # 3. Пуш в основную ветку (main)
 echo "[3/3] Отправка данных на GitHub (ветка main)..."
-git push origin main
+# Добавляем флаг --no-thin и предварительную очистку для стабильности на внешних дисках
+git gc --auto > /dev/null 2>&1
+git push origin main --no-thin
 
 if [ $? -eq 0 ]; then
     echo "--- Успех: Репозиторий обновлен! ---"
