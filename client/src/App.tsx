@@ -9,6 +9,7 @@ import IntelPlatform from "./pages/IntelPlatform";
 import OrbitPage from "./pages/Orbit";
 import SigintPage from "./pages/Sigint";
 import SurveillancePage from "./pages/Surveillance";
+import C4ISRPage from "./pages/C4ISR";
 import AdminCMS from "./pages/AdminCMS";
 import AdminRegister from "./pages/AdminRegister";
 import AccessGrantedLogin from "./pages/AccessGrantedLogin";
@@ -26,6 +27,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={IntelPlatform} />
       <Route path={"/orbit"} component={OrbitPage} />
+      <Route path={"/c4isr"} component={C4ISRPage} />
       <Route path={"/sigint"} component={SigintPage} />
       <Route path={"/sigint/svm"} component={SurveillancePage} />
       <Route path={"/surveillance"} component={SurveillancePage} />

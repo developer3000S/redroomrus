@@ -14,6 +14,7 @@ import { getDb } from "./db";
 import { activityLog, platformSettings, adminRegistrationRequests, keyHistory } from "../drizzle/schema";
 import { eq, sql } from "drizzle-orm";
 import { notifyOwner } from "./_core/notification";
+import { logToSIEM } from "./siem";
 
 const SALT_ROUNDS = 12;
 
@@ -147,6 +148,14 @@ export function registerAuthRoutes(app: Express) {
         userAgent: req.headers["user-agent"] || undefined,
       });
 
+      await logToSIEM({
+        event: "user.register",
+        user: email.toLowerCase().trim(),
+        ip,
+        severity: "INFO",
+        details: { name: name?.trim() || email.split("@")[0] }
+      });
+
       res.status(201).json({ success: true, message: "Account created successfully." });
     } catch (error) {
       console.error("[Auth] Registration failed:", error);
@@ -221,6 +230,14 @@ export function registerAuthRoutes(app: Express) {
         action: "auth.login",
         ipAddress: ip,
         userAgent: req.headers["user-agent"] || undefined,
+      });
+
+      await logToSIEM({
+        event: "user.login",
+        user: user.email || undefined,
+        ip,
+        severity: "INFO",
+        details: { role: user.role }
       });
 
       res.status(200).json({ success: true, message: "Login successful." });

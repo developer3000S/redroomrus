@@ -1,0 +1,37 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: redroom-app
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgres://redroom_user:redroom_password@db:5432/redroom
+      - NODE_ENV=production
+      # Add other env variables from .env.example as needed
+      - JWT_SECRET=${JWT_SECRET:-replace_with_a_long_random_string}
+      - ADMIN_SECRET_KEY=${ADMIN_SECRET_KEY:-replace_with_a_strong_random_secret}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: redroom-db
+    restart: always
+    environment:
+      - POSTGRES_USER=redroom_user
+      - POSTGRES_PASSWORD=redroom_password
+      - POSTGRES_DB=redroom
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U redroom_user -d redroom"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

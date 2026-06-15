@@ -21,15 +21,31 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { 
+  LayoutDashboard, 
+  LogOut, 
+  PanelLeft, 
+  Users, 
+  Radio, 
+  Globe, 
+  Satellite, 
+  FileText,
+  ShieldCheck
+} from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import AIChatBox, { Message } from "./AIChatBox";
+import { trpc } from "@/lib/trpc";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+  { icon: LayoutDashboard, label: "Intel Dashboard", path: "/" },
+  { icon: ShieldCheck, label: "C4ISR Command", path: "/c4isr" },
+  { icon: Satellite, label: "Orbit Tracker", path: "/orbit" },
+  { icon: Radio, label: "SIGINT Panel", path: "/sigint" },
+  { icon: FileText, label: "Documentation", path: "/docs" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -114,6 +130,28 @@ function DashboardLayoutContent({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeMenuItem = menuItems.find(item => item.path === location);
   const isMobile = useIsMobile();
+
+  const [aiMessages, setAiMessages] = useState<Message[]>([
+    { role: "assistant", content: "Привет! Я Redroom AI. Я изучил документацию этого репозитория и готов ответить на ваши вопросы. Чем я могу помочь?" }
+  ]);
+
+  const aiChatMutation = trpc.ai.chat.useMutation();
+
+  const handleSendAiMessage = async (content: string) => {
+    const newUserMsg: Message = { role: "user", content };
+    const updatedMessages = [...aiMessages, newUserMsg];
+    setAiMessages(updatedMessages);
+
+    try {
+      const response = await aiChatMutation.mutateAsync({
+        messages: updatedMessages
+      });
+
+      setAiMessages(prev => [...prev, { role: "assistant", content: response.content }]);
+    } catch (error) {
+      setAiMessages(prev => [...prev, { role: "assistant", content: "Извините, произошла ошибка при обращении к ИИ." }]);
+    }
+  };
 
   useEffect(() => {
     if (isCollapsed) {
@@ -259,6 +297,35 @@ function DashboardLayoutContent({
         )}
         <main className="flex-1 p-4">{children}</main>
       </SidebarInset>
+
+      {/* Floating Ask AI Button */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size="icon" className="h-12 w-12 rounded-full shadow-2xl hover:scale-110 transition-transform bg-primary text-primary-foreground">
+              <Sparkles className="h-6 w-6" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px] h-[650px] p-0 overflow-hidden flex flex-col">
+            <DialogHeader className="p-4 border-b bg-muted/30">
+              <DialogTitle className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                Ask Redroom AI
+              </DialogTitle>
+            </DialogHeader>
+            <div className="flex-1 overflow-hidden">
+              <AIChatBox 
+                messages={aiMessages}
+                onSendMessage={handleSendAiMessage}
+                isLoading={aiChatMutation.isPending}
+                height="100%"
+                className="border-0 rounded-none"
+                placeholder="Спросите о Redroom, архитектуре или установке..."
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
     </>
   );
 }

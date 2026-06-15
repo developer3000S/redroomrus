@@ -49,6 +49,9 @@ import { referenceRouter } from "./routers/reference";
 import { narrativesRouter } from "./routers/narratives";
 import { waitingListRouter } from "./routers/waitingList";
 import { headerPrefsRouter } from "./routers/headerPrefs";
+import { aiRouter } from "./routers/ai";
+import { c4isrRouter } from "./routers/c4isr";
+import { externalModulesRouter } from "./routers/external-modules";
 
 // ─── Webhook helpers ─────────────────────────────────────────────────────────
 type WebhookRow = { id: number; name: string; stage: string; url: string; secret: string | null; threshold: number; windowSeconds: number; payloadTemplate: string | null; isEnabled: boolean; totalFired: number };
@@ -110,6 +113,9 @@ export async function checkAndFireWebhooks(stage: string): Promise<void> {
 export const appRouter = router({
   system: systemRouter,
   cms: cmsRouter,
+  ai: aiRouter,
+  c4isr: c4isrRouter,
+  hardware: externalModulesRouter,
 
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
