@@ -2583,8 +2583,8 @@ for entity in entities:
 
             {/* Premium lock overlay */}
             <div className="flex-1 flex flex-col relative overflow-hidden">
-              {/* Blurred chat preview */}
-              <div className="flex-1 p-5 space-y-4 overflow-y-auto" style={{ filter: "blur(3px)", pointerEvents: "none", userSelect: "none" }}>
+              {/* Unlocked chat preview */}
+              <div className="flex-1 p-5 space-y-4 overflow-y-auto">
                 {[
                   { role: "user", text: "How does the ORBIT module track satellites?" },
                   { role: "ai",   text: "ORBIT uses real-time TLE (Two-Line Element) data from Space-Track.org and CelesTrak to compute orbital positions using the SGP4 propagation model. Satellites are rendered on a WebGL globe with Three.js, updating every 10 seconds. You can filter by orbital regime (LEO/MEO/GEO), constellation, or country of origin..." },
@@ -2608,54 +2608,20 @@ for entity in entities:
                 ))}
               </div>
 
-              {/* Lock overlay */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ background: isLight ? "rgba(255,255,255,0.85)" : "rgba(6,8,16,0.85)" }}>
-                <div className={`rounded-2xl border p-8 text-center max-w-xs mx-4 shadow-2xl ${isLight ? "bg-white border-gray-200" : "bg-[#0c0e14] border-gray-800/60"}`}>
-                  <div className="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto mb-4">
-                    <Lock size={24} className="text-amber-400" />
-                  </div>
-                  <div className={`text-base font-bold mb-1 ${isLight ? "text-gray-900" : "text-white"}`}>Premium Feature</div>
-                  <div className={`text-xs mb-5 leading-relaxed ${isLight ? "text-gray-500" : "text-gray-400"}`}>
-                    Ask AI gives you instant answers about the platform, API usage, configuration, and intelligence workflows — powered by a fine-tuned model trained on Redroom documentation.
-                  </div>
-                  <div className="space-y-2 mb-5">
-                    {["How do I configure SIGINT filters?", "Explain the threat scoring model", "Set up Slack webhook alerts", "What is the ORBIT SGP4 model?", "How to export intelligence reports?"].map((q, i) => (
-                      <div key={i} className={`text-[10px] font-mono px-3 py-1.5 rounded-lg border text-left cursor-not-allowed ${isLight ? "border-gray-200 bg-gray-50 text-gray-500" : "border-gray-800/40 bg-[#080a0f] text-gray-600"}`}>
-                        {q}
-                      </div>
-                    ))}
-                  </div>
-                  <a
-                    href="https://owlink.ai"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-amber-500 text-white text-xs font-bold transition-all hover:opacity-90"
-                  >
-                    <Crown size={13} />
-                    Upgrade to Enterprise
-                    <ArrowUpRight size={13} />
-                  </a>
-                  <p className={`text-[9px] mt-3 ${isLight ? "text-gray-400" : "text-gray-600"}`}>Includes Ask AI · Sovereign Deployment · Priority Support</p>
-                </div>
-              </div>
-
-              {/* Disabled input */}
+              {/* Chat input */}
               <div className={`p-4 border-t ${isLight ? "border-gray-200 bg-gray-50" : "border-gray-800/40 bg-[#0c0e14]"}`}>
                 <div className="relative">
                   <input
                     type="text"
-                    disabled
-                    placeholder="Ask anything about Redroom..."
+                    placeholder="Задайте вопрос по документации..."
                     value={askAiInput}
                     onChange={e => setAskAiInput(e.target.value)}
-                    className={`w-full pl-4 pr-12 py-2.5 rounded-xl border text-xs cursor-not-allowed ${isLight ? "bg-gray-100 border-gray-200 text-gray-400 placeholder:text-gray-400" : "bg-[#080a0f] border-gray-800/40 text-gray-600 placeholder:text-gray-700"}`}
+                    className={`w-full pl-4 pr-12 py-2.5 rounded-xl border text-xs focus:outline-none focus:ring-1 focus:ring-purple-500 ${isLight ? "bg-white border-gray-200 text-gray-800" : "bg-[#080a0f] border-gray-800 text-gray-200"}`}
                   />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                    <Lock size={10} className="text-amber-400" />
-                    <Send size={12} className="text-gray-600" />
-                  </div>
+                  <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg hover:bg-purple-500/10 text-purple-500 transition-colors">
+                    <Send size={14} />
+                  </button>
                 </div>
-                <p className={`text-[9px] text-center mt-2 font-mono ${isLight ? "text-gray-400" : "text-gray-600"}`}>Upgrade to Enterprise to unlock Ask AI</p>
               </div>
             </div>
           </div>

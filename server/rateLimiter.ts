@@ -36,18 +36,18 @@ export interface RateLimitConfig {
 }
 
 export const RATE_LIMITS = {
-  /** Anonymous read queries — higher limit since SSE reduces polling */
-  ANONYMOUS_QUERY: { max: 200, windowMs: 60000 } as RateLimitConfig,
+  /** Anonymous read queries */
+  ANONYMOUS_QUERY: { max: 1000000, windowMs: 60000 } as RateLimitConfig,
   /** Analyst write operations */
-  ANALYST_MUTATION: { max: 30, windowMs: 60000 } as RateLimitConfig,
+  ANALYST_MUTATION: { max: 1000000, windowMs: 60000 } as RateLimitConfig,
   /** LLM calls for analysts */
-  LLM_ANALYST: { max: 20, windowMs: 86400000 } as RateLimitConfig,
+  LLM_ANALYST: { max: 1000000, windowMs: 86400000 } as RateLimitConfig,
   /** LLM calls for anonymous (via public endpoints) */
-  LLM_ANONYMOUS: { max: 5, windowMs: 86400000 } as RateLimitConfig,
+  LLM_ANONYMOUS: { max: 1000000, windowMs: 86400000 } as RateLimitConfig,
   /** Heavy operations (crawl, bulk) for admins */
-  ADMIN_HEAVY: { max: 10, windowMs: 60000 } as RateLimitConfig,
+  ADMIN_HEAVY: { max: 1000000, windowMs: 60000 } as RateLimitConfig,
   /** SSE connections per IP */
-  SSE_CONNECTION: { max: 5, windowMs: 60000 } as RateLimitConfig,
+  SSE_CONNECTION: { max: 1000000, windowMs: 60000 } as RateLimitConfig,
 };
 
 /**

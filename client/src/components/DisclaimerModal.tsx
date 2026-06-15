@@ -717,25 +717,6 @@ function DisclaimerModal() {
                     </button>
                   </div>
 
-                  {/* Upgrade to Enterprise */}
-                  <div className="p-4 rounded-lg" style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.35)" }}>
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "rgba(220,38,38,0.15)", border: "1px solid rgba(220,38,38,0.4)" }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(248,113,113,0.9)" strokeWidth="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold" style={{ color: "rgba(248,113,113,0.95)" }}>Перейти на Enterprise</div>
-                        <div className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>Разблокируйте полный набор инструментов Owlink · Redroom</div>
-                      </div>
-                    </div>
-                    <p className="text-xs leading-relaxed mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
-                      {c("contribute.upgrade.body")}
-                    </p>
-                    <div className="flex justify-center">
-                      <UpgradeButton portal="contribute" variant="compact" className="w-full" />
-                    </div>
-                  </div>
-
                   {/* Copyright */}
                   <div className="p-4 rounded-lg text-center" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
                     <div className="text-xs font-bold mb-1" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "monospace" }}>
