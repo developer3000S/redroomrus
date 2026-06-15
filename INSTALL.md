@@ -1,71 +1,71 @@
-# Deployment Guide: Docker & Production
+# Руководство по развертыванию: Docker и Продакшн
 
-This guide provides instructions for deploying the Redroom platform using Docker containers.
+Это руководство содержит инструкции по развертыванию платформы Redroom с использованием Docker-контейнеров.
 
-## 1. Prerequisites
-- **Docker** and **Docker Compose** (V2 recommended).
-- Access to the internet (to pull images and dependencies).
-- The `server/_core` directory must be present in the repository (it contains the runtime engine).
+## 1. Предварительные требования
+- **Docker** и **Docker Compose** (рекомендуется V2).
+- Доступ к интернету (для загрузки образов и зависимостей).
+- Директория `server/_core` должна присутствовать в репозитории (она содержит движок рантайма).
 
-## 2. Environment Configuration
-Copy `.env.example` to `.env` and fill in the required secrets:
+## 2. Настройка окружения
+Скопируйте файл `.env.example` в `.env` и заполните необходимые секреты:
 
 ```bash
 cp .env.example .env
 ```
 
-Key variables to set:
-- `JWT_SECRET`: Random string for session signing.
-- `ADMIN_SECRET_KEY`: Random string for CMS access.
-- `DATABASE_URL`: If using Docker Compose, this is pre-configured to `postgres://redroom_user:redroom_password@db:5432/redroom`.
+Основные переменные для настройки:
+- `JWT_SECRET`: Случайная строка для подписи сессий.
+- `ADMIN_SECRET_KEY`: Случайная строка для доступа к CMS.
+- `DATABASE_URL`: При использовании Docker Compose этот параметр предварительно настроен как `postgres://redroom_user:redroom_password@db:5432/redroom`.
 
-## 3. Quick Start (Docker Compose)
+## 3. Быстрый старт (Docker Compose)
 
-To build and start the entire stack (Application + PostgreSQL):
+Чтобы собрать и запустить весь стек (приложение + PostgreSQL):
 
 ```bash
 docker compose up -d --build
 ```
 
-The application will be available at `http://localhost:5000`.
+Приложение будет доступно по адресу `http://localhost:5000`.
 
-## 4. Database Migrations
-After the containers are up, run the migrations to set up the database schema:
+## 4. Миграции базы данных
+После запуска контейнеров выполните миграции для настройки схемы базы данных:
 
 ```bash
 docker compose exec app pnpm db:push
 ```
 
-## 5. Initial Data Seeding (Optional)
-To populate the database with initial intelligence data, agencies, and facilities:
+## 5. Начальное наполнение данными (Опционально)
+Чтобы наполнить базу данных начальными разведданными, агентствами и объектами:
 
 ```bash
-# General seed
+# Общий сид
 docker compose exec app pnpm exec tsx server/seed.ts
 
-# Specific seeds (examples)
+# Специфические сиды (примеры)
 docker compose exec app pnpm exec tsx scripts/seed-all-countries.mjs
 docker compose exec app pnpm exec tsx scripts/seed-global-agencies.mjs
 ```
 
-## 6. Monitoring & Logs
-To view logs:
+## 6. Мониторинг и логи
+Для просмотра логов:
 ```bash
 docker compose logs -f app
 ```
 
-To check the status of containers:
+Чтобы проверить статус контейнеров:
 ```bash
 docker compose ps
 ```
 
-## 6. Manual Docker Build
-If you wish to build the image manually without Docker Compose:
+## 7. Ручная сборка Docker
+Если вы хотите собрать образ вручную без Docker Compose:
 
 ```bash
 docker build -t redroom-app .
 docker run -p 5000:5000 --env-file .env redroom-app
 ```
 
-## 7. Air-Gapped Deployment
-For deployment in isolated networks, refer to the [Air-Gapped Deployment Guide](./docs/AIRGAP.md).
+## 8. Автономное развертывание (Air-Gapped)
+Для развертывания в изолированных сетях обратитесь к [Руководству по Air-Gapped развертыванию](./docs/AIRGAP.md).
