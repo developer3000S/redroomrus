@@ -318,7 +318,7 @@ function createNewsIcon(isBreaking: boolean, topics: string[], sentiment: string
 }
 
 /**
- * Country cluster badge — shown when clusterArticles is ON.
+ * Country cluster badge — shown when clusterСтатьи is ON.
  * Outer ring color = dominant topic. Count badge. Breaking pulse ring.
  */
 function createClusterIcon(count: number, dominantColor: string, hasBreaking: boolean): L.DivIcon {
@@ -754,13 +754,13 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
   const [searchFlyTo, setSearchFlyTo] = useState<string | undefined>(undefined);
   const [mapCtxMenu, setMapCtxMenu] = useState<CtxMenu | null>(null);
   const [showFacilities, setShowFacilities] = useState(true);
-  const [showArticles, setShowArticles] = useState(true);
+  const [showСтатьи, setShowСтатьи] = useState(true);
   const [showConnections, setShowConnections] = useState(false);
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [showAttacks, setShowAttacks] = useState(false);
   const [showThreatRings, setShowThreatRings] = useState(false);  // off by default
   const [showCountryIntel, setShowCountryIntel] = useState(true);  // country hover layer
-  const [clusterArticles, setClusterArticles] = useState(true);
+  const [clusterСтатьи, setClusterСтатьи] = useState(true);
   const [clusterFacilities, setClusterFacilities] = useState(false);
   const [legendExpanded, setLegendExpanded] = useState(false);
   const { theme } = useTheme();
@@ -799,7 +799,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
 
   // ── Data Queries ──────────────────────────────────────────────────────────
   const articlesSince = useMemo(() => new Date(Date.now() - timeWindowHours * 60 * 60 * 1000), [timeWindowHours]);
-  const { data: articles, isLoading: articlesLoading, refetch: refetchArticles } = trpc.articles.list.useQuery(
+  const { data: articles, isЗагрузка: articlesЗагрузка, refetch: refetchСтатьи } = trpc.articles.list.useQuery(
     { region, topics: selectedTopics.length > 0 ? selectedTopics : undefined, search: searchQuery || undefined, limit: 1000, since: articlesSince },
     { refetchInterval: 30000 }
   );
@@ -827,7 +827,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
     { region },
     { refetchInterval: 120000 }
   );
-  const { data: facilityNewsData, isLoading: facilityNewsLoading } = trpc.facilities.newsForFacility.useQuery(
+  const { data: facilityNewsData, isЗагрузка: facilityNewsЗагрузка } = trpc.facilities.newsForFacility.useQuery(
     { facilityId: selectedFacility?.id ?? 0, limit: 15 },
     { enabled: !!selectedFacility?.id, staleTime: 60000 }
   );
@@ -864,7 +864,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
     try { return JSON.parse(raw ?? '[]'); } catch { return []; }
   };
 
-  const filteredArticles = useMemo(() => {
+  const filteredСтатьи = useMemo(() => {
     return (articles ?? []).filter(a => {
       if (sentimentFilter !== "all" && a.sentiment !== sentimentFilter) return false;
       if (countryFilter && a.country !== countryFilter) return false;
@@ -878,12 +878,12 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
 
   const articlesByCountry = useMemo(() => {
     const map: Record<string, any[]> = {};
-    filteredArticles.filter(a => a.country).forEach(a => {
+    filteredСтатьи.filter(a => a.country).forEach(a => {
       if (!map[a.country!]) map[a.country!] = [];
       map[a.country!].push(a);
     });
     return map;
-  }, [filteredArticles]);
+  }, [filteredСтатьи]);
   // Group facilities by country for clustering
   const facilitiesByCountry = useMemo(() => {
     const map: Record<string, any[]> = {};
@@ -895,9 +895,9 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
     return map;
   }, [facilities]);
 
-  const getDominantColor = (countryArticles: any[]) => {
+  const getDominantColor = (countryСтатьи: any[]) => {
     const tc: Record<string, number> = {};
-    countryArticles.forEach(a => {
+    countryСтатьи.forEach(a => {
       parseTopics(a.topicsJson ?? (a as any).topics).forEach((t: string) => { tc[t] = (tc[t] || 0) + 1; });
     });
     const dominant = Object.entries(tc).sort((a, b) => b[1] - a[1])[0]?.[0];
@@ -906,7 +906,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
 
   const heatmapPoints = useMemo((): HeatPoint[] => {
     const countMap: Record<string, { count: number; lat: number; lng: number }> = {};
-    filteredArticles.forEach(a => {
+    filteredСтатьи.forEach(a => {
       if (!a.country) return;
       const coords = getCountryCoords(a.country);
       if (!coords) return;
@@ -915,7 +915,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
     });
     const maxCount = Math.max(...Object.values(countMap).map(v => v.count), 1);
     return Object.values(countMap).map(v => ({ lat: v.lat, lng: v.lng, intensity: v.count / maxCount }));
-  }, [filteredArticles]);
+  }, [filteredСтатьи]);
 
   /**
    * De-collision engine v2: grid-based layout with guaranteed minimum separation.
@@ -930,8 +930,8 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
     const MAX_PER_COUNTRY = 40;
 
     // Group articles by country, breaking news first
-    const byCountry: Record<string, typeof filteredArticles> = {};
-    filteredArticles.forEach(a => {
+    const byCountry: Record<string, typeof filteredСтатьи> = {};
+    filteredСтатьи.forEach(a => {
       const key = a.country ?? '__unknown__';
       if (!byCountry[key]) byCountry[key] = [];
       byCountry[key].push(a);
@@ -976,7 +976,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
       });
     });
     return positions;
-  }, [filteredArticles]);
+  }, [filteredСтатьи]);
 
   const activeFilterCount = selectedTopics.length + selectedFacilityTypes.length +
     (searchQuery ? 1 : 0) + (sentimentFilter !== "all" ? 1 : 0) + (countryFilter ? 1 : 0);
@@ -1010,7 +1010,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
     const handler = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.key === 'f' || e.key === 'F') setShowFacilities(v => !v);
-      if (e.key === 'a' || e.key === 'A') setShowArticles(v => !v);
+      if (e.key === 'a' || e.key === 'A') setShowСтатьи(v => !v);
       if (e.key === 'h' || e.key === 'H') setShowHeatmap(v => !v);
       if (e.key === 'l' || e.key === 'L') setShowLayerPanel(v => !v);
       if (e.key === 'i' || e.key === 'I') setShowCountryIntel(v => !v);
@@ -1104,7 +1104,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
         <div className="flex items-center gap-2 flex-1">
           <span className="text-[8px] font-mono text-muted-foreground/35 tracking-[0.15em] uppercase flex-shrink-0">Displaying</span>
           {[
-            { val: threatSummary?.totalArticles ?? 0, cap: 500, label: 'Articles', color: 'var(--primary)' },
+            { val: threatSummary?.totalСтатьи ?? 0, cap: 500, label: 'Статьи', color: 'var(--primary)' },
             { val: threatSummary?.breakingCount ?? 0, cap: 100, label: 'Breaking', color: 'var(--intel-red)' },
             { val: threatSummary?.criticalFacilities ?? 0, cap: 50, label: 'Critical Fac.', color: '#f97316' },
             { val: threatSummary?.activeConflicts ?? 0, cap: 100, label: 'Conflicts', color: '#a78bfa' },
@@ -1157,7 +1157,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
         </div>
 
         {/* Refresh */}
-        <button onClick={() => { refetchArticles(); refetchFacilities(); }}
+        <button onClick={() => { refetchСтатьи(); refetchFacilities(); }}
           className="p-1.5 rounded-lg border border-border/70 text-muted-foreground/60 hover:text-primary hover:border-primary/40 transition-all">
           <RefreshCw size={12}/>
         </button>
@@ -1210,7 +1210,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
             {/* Stats row */}
             <div className="grid grid-cols-3 border-b border-border/60 flex-shrink-0">
               {[
-                { val: filteredArticles.length, cap: 1000, total: articles?.length ?? 0, label: 'Articles', color: 'text-blue-400' },
+                { val: filteredСтатьи.length, cap: 1000, total: articles?.length ?? 0, label: 'Статьи', color: 'text-blue-400' },
                 { val: facilities?.length ?? 0, cap: 500, total: facilities?.length ?? 0, label: 'Facilities', color: 'text-amber-400' },
                 { val: breaking?.length ?? 0, cap: 100, total: breaking?.length ?? 0, label: 'Breaking', color: (breaking?.length ?? 0) > 0 ? 'text-red-400' : 'text-muted-foreground/50' },
               ].map((s, i) => (
@@ -1279,9 +1279,9 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
                   </div>
                   {/* Article list */}
                   <div className="flex-1 overflow-y-auto">
-                    {articlesLoading ? (
+                    {articlesЗагрузка ? (
                       <div className="p-3 space-y-2">{[1,2,3,4].map(i => <div key={i} className="h-12 bg-foreground/4 rounded-lg animate-pulse"/>)}</div>
-                    ) : filteredArticles.length === 0 ? (
+                    ) : filteredСтатьи.length === 0 ? (
                       <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
                         <Newspaper size={20} className="text-muted-foreground/20 mb-2"/>
                         <div className="text-xs text-muted-foreground/50">No articles match filters</div>
@@ -1289,7 +1289,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
                       </div>
                     ) : (
                       <div className="divide-y divide-white/4">
-                        {filteredArticles.slice(0, 40).map(article => {
+                        {filteredСтатьи.slice(0, 40).map(article => {
                           const topics = parseTopics(article.topicsJson ?? (article as any).topics);
                           const topicColor = TOPIC_COLORS[topics[0]] ?? '#94a3b8';
                           const isSelected = selectedArticle?.id === article.id;
@@ -1380,7 +1380,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
                       </div>
                       <div className="flex items-center gap-1.5">
                         <span className="text-muted-foreground/70">Total:</span>
-                        <span className="font-bold text-blue-400">{threatSummary?.totalArticles ?? 0}</span>
+                        <span className="font-bold text-blue-400">{threatSummary?.totalСтатьи ?? 0}</span>
                       </div>
                     </div>
                   </div>
@@ -1582,16 +1582,16 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
             )}
 
             {/* ── NEWS ARTICLE MARKERS ── */}
-            {showArticles && (
-              clusterArticles
+            {showСтатьи && (
+              clusterСтатьи
                 ? Object.entries(articlesByCountry)
                     .filter(([country]) => !countryFilter || country === countryFilter)
-                    .map(([country, countryArticles]) => {
+                    .map(([country, countryСтатьи]) => {
                     const coords = getCountryCoords(country);
                     if (!coords) return null;
-                    const hasBreaking = countryArticles.some(a => a.isBreaking);
-                    if (countryArticles.length === 1) {
-                      const a = countryArticles[0];
+                    const hasBreaking = countryСтатьи.some(a => a.isBreaking);
+                    if (countryСтатьи.length === 1) {
+                      const a = countryСтатьи[0];
                       const topics = parseTopics(a.topicsJson ?? (a as any).topics);
                       return (
                         <Marker key={`art-${a.id}`} position={coords}
@@ -1603,12 +1603,12 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
                     }
                     return (
                       <Marker key={`cluster-${country}`} position={coords}
-                        icon={createClusterIcon(countryArticles.length, getDominantColor(countryArticles), hasBreaking)}>
-                        <Popup maxWidth={360}><ClusterPopup country={country} articles={countryArticles} onExplore={onExplore} onVerify={onVerify}/></Popup>
+                        icon={createClusterIcon(countryСтатьи.length, getDominantColor(countryСтатьи), hasBreaking)}>
+                        <Popup maxWidth={360}><ClusterPopup country={country} articles={countryСтатьи} onExplore={onExplore} onVerify={onVerify}/></Popup>
                       </Marker>
                     );
                   })
-                : filteredArticles.map((a) => {
+                : filteredСтатьи.map((a) => {
                     // Use de-collision engine position (sunflower spiral per country group)
                     const pos = decollidedPositions.get(a.id);
                     if (!pos) return null;
@@ -1652,7 +1652,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
                     <div style={{ fontFamily: 'Inter, sans-serif', padding: '8px' }}>
                       <div style={{ fontSize: 12, fontWeight: 700, color: ringColor, marginBottom: 4 }}>{country}</div>
                       <div style={{ fontSize: 10, color: 'var(--muted-foreground)' }}>Threat Score: {data.threatScore}</div>
-                      <div style={{ fontSize: 10, color: 'var(--muted-foreground)' }}>Articles: {data.articleCount}</div>
+                      <div style={{ fontSize: 10, color: 'var(--muted-foreground)' }}>Статьи: {data.articleCount}</div>
                       <div style={{ fontSize: 10, color: 'var(--muted-foreground)' }}>Dominant: {data.dominantTopic}</div>
                     </div>
                   </Popup>
@@ -1787,7 +1787,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
                     </div>
                   </div>
                   <div className="border-t border-foreground/6 pt-4">
-                    <div className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-widest mb-3">Threat Levels</div>
+                    <div className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-widest mb-3">Уровень угрозыs</div>
                     <div className="grid grid-cols-3 gap-2">
                       {[['Critical','#ef4444'],['High','#f97316'],['Medium','#f59e0b'],['Low','#22c55e'],['Minimal','#64748b']].map(([l,c]) => (
                         <div key={l} className="flex items-center gap-2 px-3 py-2 rounded-lg border" style={{ background: `${c}10`, borderColor: `${c}30` }}>
@@ -1865,7 +1865,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-3 bg-background/80 border border-border/60 rounded-full px-4 py-1.5 backdrop-blur-md">
             {([
               { key: 'F', label: 'Facilities', active: showFacilities, color: 'var(--intel-yellow)' },
-              { key: 'A', label: 'Articles',   active: showArticles,   color: 'var(--primary)' },
+              { key: 'A', label: 'Статьи',   active: showСтатьи,   color: 'var(--primary)' },
               { key: 'H', label: 'Heatmap',    active: showHeatmap,    color: '#f97316' },
               { key: 'I', label: 'Country Intel', active: showCountryIntel, color: '#22d3ee' },
               { key: 'L', label: 'Layers',     active: showLayerPanel, color: 'var(--intel-green)' },
@@ -1894,7 +1894,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
             />
           )}
 
-          {/* ── ACTIVE FILTERS BADGE ── */}
+          {/* ── АКТИВНО FILTERS BADGE ── */}
           {activeFilterCount > 0 && (
             <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-card/90 border border-primary/40 rounded-full px-3 py-1 text-[10px] font-medium flex items-center gap-2 backdrop-blur-md shadow-lg">
               <Filter size={9} className="text-primary"/>
@@ -1928,12 +1928,12 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
                 <div className="space-y-2">
                   {[
                     { label: 'Facilities', val: showFacilities, set: setShowFacilities, color: 'var(--intel-yellow)', key: 'F' },
-                    { label: 'News Articles', val: showArticles, set: setShowArticles, color: 'var(--primary)', key: 'A' },
+                    { label: 'News Статьи', val: showСтатьи, set: setShowСтатьи, color: 'var(--primary)', key: 'A' },
                     { label: 'Threat Rings', val: showThreatRings, set: setShowThreatRings, color: '#a78bfa', key: null },
                     { label: 'Heat Map', val: showHeatmap, set: setShowHeatmap, color: '#f97316', key: 'H' },
                     { label: 'Attack Vectors', val: showAttacks, set: setShowAttacks, color: 'var(--intel-red)', key: null },
                     { label: 'Country Intel Layer', val: showCountryIntel, set: setShowCountryIntel, color: '#22d3ee', key: 'I' },
-                    { label: 'Cluster Articles', val: clusterArticles, set: setClusterArticles, color: '#22d3ee', key: null },
+                    { label: 'Cluster Статьи', val: clusterСтатьи, set: setClusterСтатьи, color: '#22d3ee', key: null },
                     { label: 'Cluster Facilities', val: clusterFacilities, set: setClusterFacilities, color: 'var(--intel-yellow)', key: null },
                   ].map(item => (
                     <label key={item.label} className="flex items-center gap-2.5 cursor-pointer group">
@@ -2114,7 +2114,7 @@ export default function LiveTab({ region, onExplore, onVerify, initialCountryFil
                         <span className="text-[8px] text-muted-foreground/50 font-mono">{facilityNewsData.articles.length} reports</span>
                       )}
                     </div>
-                    {facilityNewsLoading ? (
+                    {facilityNewsЗагрузка ? (
                       <div className="p-4 space-y-3">
                         {[1,2,3].map(i => (
                           <div key={i} className="animate-pulse space-y-2">

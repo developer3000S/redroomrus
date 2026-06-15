@@ -29,7 +29,7 @@ import 'leaflet.heat';
 import "leaflet/dist/leaflet.css";
 import { FetchingMonitor } from "./FetchingMonitor";
 
-interface SourcesTabProps { region: string; initialSubTab?: string; }
+interface ИсточникиTabProps { region: string; initialSubTab?: string; }
 
 // ─── Country → Coordinates lookup ─────────────────────────────────────────────
 const COUNTRY_COORDS: Record<string, [number, number]> = {
@@ -129,8 +129,8 @@ function relativeTime(date: string | Date | null | undefined): string {
   return `${days}d ago`;
 }
 
-// ─── Sources Intelligence Dashboard ───────────────────────────────────────────
-function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: () => void }) {
+// ─── Источники Intelligence Dashboard ───────────────────────────────────────────
+function ИсточникиList({ region, onCrawlStart }: { region: string; onCrawlStart?: () => void }) {
   const [search, setSearch] = useState('');
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
   const [filterType, setFilterType] = useState('all');
@@ -148,22 +148,22 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
   const [showIntelPanel, setShowIntelPanel] = useState(true);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const { data: agencies, isLoading, refetch } = trpc.agencies.withStats.useQuery(
+  const { data: agencies, isЗагрузка, refetch } = trpc.agencies.withStats.useQuery(
     { region: region === 'Global' ? undefined : region, limit: 300 }, { staleTime: 30000 }
   );
   const utils = trpc.useUtils();
 
   const createMutation = trpc.agencies.create.useMutation({
     onSuccess: () => { toast.success('Source registered'); refetch(); setShowForm(false); setForm({ ...EMPTY_FORM, region }); },
-    onError: (e) => toast.error('Registration failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Registration failed', { description: e.message }),
   });
   const updateMutation = trpc.agencies.update.useMutation({
     onSuccess: () => { toast.success('Source updated'); refetch(); setShowForm(false); setEditingId(null); },
-    onError: (e) => toast.error('Update failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Update failed', { description: e.message }),
   });
   const deleteMutation = trpc.agencies.delete.useMutation({
     onSuccess: () => { toast.success('Source decommissioned'); refetch(); },
-    onError: (e) => toast.error('Decommission failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Decommission failed', { description: e.message }),
   });
   const crawlOneMutation = trpc.agencies.crawlOne.useMutation({
     onSuccess: (data) => {
@@ -175,11 +175,11 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
       utils.articles.list.invalidate();
       setCrawlingId(null);
     },
-    onError: (e) => { toast.error('Acquisition failed', { description: e.message }); setCrawlingId(null); },
+    onОшибка: (e) => { toast.error('Acquisition failed', { description: e.message }); setCrawlingId(null); },
   });
   const toggleActiveMutation = trpc.agencies.update.useMutation({
     onSuccess: () => { refetch(); },
-    onError: (e) => toast.error('Toggle failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Toggle failed', { description: e.message }),
   });
 
   const handleSave = useCallback(() => {
@@ -250,7 +250,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
     const all = agencies;
     const active = all.filter(a => a.isActive);
     const withRss = all.filter(a => (a.rssFeeds as string[] || []).length > 0);
-    const totalArticles = all.reduce((s, a) => s + ((a as any).articleCount ?? 0), 0);
+    const totalСтатьи = all.reduce((s, a) => s + ((a as any).articleCount ?? 0), 0);
     const byBias = Object.keys(BIAS_COLORS).reduce((acc, b) => {
       acc[b] = all.filter(a => a.bias === b).length; return acc;
     }, {} as Record<string, number>);
@@ -275,7 +275,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
       const h = getSignalHealth(a.lastCrawled, (a as any).lastArticleAt);
       return h === 'dead' || h === 'unknown';
     });
-    return { total: all.length, active: active.length, withRss: withRss.length, totalArticles, byBias, byHealth, topCountries, avgReliability, biasScore, staleTier1 };
+    return { total: all.length, active: active.length, withRss: withRss.length, totalСтатьи, byBias, byHealth, topCountries, avgReliability, biasScore, staleTier1 };
   }, [agencies]);
 
   const selectedAgency = useMemo(() => agencies?.find(a => a.id === selectedId), [agencies, selectedId]);
@@ -306,13 +306,13 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
   // ─── CSV Import ────────────────────────────────────────────────────────────
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState('');
-  const [importErrors, setImportErrors] = useState<string[]>([]);
+  const [importОшибкаs, setImportОшибкаs] = useState<string[]>([]);
   const [importPreview, setImportPreview] = useState<any[]>([]);
   const [alertDismissed, setAlertDismissed] = useState(false);
 
   const parseImportCSV = useCallback((text: string) => {
     const lines = text.trim().split('\n').filter(Boolean);
-    if (lines.length < 2) { setImportErrors(['CSV must have a header row and at least one data row']); return; }
+    if (lines.length < 2) { setImportОшибкаs(['CSV must have a header row and at least one data row']); return; }
     const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
     const errors: string[] = [];
     const parsed: any[] = [];
@@ -329,7 +329,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
         description: row.description || '', region,
       });
     }
-    setImportErrors(errors);
+    setImportОшибкаs(errors);
     setImportPreview(parsed);
   }, [region]);
 
@@ -339,7 +339,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
       await createManyMutation.mutateAsync(row);
     }
     await refetch();
-    setShowImport(false); setImportText(''); setImportPreview([]); setImportErrors([]);
+    setShowImport(false); setImportText(''); setImportPreview([]); setImportОшибкаs([]);
   }, [importPreview, createManyMutation, refetch]);
 
   return (
@@ -355,7 +355,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
             </div>
             <div className="h-3 w-px bg-foreground/10"/>
             <span className="text-[10px] font-mono text-muted-foreground/60 tracking-wider">
-              {stats?.total ?? '—'} SOURCES · {stats?.active ?? '—'} ACTIVE · {stats?.withRss ?? '—'} RSS-ENABLED
+              {stats?.total ?? '—'} SOURCES · {stats?.active ?? '—'} АКТИВНО · {stats?.withRss ?? '—'} RSS-ENABLED
             </span>
             {/* TIER-1 stale alert badge */}
             {stats?.staleTier1 && stats.staleTier1.length > 0 && !alertDismissed && (
@@ -569,7 +569,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
               </div>
               <div className="mt-2 pt-2 border-t border-border/40 flex items-center justify-between">
                 <span className="text-[8px] font-mono text-muted-foreground/40">{stats.topCountries.length} COUNTRIES</span>
-                <span className="text-[8px] font-mono text-muted-foreground/40">{stats.totalArticles?.toLocaleString() ?? 0} ARTICLES</span>
+                <span className="text-[8px] font-mono text-muted-foreground/40">{stats.totalСтатьи?.toLocaleString() ?? 0} ARTICLES</span>
               </div>
             </div>
           </div>
@@ -583,7 +583,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
               className="pl-8 h-7 text-[11px] font-mono bg-foreground/5 border-border/70 text-foreground placeholder:text-muted-foreground/40 focus:border-cyan-500/40"/>
           </div>
           {[
-            { value: filterActive, setter: setFilterActive, options: [['all','ALL STATUS'],['active','ACTIVE'],['inactive','INACTIVE']] as [string,string][] },
+            { value: filterActive, setter: setFilterActive, options: [['all','ALL STATUS'],['active','АКТИВНО'],['inactive','INАКТИВНО']] as [string,string][] },
             { value: filterType, setter: setFilterType, options: [['all','ALL TYPES'], ...Object.entries(TYPE_LABELS)] as [string,string][] },
             { value: filterBias, setter: setFilterBias, options: [['all','ALL BIAS'], ...Object.entries(BIAS_LABELS)] as [string,string][] },
             { value: filterHealth, setter: setFilterHealth, options: [['all','ALL HEALTH'],['hot','LIVE'],['warm','WARM'],['cold','COLD'],['dead','STALE'],['unknown','NO DATA']] as [string,string][] },
@@ -609,7 +609,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
 
         {/* Source list / table */}
         <div className={`flex-1 overflow-y-auto ${selectedId ? 'border-r border-border/60' : ''}`}>
-          {isLoading ? (
+          {isЗагрузка ? (
             <div className="flex items-center justify-center h-40 text-muted-foreground/60 font-mono text-xs gap-2">
               <Loader2 size={16} className="animate-spin"/> LOADING SOURCE REGISTRY...
             </div>
@@ -739,7 +739,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
                 <Upload size={14} className="text-amber-400"/>
                 <span className="text-xs font-mono font-semibold text-amber-400 tracking-[0.15em]">BULK SOURCE IMPORT</span>
               </div>
-              <button onClick={() => { setShowImport(false); setImportText(''); setImportPreview([]); setImportErrors([]); }}
+              <button onClick={() => { setShowImport(false); setImportText(''); setImportPreview([]); setImportОшибкаs([]); }}
                 className="text-muted-foreground/60 hover:text-foreground/70 transition-colors">
                 <X size={16}/>
               </button>
@@ -773,10 +773,10 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
                 />
               </div>
 
-              {/* Errors */}
-              {importErrors.length > 0 && (
+              {/* Ошибкаs */}
+              {importОшибкаs.length > 0 && (
                 <div className="space-y-1">
-                  {importErrors.map((e, i) => (
+                  {importОшибкаs.map((e, i) => (
                     <div key={i} className="flex items-center gap-2 text-[10px] font-mono text-red-400 bg-red-500/10 px-3 py-1.5 rounded">
                       <AlertTriangle size={10}/> {e}
                     </div>
@@ -812,7 +812,7 @@ function SourcesList({ region, onCrawlStart }: { region: string; onCrawlStart?: 
               </span>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => { setShowImport(false); setImportText(''); setImportPreview([]); setImportErrors([]); }}
+                  onClick={() => { setShowImport(false); setImportText(''); setImportPreview([]); setImportОшибкаs([]); }}
                   className="px-4 py-1.5 rounded border border-border/70 text-[10px] font-mono text-muted-foreground/80 hover:text-foreground/70 transition-colors">
                   CANCEL
                 </button>
@@ -1259,11 +1259,11 @@ function SourceDetailPanel({ agency, onClose, onEdit, onCrawl, crawling, onToggl
   );
 }
 
-// ─── Sources Map Component ─────────────────────────────────────────────────────
+// ─── Источники Map Component ─────────────────────────────────────────────────────
 // ─── Article frequency color helper ──────────────────────────────────────────
-function articleFreqColor(articles: number, maxArticles: number): string {
-  if (maxArticles === 0 || articles === 0) return '#374151'; // grey — no articles
-  const ratio = Math.min(articles / maxArticles, 1);
+function articleFreqColor(articles: number, maxСтатьи: number): string {
+  if (maxСтатьи === 0 || articles === 0) return '#374151'; // grey — no articles
+  const ratio = Math.min(articles / maxСтатьи, 1);
   if (ratio < 0.2) return '#1e40af';   // dim blue
   if (ratio < 0.4) return '#0ea5e9';   // cyan
   if (ratio < 0.6) return '#10b981';   // green
@@ -1292,7 +1292,7 @@ function MapResizer() {
 }
 
 // ─── Heatmap layer component ──────────────────────────────────────────────────
-function ArticleHeatmapLayer({ groups, visible }: { groups: { coords: [number,number]; totalArticles: number }[]; visible: boolean }) {
+function ArticleHeatmapLayer({ groups, visible }: { groups: { coords: [number,number]; totalСтатьи: number }[]; visible: boolean }) {
   const map = useMap();
   const heatRef = useRef<any>(null);
   useEffect(() => {
@@ -1300,8 +1300,8 @@ function ArticleHeatmapLayer({ groups, visible }: { groups: { coords: [number,nu
       if (heatRef.current) { map.removeLayer(heatRef.current); heatRef.current = null; }
       return;
     }
-    const maxA = Math.max(...groups.map(g => g.totalArticles), 1);
-    const data = groups.map(g => [g.coords[0], g.coords[1], g.totalArticles / maxA] as [number, number, number]);
+    const maxA = Math.max(...groups.map(g => g.totalСтатьи), 1);
+    const data = groups.map(g => [g.coords[0], g.coords[1], g.totalСтатьи / maxA] as [number, number, number]);
     if (heatRef.current) {
       heatRef.current.setLatLngs(data);
     } else {
@@ -1324,7 +1324,7 @@ const DATE_PRESETS = [
   { label: 'ALL', days: 0 },
 ];
 
-function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToMonitor: () => void }) {
+function ИсточникиMap({ region, onSwitchToMonitor }: { region: string; onSwitchToMonitor: () => void }) {
   // Date-window state: daysBack=0 means no filter (all time)
   const [daysBack, setDaysBack] = useState(0);
   const dateFrom = useMemo(() => {
@@ -1333,7 +1333,7 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
     d.setDate(d.getDate() - daysBack);
     return d.toISOString();
   }, [daysBack]);
-  const { data: agencies, isLoading, refetch: refetchStats } = trpc.agencies.withStats.useQuery(
+  const { data: agencies, isЗагрузка, refetch: refetchStats } = trpc.agencies.withStats.useQuery(
     { region: region === 'Global' ? undefined : region, dateFrom },
     { staleTime: 30000 }
   );
@@ -1351,7 +1351,7 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
       // Refresh stats after a short delay to pick up new articles
       setTimeout(() => { utils.agencies.withStats.invalidate(); }, 3000);
     },
-    onError: (e, vars) => { toast.error(`Crawl failed for ${vars.country}`, { description: e.message }); setCrawlingCountry(null); },
+    onОшибка: (e, vars) => { toast.error(`Crawl failed for ${vars.country}`, { description: e.message }); setCrawlingCountry(null); },
   });
   const [selectedType, setSelectedType] = useState('all');
   const [selectedBias, setSelectedBias] = useState('all');
@@ -1374,16 +1374,16 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
     document.addEventListener('keydown', handleKey);
     return () => { document.removeEventListener('click', handleClick); document.removeEventListener('keydown', handleKey); };
   }, [ctxMenu]);
-  const { data: countryErrorRates } = trpc.agencies.getCountryErrorRates.useQuery(
+  const { data: countryОшибкаRates } = trpc.agencies.getCountryОшибкаRates.useQuery(
     { windowHours: 24 },
     { enabled: showThreatOverlay, refetchInterval: 60000, staleTime: 30000 }
   );
   const threatByCountry = useMemo(() => {
-    if (!countryErrorRates) return {} as Record<string, number>;
+    if (!countryОшибкаRates) return {} as Record<string, number>;
     return Object.fromEntries(
-      (countryErrorRates as Array<{ country: string; errorRate: number }>).map(r => [r.country, r.errorRate])
+      (countryОшибкаRates as Array<{ country: string; errorRate: number }>).map(r => [r.country, r.errorRate])
     );
-  }, [countryErrorRates]);
+  }, [countryОшибкаRates]);
 
   const agencyGroups = useMemo(() => {
     if (!agencies) return [];
@@ -1401,17 +1401,17 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
     }
     return Object.entries(groups).map(([country, { coords, agencies }]) => ({
       country, coords, agencies,
-      totalArticles: agencies.reduce((s, a) => s + ((a as any).articleCount ?? 0), 0),
+      totalСтатьи: agencies.reduce((s, a) => s + ((a as any).articleCount ?? 0), 0),
     }));
   }, [agencies, showInactive, selectedType, selectedBias, selectedTier, searchText]);
 
   const maxCount = Math.max(...agencyGroups.map(g => g.agencies.length), 1);
-  const maxArticles = Math.max(...agencyGroups.map(g => g.totalArticles), 1);
+  const maxСтатьи = Math.max(...agencyGroups.map(g => g.totalСтатьи), 1);
   const totalShown = agencyGroups.reduce((s, g) => s + g.agencies.length, 0);
   const totalAll = agencies?.length ?? 0;
-  const totalArticles = agencyGroups.reduce((s, g) => s + g.totalArticles, 0);
+  const totalСтатьи = agencyGroups.reduce((s, g) => s + g.totalСтатьи, 0);
 
-  if (isLoading) return (
+  if (isЗагрузка) return (
     <div className="flex items-center justify-center h-full text-muted-foreground/60 font-mono text-xs gap-2">
       <Loader2 size={16} className="animate-spin"/> LOADING GEO-INTELLIGENCE MAP...
     </div>
@@ -1487,13 +1487,13 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
               : 'border-border/70 bg-foreground/5 text-muted-foreground/80 hover:text-foreground/60'
           }`}>
           {showInactive ? <Eye size={10}/> : <EyeOff size={10}/>}
-          {showInactive ? 'INCL. INACTIVE' : 'ACTIVE ONLY'}
+          {showInactive ? 'INCL. INАКТИВНО' : 'АКТИВНО ONLY'}
         </button>
 
         {/* Article total */}
         <div className="flex items-center gap-1 text-[10px] font-mono text-muted-foreground/80">
           <BarChart3 size={10} className="text-amber-400/60"/>
-          <span className="text-amber-400 font-semibold">{totalArticles.toLocaleString()}</span> articles
+          <span className="text-amber-400 font-semibold">{totalСтатьи.toLocaleString()}</span> articles
         </div>
 
         <div className="h-4 w-px bg-foreground/10"/>
@@ -1599,20 +1599,20 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
                 <Popup>
                   <div className="font-mono text-xs">
                     <div className="text-red-400 font-bold mb-1">⚠ THREAT SIGNAL — {country}</div>
-                    <div className="text-foreground/70">Error Rate: <span className="text-red-400">{Math.round(errorRate * 100)}%</span></div>
+                    <div className="text-foreground/70">Ошибка Rate: <span className="text-red-400">{Math.round(errorRate * 100)}%</span></div>
                     <div className="text-muted-foreground text-[10px] mt-1">Last 24h crawl window</div>
                   </div>
                 </Popup>
               </CircleMarker>
             );
           })}
-          {agencyGroups.map(({ country, coords, agencies, totalArticles: groupArticles }) => {
+          {agencyGroups.map(({ country, coords, agencies, totalСтатьи: groupСтатьи }) => {
             const radius = 7 + (agencies.length / maxCount) * 18;
             const activeCount = agencies.filter(a => a.isActive).length;
             const inactiveCount = agencies.length - activeCount;
             const avgReliability = Math.round(agencies.reduce((s, a) => s + (a.reliability ?? 70), 0) / agencies.length);
             const statusColor = activeCount === agencies.length ? '#22d3ee' : activeCount === 0 ? '#6b7280' : '#f59e0b';
-            const freqColor = articleFreqColor(groupArticles, maxArticles);
+            const freqColor = articleFreqColor(groupСтатьи, maxСтатьи);
             const color = colorMode === 'frequency' ? freqColor : statusColor;
             const dominantBias = (() => {
               const counts: Record<string, number> = {};
@@ -1647,7 +1647,7 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
                     <div className="grid grid-cols-4 gap-1 mb-2">
                       <div className="bg-foreground/5 rounded p-1.5 text-center">
                         <div className="text-green-400 text-sm font-bold">{activeCount}</div>
-                        <div className="text-[8px] text-muted-foreground/60">ACTIVE</div>
+                        <div className="text-[8px] text-muted-foreground/60">АКТИВНО</div>
                       </div>
                       <div className="bg-foreground/5 rounded p-1.5 text-center">
                         <div className="text-muted-foreground/80 text-sm font-bold">{inactiveCount}</div>
@@ -1658,7 +1658,7 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
                         <div className="text-[8px] text-muted-foreground/60">REL.</div>
                       </div>
                       <div className="bg-foreground/5 rounded p-1.5 text-center">
-                        <div className="text-red-400 text-sm font-bold">{groupArticles > 999 ? (groupArticles/1000).toFixed(1)+'k' : groupArticles}</div>
+                        <div className="text-red-400 text-sm font-bold">{groupСтатьи > 999 ? (groupСтатьи/1000).toFixed(1)+'k' : groupСтатьи}</div>
                         <div className="text-[8px] text-muted-foreground/60">ARTS.</div>
                       </div>
                     </div>
@@ -1666,10 +1666,10 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
                     <div className="mb-2">
                       <div className="flex items-center justify-between text-[8px] text-muted-foreground/60 mb-0.5">
                         <span>ARTICLE FREQUENCY</span>
-                        <span style={{ color }}>{Math.round(groupArticles / maxArticles * 100)}% of peak</span>
+                        <span style={{ color }}>{Math.round(groupСтатьи / maxСтатьи * 100)}% of peak</span>
                       </div>
                       <div className="h-1.5 bg-foreground/5 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full transition-all" style={{ width: `${Math.round(groupArticles / maxArticles * 100)}%`, background: color }}/>
+                        <div className="h-full rounded-full transition-all" style={{ width: `${Math.round(groupСтатьи / maxСтатьи * 100)}%`, background: color }}/>
                       </div>
                     </div>
                     {/* Dominant bias */}
@@ -1706,7 +1706,7 @@ function SourcesMap({ region, onSwitchToMonitor }: { region: string; onSwitchToM
                       }`}>
                       {crawlingCountry === country
                         ? <><Loader2 size={10} className="animate-spin"/> CRAWLING {activeCount} SOURCE{activeCount !== 1 ? 'S' : ''}…</>
-                        : <><Play size={10}/> CRAWL NOW · {activeCount} ACTIVE SOURCE{activeCount !== 1 ? 'S' : ''}</>
+                        : <><Play size={10}/> CRAWL NOW · {activeCount} АКТИВНО SOURCE{activeCount !== 1 ? 'S' : ''}</>
                       }
                     </button>
                   </div>
@@ -1966,7 +1966,7 @@ function MissionCard({ mission, onSelect, onTrigger, onToggle, onDelete, onEdit,
             <div className="text-[8px] font-mono text-muted-foreground/50 tracking-wider">RUNS</div>
           </div>
           <div className="text-center bg-foreground/[0.03] rounded p-1.5">
-            <div className="text-sm font-bold font-mono text-green-400">{mission.totalArticlesCollected ?? 0}</div>
+            <div className="text-sm font-bold font-mono text-green-400">{mission.totalСтатьиCollected ?? 0}</div>
             <div className="text-[8px] font-mono text-muted-foreground/50 tracking-wider">ARTICLES</div>
           </div>
           <div className="text-center bg-foreground/[0.03] rounded p-1.5">
@@ -2062,16 +2062,16 @@ function MissionBuilder({ region, agencies, onCreated, onCancel, existingMission
   const [selectedRegions, setSelectedRegions] = useState<string[]>(existingMission?.targetRegions?.length ? existingMission.targetRegions : [region]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>(existingMission?.targetTypes ?? []);
   const [selectedTopics, setSelectedTopics] = useState<string[]>(existingMission?.targetTopics ?? []);
-  const [minArticlesPerRun, setMinArticlesPerRun] = useState<number>(existingMission?.minArticlesPerRun ?? 0);
+  const [minСтатьиPerRun, setMinСтатьиPerRun] = useState<number>(existingMission?.minСтатьиPerRun ?? 0);
   const [agencySearch, setAgencySearch] = useState('');
 
   const createMission = trpc.missions.create.useMutation({
     onSuccess: () => { toast.success('Mission created', { description: `"${name}" is now scheduled`}); onCreated(); },
-    onError: (e) => toast.error('Mission creation failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Mission creation failed', { description: e.message }),
   });
   const updateMission = trpc.missions.update.useMutation({
     onSuccess: () => { toast.success('Mission updated', { description: `"${name}" has been updated`}); onCreated(); },
-    onError: (e) => toast.error('Mission update failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Mission update failed', { description: e.message }),
   });
 
   // RSS feed health check
@@ -2083,7 +2083,7 @@ function MissionBuilder({ region, agencies, onCreated, onCancel, existingMission
       if (broken === 0) toast.success('All feeds healthy', { description: `${results.length} feeds checked` });
       else toast.warning(`${broken} broken feed${broken > 1 ? 's' : ''} detected`, { description: 'Review feed status below before saving' });
     },
-    onError: (e) => toast.error('Health check failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Health check failed', { description: e.message }),
   });
 
   const handleCheckFeeds = () => {
@@ -2122,7 +2122,7 @@ function MissionBuilder({ region, agencies, onCreated, onCancel, existingMission
       targetRegions: targetMode === 'region' ? selectedRegions : [],
       targetTypes: targetMode === 'type' ? selectedTypes : [],
       targetTopics: selectedTopics,
-      minArticlesPerRun,
+      minСтатьиPerRun,
     };
     if (isEditing) {
       updateMission.mutate({ id: existingMission.id, ...payload });
@@ -2257,7 +2257,7 @@ function MissionBuilder({ region, agencies, onCreated, onCancel, existingMission
 
         <div className="flex gap-1.5 flex-wrap">
           {[
-            { mode: 'all', label: 'ALL ACTIVE', icon: <Globe size={9}/> },
+            { mode: 'all', label: 'ALL АКТИВНО', icon: <Globe size={9}/> },
             { mode: 'region', label: 'BY REGION', icon: <Layers size={9}/> },
             { mode: 'type', label: 'BY TYPE', icon: <Network size={9}/> },
             { mode: 'manual', label: 'MANUAL', icon: <Crosshair size={9}/> },
@@ -2353,14 +2353,14 @@ function MissionBuilder({ region, agencies, onCreated, onCancel, existingMission
               <div className="flex items-center gap-2">
                 <Input
                   type="number" min={0} max={10000}
-                  value={minArticlesPerRun}
-                  onChange={e => setMinArticlesPerRun(Math.max(0, parseInt(e.target.value) || 0))}
+                  value={minСтатьиPerRun}
+                  onChange={e => setMinСтатьиPerRun(Math.max(0, parseInt(e.target.value) || 0))}
                   className="h-7 text-[10px] font-mono bg-black/30 border-border/70 text-orange-300 w-28"
                 />
                 <span className="text-[9px] font-mono text-muted-foreground/50">min articles / run</span>
-                {minArticlesPerRun > 0 && (
+                {minСтатьиPerRun > 0 && (
                   <span className="text-[9px] font-mono text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
-                    ALERT ACTIVE
+                    ALERT АКТИВНО
                   </span>
                 )}
               </div>
@@ -2471,7 +2471,7 @@ function MissionDetail({ missionId, onBack, onCrawlStart }: { missionId: number;
       refetch();
       onCrawlStart?.();
     },
-    onError: (e) => toast.error('Trigger failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Trigger failed', { description: e.message }),
   });
   const toggleActiveMutation = trpc.missions.update.useMutation({
     onMutate: async ({ id, isActive }) => {
@@ -2482,7 +2482,7 @@ function MissionDetail({ missionId, onBack, onCrawlStart }: { missionId: number;
       );
       return { prev };
     },
-    onError: (_e, _v, ctx) => { utils.missions.list.setData(undefined, ctx?.prev); toast.error('Toggle failed'); },
+    onОшибка: (_e, _v, ctx) => { utils.missions.list.setData(undefined, ctx?.prev); toast.error('Toggle failed'); },
     onSettled: () => utils.missions.list.invalidate(),
   });
 
@@ -2517,7 +2517,7 @@ function MissionDetail({ missionId, onBack, onCrawlStart }: { missionId: number;
           {toggleActiveMutation.isPending
             ? <Loader2 size={9} className="animate-spin"/>
             : mission.isActive ? <Power size={9}/> : <PowerOff size={9}/>}
-          {mission.isActive ? 'ACTIVE' : 'PAUSED'}
+          {mission.isActive ? 'АКТИВНО' : 'PAUSED'}
         </button>
         <Button onClick={() => triggerMutation.mutate({ id: missionId })} disabled={triggerMutation.isPending}
           className="h-7 text-[9px] font-mono gap-1 bg-green-500/15 hover:bg-green-500/25 border border-green-500/30 text-green-400">
@@ -2529,8 +2529,8 @@ function MissionDetail({ missionId, onBack, onCrawlStart }: { missionId: number;
       <div className="grid grid-cols-4 gap-3">
         {[
           { label: 'TOTAL RUNS', value: mission.totalRuns ?? 0, color: 'text-cyan-400' },
-          { label: 'ARTICLES', value: mission.totalArticlesCollected ?? 0, color: 'text-green-400' },
-          { label: 'STATUS', value: mission.isRunning ? 'RUNNING' : mission.isActive ? 'ACTIVE' : 'PAUSED', color: mission.isRunning ? 'text-yellow-400' : mission.isActive ? 'text-green-400' : 'text-muted-foreground/60' },
+          { label: 'ARTICLES', value: mission.totalСтатьиCollected ?? 0, color: 'text-green-400' },
+          { label: 'STATUS', value: mission.isRunning ? 'RUNNING' : mission.isActive ? 'АКТИВНО' : 'PAUSED', color: mission.isRunning ? 'text-yellow-400' : mission.isActive ? 'text-green-400' : 'text-muted-foreground/60' },
           { label: 'SCHEDULE', value: formatCronHuman(mission.cronExpression), color: 'text-violet-400' },
         ].map(({ label, value, color }) => (
           <div key={label} className="text-center bg-foreground/[0.02] rounded-lg p-3 border border-border/40">
@@ -2612,17 +2612,17 @@ function AcquisitionCenter({ region, onCrawlStart }: { region: string; onCrawlSt
       refetch();
       onCrawlStart?.();
     },
-    onError: (e) => { toast.error('Trigger failed', { description: e.message }); setTriggeringId(null); },
+    onОшибка: (e) => { toast.error('Trigger failed', { description: e.message }); setTriggeringId(null); },
   });
 
   const toggleMission = trpc.missions.update.useMutation({
     onSuccess: () => refetch(),
-    onError: (e) => toast.error('Update failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Update failed', { description: e.message }),
   });
 
   const deleteMission = trpc.missions.delete.useMutation({
     onSuccess: () => { toast.success('Mission deleted'); refetch(); },
-    onError: (e) => toast.error('Delete failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Delete failed', { description: e.message }),
   });
 
   const quickCrawlMutation = trpc.crawler.quickCrawl.useMutation({
@@ -2632,7 +2632,7 @@ function AcquisitionCenter({ region, onCrawlStart }: { region: string; onCrawlSt
       utils.articles.list.invalidate();
       onCrawlStart?.();
     },
-    onError: (e) => toast.error('Sweep failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Sweep failed', { description: e.message }),
   });
   const triggerBreakingMutation = trpc.scheduler.triggerBreaking.useMutation({
     onSuccess: (data) => {
@@ -2641,12 +2641,12 @@ function AcquisitionCenter({ region, onCrawlStart }: { region: string; onCrawlSt
       utils.articles.list.invalidate();
       onCrawlStart?.();
     },
-    onError: (e) => toast.error('Breaking sweep failed', { description: e.message }),
+    onОшибка: (e) => toast.error('Breaking sweep failed', { description: e.message }),
   });
 
   const activeMissions = missions?.filter(m => m.isActive) ?? [];
   const runningMissions = missions?.filter(m => m.isRunning) ?? [];
-  const totalArticles = missions?.reduce((s, m) => s + (m.totalArticlesCollected ?? 0), 0) ?? 0;
+  const totalСтатьи = missions?.reduce((s, m) => s + (m.totalСтатьиCollected ?? 0), 0) ?? 0;
 
   if (view === 'create') {
     return <MissionBuilder region={region} agencies={agencies ?? []}
@@ -2687,11 +2687,11 @@ function AcquisitionCenter({ region, onCrawlStart }: { region: string; onCrawlSt
 
         <div className="grid grid-cols-5 gap-3">
           {[
-            { label: 'ACTIVE MISSIONS', value: activeMissions.length, color: 'text-green-400', icon: <CheckCircle2 size={9}/> },
+            { label: 'АКТИВНО MISSIONS', value: activeMissions.length, color: 'text-green-400', icon: <CheckCircle2 size={9}/> },
             { label: 'RUNNING NOW', value: runningMissions.length, color: runningMissions.length > 0 ? 'text-yellow-400' : 'text-muted-foreground/50', icon: <Activity size={9}/> },
             { label: 'TOTAL MISSIONS', value: missions?.length ?? 0, color: 'text-cyan-400', icon: <Target size={9}/> },
-            { label: 'ARTICLES COLLECTED', value: totalArticles.toLocaleString(), color: 'text-blue-400', icon: <Newspaper size={9}/> },
-            { label: 'LEGACY SCHEDULE', value: schedulerStatus?.config.generalEnabled ? 'ACTIVE' : 'PAUSED', color: schedulerStatus?.config.generalEnabled ? 'text-green-400' : 'text-muted-foreground/50', icon: <Clock size={9}/> },
+            { label: 'ARTICLES COLLECTED', value: totalСтатьи.toLocaleString(), color: 'text-blue-400', icon: <Newspaper size={9}/> },
+            { label: 'LEGACY SCHEDULE', value: schedulerStatus?.config.generalEnabled ? 'АКТИВНО' : 'PAUSED', color: schedulerStatus?.config.generalEnabled ? 'text-green-400' : 'text-muted-foreground/50', icon: <Clock size={9}/> },
           ].map(({ label, value, color, icon }) => (
             <div key={label} className="flex items-center gap-2 bg-foreground/[0.02] rounded-lg px-3 py-2 border border-border/40">
               <span className={color}>{icon}</span>
@@ -2849,7 +2849,7 @@ function AcquisitionCenter({ region, onCrawlStart }: { region: string; onCrawlSt
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[9px] font-mono text-muted-foreground/80">{label}</span>
                     <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded ${enabled ? 'text-green-400 bg-green-500/15' : 'text-muted-foreground/40 bg-foreground/5'}`}>
-                      {enabled ? 'ACTIVE' : 'PAUSED'}
+                      {enabled ? 'АКТИВНО' : 'PAUSED'}
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-1 text-center">
@@ -2878,8 +2878,8 @@ function AcquisitionCenter({ region, onCrawlStart }: { region: string; onCrawlSt
   );
 }
 
-// ─── Main SourcesTab ───────────────────────────────────────────────────────────
-export default function SourcesTab({ region, initialSubTab }: SourcesTabProps) {
+// ─── Main ИсточникиTab ───────────────────────────────────────────────────────────
+export default function ИсточникиTab({ region, initialSubTab }: ИсточникиTabProps) {
   const [subTab, setSubTab] = useState<SubTab>((initialSubTab as SubTab) || 'sources');
   const [monitorRefreshKey, setMonitorRefreshKey] = useState(0);
   const handleCrawlStart = () => { setSubTab('monitor'); setMonitorRefreshKey(k => k + 1); };
@@ -2910,10 +2910,10 @@ export default function SourcesTab({ region, initialSubTab }: SourcesTabProps) {
       {/* Content — FetchingMonitor is always mounted so its SSE connection and event buffer survive tab switches */}
       <div className="flex-1 overflow-hidden relative">
         <div style={{ display: subTab === 'sources' ? 'flex' : 'none', flexDirection: 'column', height: '100%' }}>
-          <SourcesList region={region} onCrawlStart={handleCrawlStart}/>
+          <ИсточникиList region={region} onCrawlStart={handleCrawlStart}/>
         </div>
         <div style={{ display: subTab === 'map' ? 'flex' : 'none', flexDirection: 'column', height: '100%' }}>
-          <SourcesMap region={region} onSwitchToMonitor={handleCrawlStart}/>
+          <ИсточникиMap region={region} onSwitchToMonitor={handleCrawlStart}/>
         </div>
         <div style={{ display: subTab === 'fetching' ? 'flex' : 'none', flexDirection: 'column', height: '100%' }}>
           <AcquisitionCenter region={region} onCrawlStart={handleCrawlStart}/>

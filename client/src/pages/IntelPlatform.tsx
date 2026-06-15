@@ -32,14 +32,14 @@ import {
 type Tab = "live" | "compare" | "data" | "feed" | "explore" | "sources" | "verify" | "facilities";
 
 const TABS: { id: Tab; label: string; icon: React.ReactNode; description: string }[] = [
-  { id: "live", label: "LIVE", icon: <Globe size={12} />, description: "Real-time Map Intelligence" },
-  { id: "compare", label: "COMPARE", icon: <BarChart3 size={12} />, description: "Regional Analysis" },
-  { id: "data", label: "DATA", icon: <Database size={12} />, description: "Data Explorer" },
-  { id: "feed", label: "FEED", icon: <Rss size={12} />, description: "News Feed" },
-  { id: "explore", label: "EXPLORE", icon: <Network size={12} />, description: "Network Graph" },
-  { id: "sources", label: "SOURCES", icon: <Radio size={12} />, description: "Source Management" },
-  { id: "verify", label: "VERIFY", icon: <CheckCircle2 size={12} />, description: "Data Provenance" },
-  { id: "facilities", label: "FACILITIES", icon: <Shield size={12} />, description: "Facility Intelligence Registry" },
+  { id: "live", label: "КАРТА", icon: <Globe size={12} />, description: "Разведка по карте в реальном времени" },
+  { id: "compare", label: "СРАВНЕНИЕ", icon: <BarChart3 size={12} />, description: "Региональный анализ" },
+  { id: "data", label: "ДАННЫЕ", icon: <Database size={12} />, description: "Обозреватель данных" },
+  { id: "feed", label: "ЛЕНТА", icon: <Rss size={12} />, description: "Новостная лента" },
+  { id: "explore", label: "ГРАФ", icon: <Network size={12} />, description: "Сетевой граф" },
+  { id: "sources", label: "ИСТОЧНИКИ", icon: <Radio size={12} />, description: "Управление источниками" },
+  { id: "verify", label: "АНАЛИЗ", icon: <CheckCircle2 size={12} />, description: "Проверка подлинности данных" },
+  { id: "facilities", label: "ОБЪЕКТЫ", icon: <Shield size={12} />, description: "Реестр разведывательных объектов" },
 ];
 
 // REGIONS are loaded from the database — fallback used until DB responds
@@ -258,11 +258,11 @@ export default function IntelPlatform() {
             {/* Expand on hover */}
             <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 opacity-0 group-hover/stats:opacity-100 pointer-events-none group-hover/stats:pointer-events-auto transition-opacity duration-200 z-50">
               <div className="flex items-center gap-3 px-3 py-1.5 bg-card border border-border/80 shadow-lg text-mono text-[10px] whitespace-nowrap">
-                <span className="text-muted-foreground">ART: <span className="text-primary">{stats?.total ?? '—'}</span></span>
-                <span className="text-muted-foreground">BREAK: <span className="text-danger">{stats?.breaking ?? '—'}</span></span>
-                <span className="text-muted-foreground">TODAY: <span className="text-neon">{stats?.today ?? '—'}</span></span>
-              </div>
-            </div>
+                <div className="flex gap-2">
+                  <span className="text-muted-foreground">СТАТЬИ: <span className="text-primary">{stats?.total ?? '—'}</span></span>
+                  <span className="text-muted-foreground">СРОЧНО: <span className="text-danger">{stats?.breaking ?? '—'}</span></span>
+                  <span className="text-muted-foreground">СЕГОДНЯ: <span className="text-neon">{stats?.today ?? '—'}</span></span>
+                </div>
           </div>
         );
       case "region":
@@ -446,7 +446,7 @@ export default function IntelPlatform() {
               <div className="text-orbitron text-xs font-bold tracking-widest leading-none" style={{ color: 'var(--primary)' }}>
                 <span style={{ color: '#cc1111', animation: `redWordGlow ${threatPulseSpeed}s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite` }}>RED</span><span style={{ color: 'var(--neon)' }}>ROOM</span>
               </div>
-              <div className="text-mono text-[9px] text-muted-foreground tracking-wider leading-none mt-0.5">NEWS & GEO INTELLIGENCE</div>
+              <div className="text-mono text-[9px] text-muted-foreground tracking-wider leading-none mt-0.5">НОВОСТИ И ГЕОРАЗВЕДКА</div>
             </div>
           </div>
 
@@ -563,7 +563,7 @@ export default function IntelPlatform() {
               </button>
             )}
             <Shield size={10} className="text-muted-foreground" />
-            <span className="text-mono text-[9px] text-muted-foreground">OPEN INTELLIGENCE</span>
+            <span className="text-mono text-[9px] text-muted-foreground">ОТКРЫТАЯ РАЗВЕДКА</span>
           </div>
         </div>
       </header>
@@ -583,26 +583,26 @@ export default function IntelPlatform() {
             <div key={node.label} className="flex items-center gap-1 px-2.5 border-r" style={{ borderColor: 'oklch(from var(--foreground) l c h / 0.05)', height: '100%' }}>
               <div className="w-1 h-1 rounded-full" style={{ background: node.color, boxShadow: `0 0 3px ${node.color}` }} />
               <span style={{ color: node.color }}>{node.label}</span>
-              <span style={{ color: 'oklch(from var(--foreground) l c h / 0.2)' }}>ACTIVE</span>
+              <span style={{ color: 'oklch(from var(--foreground) l c h / 0.2)' }}>АКТИВНО</span>
             </div>
           ))}
           <div className="flex items-center gap-1 px-2.5 border-r" style={{ borderColor: 'oklch(from var(--foreground) l c h / 0.05)', height: '100%' }}>
-            <span style={{ color: 'oklch(from var(--foreground) l c h / 0.3)' }}>SRC:</span>
+            <span style={{ color: 'oklch(from var(--foreground) l c h / 0.3)' }}>ИСТ:</span>
             <span style={{ color: 'var(--primary)' }}>{stats?.sources ?? '—'}</span>
           </div>
           <div className="flex items-center gap-1 px-2.5 border-r" style={{ borderColor: 'oklch(from var(--foreground) l c h / 0.05)', height: '100%' }}>
-            <span style={{ color: 'oklch(from var(--foreground) l c h / 0.3)' }}>ART:</span>
+            <span style={{ color: 'oklch(from var(--foreground) l c h / 0.3)' }}>СТАТЬИ:</span>
             <span style={{ color: 'var(--intel-green)' }}>{stats?.total ?? '—'}</span>
           </div>
           <div className="ml-auto flex items-center gap-4 pl-3">
-            <span style={{ color: 'oklch(from var(--foreground) l c h / 0.2)' }}>ENC: <span style={{ color: 'var(--intel-green)' }}>AES-256-GCM</span></span>
+            <span style={{ color: 'oklch(from var(--foreground) l c h / 0.2)' }}>ШИФР: <span style={{ color: 'var(--intel-green)' }}>AES-256-GCM</span></span>
             <span style={{ color: 'oklch(from var(--foreground) l c h / 0.2)' }}>TLS: <span style={{ color: 'var(--intel-green)' }}>1.3</span></span>
-            <span style={{ color: 'oklch(from var(--foreground) l c h / 0.15)' }}>CLASSIFICATION: <span style={{ color: 'var(--intel-red)', fontWeight: 'bold' }}>UNCLASSIFIED // FOUO</span></span>
+            <span style={{ color: 'oklch(from var(--foreground) l c h / 0.15)' }}>КЛАССИФИКАЦИЯ: <span style={{ color: 'var(--intel-red)', fontWeight: 'bold' }}>НЕ СЕКРЕТНО // ДСП</span></span>
             <span style={{ color: 'oklch(from var(--foreground) l c h / 0.12)' }}>{systemTime.toISOString().replace('T', ' ').substring(0, 19)} UTC</span>
             <button
               onClick={() => setStatusBarCollapsed(true)}
               className="ml-2 flex items-center justify-center w-4 h-4 rounded hover:bg-white/10 transition-colors cursor-pointer flex-shrink-0"
-              title="Collapse status bar"
+              title="Свернуть строку состояния"
               style={{ color: 'oklch(from var(--foreground) l c h / 0.25)' }}
             >
               <span style={{ fontSize: '7px', lineHeight: 1 }}>▼</span>

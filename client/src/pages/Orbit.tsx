@@ -126,83 +126,83 @@ function TleAgeBadge({ tle1, compact = false }: { tle1: string; compact?: boolea
 
 // ─── Launch Facilities (32 real spaceports) ───────────────────────────────────
 const LAUNCH_FACILITIES = [
-  { name: "Kennedy Space Center / Cape Canaveral", lat: 28.573, lon: -80.649, country: "USA", operator: "NASA / SpaceX / ULA", status: "ACTIVE", type: "ORBITAL", launches2023: 72, notes: "LC-39A (SpaceX), SLC-41 (ULA)" },
-  { name: "Vandenberg SFB", lat: 34.742, lon: -120.574, country: "USA", operator: "SpaceX / ULA / USSF", status: "ACTIVE", type: "ORBITAL", launches2023: 28, notes: "Polar orbit; SLC-4E (Falcon 9)" },
-  { name: "SpaceX Starbase (Boca Chica)", lat: 25.997, lon: -97.157, country: "USA", operator: "SpaceX", status: "ACTIVE", type: "ORBITAL", launches2023: 3, notes: "Starship/Super Heavy" },
-  { name: "Wallops Flight Facility", lat: 37.940, lon: -75.466, country: "USA", operator: "NASA / Rocket Lab", status: "ACTIVE", type: "ORBITAL", launches2023: 4, notes: "Antares, Minotaur, Electron" },
-  { name: "Baikonur Cosmodrome", lat: 45.965, lon: 63.305, country: "Kazakhstan", operator: "Roscosmos", status: "ACTIVE", type: "ORBITAL", launches2023: 18, notes: "Historic Soviet/Russian primary site" },
-  { name: "Plesetsk Cosmodrome", lat: 62.927, lon: 40.577, country: "Russia", operator: "Russian MoD", status: "ACTIVE", type: "ORBITAL", launches2023: 12, notes: "Military launches; Soyuz-2, Angara" },
-  { name: "Vostochny Cosmodrome", lat: 51.884, lon: 128.334, country: "Russia", operator: "Roscosmos", status: "ACTIVE", type: "ORBITAL", launches2023: 5, notes: "New Russian civilian site" },
-  { name: "Jiuquan Satellite Launch Center", lat: 40.958, lon: 100.291, country: "China", operator: "CASC / CNSA", status: "ACTIVE", type: "ORBITAL", launches2023: 22, notes: "Crewed missions (Shenzhou)" },
-  { name: "Xichang Satellite Launch Center", lat: 28.246, lon: 102.027, country: "China", operator: "CASC / CNSA", status: "ACTIVE", type: "ORBITAL", launches2023: 19, notes: "GEO launches; BeiDou constellation" },
-  { name: "Taiyuan Satellite Launch Center", lat: 38.849, lon: 111.608, country: "China", operator: "CASC / CNSA", status: "ACTIVE", type: "ORBITAL", launches2023: 16, notes: "Sun-synchronous orbit" },
-  { name: "Wenchang Space Launch Site", lat: 19.614, lon: 110.951, country: "China", operator: "CASC / CNSA", status: "ACTIVE", type: "ORBITAL", launches2023: 8, notes: "Heavy lift; Long March 5, CSS modules" },
-  { name: "Guiana Space Centre (Kourou)", lat: 5.239, lon: -52.769, country: "French Guiana", operator: "ESA / Arianespace", status: "ACTIVE", type: "ORBITAL", launches2023: 7, notes: "Ariane 6, Vega-C; equatorial advantage" },
-  { name: "Satish Dhawan Space Centre", lat: 13.733, lon: 80.235, country: "India", operator: "ISRO", status: "ACTIVE", type: "ORBITAL", launches2023: 7, notes: "PSLV, GSLV, LVM3; Chandrayaan" },
-  { name: "Tanegashima Space Center", lat: 30.400, lon: 130.975, country: "Japan", operator: "JAXA", status: "ACTIVE", type: "ORBITAL", launches2023: 4, notes: "H-IIA, H3, Epsilon" },
-  { name: "Rocket Lab LC-1 (Māhia)", lat: -39.262, lon: 177.864, country: "New Zealand", operator: "Rocket Lab", status: "ACTIVE", type: "ORBITAL", launches2023: 9, notes: "Electron small sat launcher" },
-  { name: "Sohae Satellite Launching Station", lat: 39.660, lon: 124.705, country: "North Korea", operator: "NADA / KCNA", status: "ACTIVE", type: "ORBITAL", launches2023: 2, notes: "Kwangmyongsong, Malligyong recon sats" },
-  { name: "Tonghae Satellite Launching Ground", lat: 40.854, lon: 129.664, country: "North Korea", operator: "NADA", status: "ACTIVE", type: "ORBITAL", launches2023: 1, notes: "Secondary NK launch site" },
-  { name: "Imam Khomeini Space Center", lat: 35.234, lon: 53.921, country: "Iran", operator: "ISA / IRGC", status: "ACTIVE", type: "ORBITAL", launches2023: 3, notes: "Safir, Simorgh, Qaem rockets" },
-  { name: "Palmachim Airbase", lat: 31.893, lon: 34.690, country: "Israel", operator: "IAI / MoD", status: "ACTIVE", type: "ORBITAL", launches2023: 2, notes: "Retrograde polar orbit; Ofeq spy sats" },
-  { name: "Naro Space Center", lat: 34.432, lon: 127.535, country: "South Korea", operator: "KARI", status: "ACTIVE", type: "ORBITAL", launches2023: 2, notes: "KSLV-II (Nuri)" },
-  { name: "Alcântara Launch Center", lat: -2.373, lon: -44.396, country: "Brazil", operator: "AEB", status: "ACTIVE", type: "ORBITAL", launches2023: 1, notes: "Near-equatorial; VLS, Cyclone-4M" },
-  { name: "Esrange Space Center", lat: 67.893, lon: 21.063, country: "Sweden", operator: "SSC", status: "ACTIVE", type: "SUBORBITAL", launches2023: 3, notes: "High-latitude research rockets" },
-  { name: "Andøya Spaceport", lat: 69.297, lon: 16.020, country: "Norway", operator: "Andøya Space", status: "ACTIVE", type: "SUBORBITAL", launches2023: 2, notes: "Polar orbit research" },
+  { name: "Kennedy Space Center / Cape Canaveral", lat: 28.573, lon: -80.649, country: "USA", operator: "NASA / SpaceX / ULA", status: "АКТИВНО", type: "ORBITAL", launches2023: 72, notes: "LC-39A (SpaceX), SLC-41 (ULA)" },
+  { name: "Vandenberg SFB", lat: 34.742, lon: -120.574, country: "USA", operator: "SpaceX / ULA / USSF", status: "АКТИВНО", type: "ORBITAL", launches2023: 28, notes: "Polar orbit; SLC-4E (Falcon 9)" },
+  { name: "SpaceX Starbase (Boca Chica)", lat: 25.997, lon: -97.157, country: "USA", operator: "SpaceX", status: "АКТИВНО", type: "ORBITAL", launches2023: 3, notes: "Starship/Super Heavy" },
+  { name: "Wallops Flight Facility", lat: 37.940, lon: -75.466, country: "USA", operator: "NASA / Rocket Lab", status: "АКТИВНО", type: "ORBITAL", launches2023: 4, notes: "Antares, Minotaur, Electron" },
+  { name: "Baikonur Cosmodrome", lat: 45.965, lon: 63.305, country: "Kazakhstan", operator: "Roscosmos", status: "АКТИВНО", type: "ORBITAL", launches2023: 18, notes: "Historic Soviet/Russian primary site" },
+  { name: "Plesetsk Cosmodrome", lat: 62.927, lon: 40.577, country: "Russia", operator: "Russian MoD", status: "АКТИВНО", type: "ORBITAL", launches2023: 12, notes: "Military launches; Soyuz-2, Angara" },
+  { name: "Vostochny Cosmodrome", lat: 51.884, lon: 128.334, country: "Russia", operator: "Roscosmos", status: "АКТИВНО", type: "ORBITAL", launches2023: 5, notes: "New Russian civilian site" },
+  { name: "Jiuquan Satellite Launch Center", lat: 40.958, lon: 100.291, country: "China", operator: "CASC / CNSA", status: "АКТИВНО", type: "ORBITAL", launches2023: 22, notes: "Crewed missions (Shenzhou)" },
+  { name: "Xichang Satellite Launch Center", lat: 28.246, lon: 102.027, country: "China", operator: "CASC / CNSA", status: "АКТИВНО", type: "ORBITAL", launches2023: 19, notes: "GEO launches; BeiDou constellation" },
+  { name: "Taiyuan Satellite Launch Center", lat: 38.849, lon: 111.608, country: "China", operator: "CASC / CNSA", status: "АКТИВНО", type: "ORBITAL", launches2023: 16, notes: "Sun-synchronous orbit" },
+  { name: "Wenchang Space Launch Site", lat: 19.614, lon: 110.951, country: "China", operator: "CASC / CNSA", status: "АКТИВНО", type: "ORBITAL", launches2023: 8, notes: "Heavy lift; Long March 5, CSS modules" },
+  { name: "Guiana Space Centre (Kourou)", lat: 5.239, lon: -52.769, country: "French Guiana", operator: "ESA / Arianespace", status: "АКТИВНО", type: "ORBITAL", launches2023: 7, notes: "Ariane 6, Vega-C; equatorial advantage" },
+  { name: "Satish Dhawan Space Centre", lat: 13.733, lon: 80.235, country: "India", operator: "ISRO", status: "АКТИВНО", type: "ORBITAL", launches2023: 7, notes: "PSLV, GSLV, LVM3; Chandrayaan" },
+  { name: "Tanegashima Space Center", lat: 30.400, lon: 130.975, country: "Japan", operator: "JAXA", status: "АКТИВНО", type: "ORBITAL", launches2023: 4, notes: "H-IIA, H3, Epsilon" },
+  { name: "Rocket Lab LC-1 (Māhia)", lat: -39.262, lon: 177.864, country: "New Zealand", operator: "Rocket Lab", status: "АКТИВНО", type: "ORBITAL", launches2023: 9, notes: "Electron small sat launcher" },
+  { name: "Sohae Satellite Launching Station", lat: 39.660, lon: 124.705, country: "North Korea", operator: "NADA / KCNA", status: "АКТИВНО", type: "ORBITAL", launches2023: 2, notes: "Kwangmyongsong, Malligyong recon sats" },
+  { name: "Tonghae Satellite Launching Ground", lat: 40.854, lon: 129.664, country: "North Korea", operator: "NADA", status: "АКТИВНО", type: "ORBITAL", launches2023: 1, notes: "Secondary NK launch site" },
+  { name: "Imam Khomeini Space Center", lat: 35.234, lon: 53.921, country: "Iran", operator: "ISA / IRGC", status: "АКТИВНО", type: "ORBITAL", launches2023: 3, notes: "Safir, Simorgh, Qaem rockets" },
+  { name: "Palmachim Airbase", lat: 31.893, lon: 34.690, country: "Israel", operator: "IAI / MoD", status: "АКТИВНО", type: "ORBITAL", launches2023: 2, notes: "Retrograde polar orbit; Ofeq spy sats" },
+  { name: "Naro Space Center", lat: 34.432, lon: 127.535, country: "South Korea", operator: "KARI", status: "АКТИВНО", type: "ORBITAL", launches2023: 2, notes: "KSLV-II (Nuri)" },
+  { name: "Alcântara Launch Center", lat: -2.373, lon: -44.396, country: "Brazil", operator: "AEB", status: "АКТИВНО", type: "ORBITAL", launches2023: 1, notes: "Near-equatorial; VLS, Cyclone-4M" },
+  { name: "Esrange Space Center", lat: 67.893, lon: 21.063, country: "Sweden", operator: "SSC", status: "АКТИВНО", type: "SUBORBITAL", launches2023: 3, notes: "High-latitude research rockets" },
+  { name: "Andøya Spaceport", lat: 69.297, lon: 16.020, country: "Norway", operator: "Andøya Space", status: "АКТИВНО", type: "SUBORBITAL", launches2023: 2, notes: "Polar orbit research" },
   { name: "Sutherland Spaceport", lat: 58.530, lon: -4.430, country: "UK", operator: "Orbex / HIE", status: "DEVELOPMENT", type: "ORBITAL", launches2023: 0, notes: "UK's first vertical launch site" },
   { name: "SaxaVord Spaceport", lat: 60.833, lon: -0.900, country: "UK (Shetland)", operator: "SaxaVord / Rocket Lab", status: "DEVELOPMENT", type: "ORBITAL", launches2023: 0, notes: "Northernmost European spaceport" },
-  { name: "Kapustin Yar", lat: 48.580, lon: 45.793, country: "Russia", operator: "Russian MoD", status: "ACTIVE", type: "SUBORBITAL", launches2023: 3, notes: "Military test range; ballistic missiles" },
-  { name: "Dombarovsky / Yasny", lat: 51.059, lon: 59.851, country: "Russia", operator: "ISC Kosmotras", status: "ACTIVE", type: "ORBITAL", launches2023: 1, notes: "Dnepr/Rokot commercial launches" },
-  { name: "Uchinoura Space Center", lat: 31.251, lon: 131.082, country: "Japan", operator: "JAXA", status: "ACTIVE", type: "ORBITAL", launches2023: 2, notes: "Epsilon, SS-520; scientific missions" },
-  { name: "Pacific Spaceport Complex – Alaska", lat: 57.435, lon: -152.338, country: "USA", operator: "AK Aerospace", status: "ACTIVE", type: "SUBORBITAL", launches2023: 2, notes: "High-latitude launches" },
-  { name: "Rocket Lab LC-2 (Wallops)", lat: 37.840, lon: -75.488, country: "USA", operator: "Rocket Lab", status: "ACTIVE", type: "ORBITAL", launches2023: 2, notes: "Electron from US soil; NROL missions" },
-  { name: "Jiamusi Deep Space Station", lat: 46.887, lon: 130.421, country: "China", operator: "CNSA", status: "ACTIVE", type: "DEEP_SPACE", launches2023: 0, notes: "China's 66m deep space antenna" },
-  { name: "Haiyang Commercial Launch Site", lat: 36.780, lon: 119.740, country: "China", operator: "Galactic Energy / iSpace", status: "ACTIVE", type: "ORBITAL", launches2023: 6, notes: "Sea launch platform; commercial" },
+  { name: "Kapustin Yar", lat: 48.580, lon: 45.793, country: "Russia", operator: "Russian MoD", status: "АКТИВНО", type: "SUBORBITAL", launches2023: 3, notes: "Military test range; ballistic missiles" },
+  { name: "Dombarovsky / Yasny", lat: 51.059, lon: 59.851, country: "Russia", operator: "ISC Kosmotras", status: "АКТИВНО", type: "ORBITAL", launches2023: 1, notes: "Dnepr/Rokot commercial launches" },
+  { name: "Uchinoura Space Center", lat: 31.251, lon: 131.082, country: "Japan", operator: "JAXA", status: "АКТИВНО", type: "ORBITAL", launches2023: 2, notes: "Epsilon, SS-520; scientific missions" },
+  { name: "Pacific Spaceport Complex – Alaska", lat: 57.435, lon: -152.338, country: "USA", operator: "AK Aerospace", status: "АКТИВНО", type: "SUBORBITAL", launches2023: 2, notes: "High-latitude launches" },
+  { name: "Rocket Lab LC-2 (Wallops)", lat: 37.840, lon: -75.488, country: "USA", operator: "Rocket Lab", status: "АКТИВНО", type: "ORBITAL", launches2023: 2, notes: "Electron from US soil; NROL missions" },
+  { name: "Jiamusi Deep Space Station", lat: 46.887, lon: 130.421, country: "China", operator: "CNSA", status: "АКТИВНО", type: "DEEP_SPACE", launches2023: 0, notes: "China's 66m deep space antenna" },
+  { name: "Haiyang Commercial Launch Site", lat: 36.780, lon: 119.740, country: "China", operator: "Galactic Energy / iSpace", status: "АКТИВНО", type: "ORBITAL", launches2023: 6, notes: "Sea launch platform; commercial" },
 ];
 
 // ─── Ground Stations (35 real stations) ──────────────────────────────────────
 const GROUND_STATIONS = [
   // NASA DSN
-  { name: "DSN Goldstone", lat: 35.426, lon: -116.890, country: "USA", operator: "NASA/JPL", type: "DEEP_SPACE", status: "ACTIVE", notes: "70m dish; Mars, Voyager comms" },
-  { name: "DSN Madrid (Robledo)", lat: 40.431, lon: -4.249, country: "Spain", operator: "NASA/JPL", type: "DEEP_SPACE", status: "ACTIVE", notes: "70m dish; European DSN complex" },
-  { name: "DSN Canberra (Tidbinbilla)", lat: -35.401, lon: 148.982, country: "Australia", operator: "NASA/JPL", type: "DEEP_SPACE", status: "ACTIVE", notes: "70m dish; southern hemisphere DSN" },
+  { name: "DSN Goldstone", lat: 35.426, lon: -116.890, country: "USA", operator: "NASA/JPL", type: "DEEP_SPACE", status: "АКТИВНО", notes: "70m dish; Mars, Voyager comms" },
+  { name: "DSN Madrid (Robledo)", lat: 40.431, lon: -4.249, country: "Spain", operator: "NASA/JPL", type: "DEEP_SPACE", status: "АКТИВНО", notes: "70m dish; European DSN complex" },
+  { name: "DSN Canberra (Tidbinbilla)", lat: -35.401, lon: 148.982, country: "Australia", operator: "NASA/JPL", type: "DEEP_SPACE", status: "АКТИВНО", notes: "70m dish; southern hemisphere DSN" },
   // ESA ESTRACK
-  { name: "ESOC Darmstadt", lat: 49.871, lon: 8.623, country: "Germany", operator: "ESA", type: "MISSION_CONTROL", status: "ACTIVE", notes: "ESA mission control; Sentinel, Gaia" },
-  { name: "Kiruna Ground Station", lat: 67.858, lon: 20.966, country: "Sweden", operator: "ESA / SSC", type: "LEO_POLAR", status: "ACTIVE", notes: "Polar orbit passes; Sentinel, ERS" },
-  { name: "Maspalomas Ground Station", lat: 27.763, lon: -15.634, country: "Spain (Canary Is.)", operator: "ESA", type: "LEO", status: "ACTIVE", notes: "ESA ESTRACK; Envisat, ERS-2" },
-  { name: "Svalbard Satellite Station (SvalSat)", lat: 78.229, lon: 15.408, country: "Norway (Svalbard)", operator: "KSAT", type: "LEO_POLAR", status: "ACTIVE", notes: "World's northernmost commercial station" },
-  { name: "Troll Satellite Station", lat: -72.012, lon: 2.535, country: "Antarctica", operator: "KSAT", type: "LEO_POLAR", status: "ACTIVE", notes: "Antarctic polar orbit coverage" },
+  { name: "ESOC Darmstadt", lat: 49.871, lon: 8.623, country: "Germany", operator: "ESA", type: "MISSION_CONTROL", status: "АКТИВНО", notes: "ESA mission control; Sentinel, Gaia" },
+  { name: "Kiruna Ground Station", lat: 67.858, lon: 20.966, country: "Sweden", operator: "ESA / SSC", type: "LEO_POLAR", status: "АКТИВНО", notes: "Polar orbit passes; Sentinel, ERS" },
+  { name: "Maspalomas Ground Station", lat: 27.763, lon: -15.634, country: "Spain (Canary Is.)", operator: "ESA", type: "LEO", status: "АКТИВНО", notes: "ESA ESTRACK; Envisat, ERS-2" },
+  { name: "Svalbard Satellite Station (SvalSat)", lat: 78.229, lon: 15.408, country: "Norway (Svalbard)", operator: "KSAT", type: "LEO_POLAR", status: "АКТИВНО", notes: "World's northernmost commercial station" },
+  { name: "Troll Satellite Station", lat: -72.012, lon: 2.535, country: "Antarctica", operator: "KSAT", type: "LEO_POLAR", status: "АКТИВНО", notes: "Antarctic polar orbit coverage" },
   // Military / Intelligence (SIGINT)
-  { name: "Pine Gap", lat: -23.799, lon: 133.737, country: "Australia", operator: "CIA / NSA / ASD", type: "SIGINT", status: "ACTIVE", notes: "Joint US-Australia SIGINT; 38 radomes; missile early warning" },
-  { name: "Menwith Hill Station", lat: 54.005, lon: -1.685, country: "UK", operator: "NSA / GCHQ", type: "SIGINT", status: "ACTIVE", notes: "Largest SIGINT station globally; 33 radomes; ECHELON node" },
-  { name: "Bad Aibling Station", lat: 47.871, lon: 11.998, country: "Germany", operator: "BND / NSA", type: "SIGINT", status: "ACTIVE", notes: "German-US SIGINT cooperation" },
-  { name: "Misawa Air Base", lat: 40.703, lon: 141.368, country: "Japan", operator: "NSA / JASDF", type: "SIGINT", status: "ACTIVE", notes: "SIGINT collection; North Korea monitoring" },
-  { name: "Morwenstow (GCHQ Bude)", lat: 50.888, lon: -4.551, country: "UK", operator: "GCHQ", type: "SIGINT", status: "ACTIVE", notes: "Undersea cable tapping; 21 radomes; ECHELON" },
-  { name: "Waihopai Station", lat: -41.717, lon: 173.783, country: "New Zealand", operator: "GCSB / NSA", type: "SIGINT", status: "ACTIVE", notes: "Five Eyes SIGINT; Pacific coverage" },
-  { name: "Schriever SFB (GPS MCS)", lat: 38.803, lon: -104.527, country: "USA", operator: "USSF / 50th SW", type: "GPS_CONTROL", status: "ACTIVE", notes: "GPS Master Control Station; constellation management" },
-  { name: "Buckley SFB", lat: 39.717, lon: -104.752, country: "USA", operator: "USSF / NRO", type: "SIGINT", status: "ACTIVE", notes: "NRO satellite downlink; SIGINT collection" },
+  { name: "Pine Gap", lat: -23.799, lon: 133.737, country: "Australia", operator: "CIA / NSA / ASD", type: "SIGINT", status: "АКТИВНО", notes: "Joint US-Australia SIGINT; 38 radomes; missile early warning" },
+  { name: "Menwith Hill Station", lat: 54.005, lon: -1.685, country: "UK", operator: "NSA / GCHQ", type: "SIGINT", status: "АКТИВНО", notes: "Largest SIGINT station globally; 33 radomes; ECHELON node" },
+  { name: "Bad Aibling Station", lat: 47.871, lon: 11.998, country: "Germany", operator: "BND / NSA", type: "SIGINT", status: "АКТИВНО", notes: "German-US SIGINT cooperation" },
+  { name: "Misawa Air Base", lat: 40.703, lon: 141.368, country: "Japan", operator: "NSA / JASDF", type: "SIGINT", status: "АКТИВНО", notes: "SIGINT collection; North Korea monitoring" },
+  { name: "Morwenstow (GCHQ Bude)", lat: 50.888, lon: -4.551, country: "UK", operator: "GCHQ", type: "SIGINT", status: "АКТИВНО", notes: "Undersea cable tapping; 21 radomes; ECHELON" },
+  { name: "Waihopai Station", lat: -41.717, lon: 173.783, country: "New Zealand", operator: "GCSB / NSA", type: "SIGINT", status: "АКТИВНО", notes: "Five Eyes SIGINT; Pacific coverage" },
+  { name: "Schriever SFB (GPS MCS)", lat: 38.803, lon: -104.527, country: "USA", operator: "USSF / 50th SW", type: "GPS_CONTROL", status: "АКТИВНО", notes: "GPS Master Control Station; constellation management" },
+  { name: "Buckley SFB", lat: 39.717, lon: -104.752, country: "USA", operator: "USSF / NRO", type: "SIGINT", status: "АКТИВНО", notes: "NRO satellite downlink; SIGINT collection" },
   // Russian / Chinese
-  { name: "TsUP Mission Control Moscow", lat: 55.752, lon: 37.622, country: "Russia", operator: "Roscosmos", type: "MISSION_CONTROL", status: "ACTIVE", notes: "Russian mission control; ISS, crewed missions" },
-  { name: "Beijing Aerospace Control Center", lat: 39.907, lon: 116.391, country: "China", operator: "CNSA / PLA", type: "MISSION_CONTROL", status: "ACTIVE", notes: "Chinese mission control; CSS, Chang'e" },
-  { name: "Kashgar Deep Space Station", lat: 39.492, lon: 75.988, country: "China", operator: "CNSA", type: "DEEP_SPACE", status: "ACTIVE", notes: "35m dish; lunar and deep space" },
-  { name: "Neuquén Deep Space Station", lat: -36.232, lon: -70.153, country: "Argentina", operator: "CNSA (China)", type: "DEEP_SPACE", status: "ACTIVE", notes: "Chinese deep space in South America" },
+  { name: "TsUP Mission Control Moscow", lat: 55.752, lon: 37.622, country: "Russia", operator: "Roscosmos", type: "MISSION_CONTROL", status: "АКТИВНО", notes: "Russian mission control; ISS, crewed missions" },
+  { name: "Beijing Aerospace Control Center", lat: 39.907, lon: 116.391, country: "China", operator: "CNSA / PLA", type: "MISSION_CONTROL", status: "АКТИВНО", notes: "Chinese mission control; CSS, Chang'e" },
+  { name: "Kashgar Deep Space Station", lat: 39.492, lon: 75.988, country: "China", operator: "CNSA", type: "DEEP_SPACE", status: "АКТИВНО", notes: "35m dish; lunar and deep space" },
+  { name: "Neuquén Deep Space Station", lat: -36.232, lon: -70.153, country: "Argentina", operator: "CNSA (China)", type: "DEEP_SPACE", status: "АКТИВНО", notes: "Chinese deep space in South America" },
   // Commercial / Starlink Gateways
-  { name: "Starlink Gateway – Hawthorne CA", lat: 33.921, lon: -118.328, country: "USA", operator: "SpaceX", type: "STARLINK", status: "ACTIVE", notes: "Primary Starlink PoP; California" },
-  { name: "Starlink Gateway – Brewster WA", lat: 48.131, lon: -119.783, country: "USA", operator: "SpaceX", type: "STARLINK", status: "ACTIVE", notes: "Starlink PoP; Pacific Northwest" },
-  { name: "Starlink Gateway – Lanarkshire UK", lat: 55.700, lon: -3.800, country: "UK", operator: "SpaceX", type: "STARLINK", status: "ACTIVE", notes: "European Starlink PoP" },
-  { name: "Starlink Gateway – Bochum DE", lat: 51.482, lon: 7.219, country: "Germany", operator: "SpaceX", type: "STARLINK", status: "ACTIVE", notes: "Central Europe Starlink PoP" },
-  { name: "Starlink Gateway – Punta Arenas CL", lat: -53.163, lon: -70.916, country: "Chile", operator: "SpaceX", type: "STARLINK", status: "ACTIVE", notes: "Southern hemisphere Starlink PoP" },
-  { name: "Starlink Gateway – Awarua NZ", lat: -46.529, lon: 168.378, country: "New Zealand", operator: "SpaceX", type: "STARLINK", status: "ACTIVE", notes: "NZ Starlink PoP" },
+  { name: "Starlink Gateway – Hawthorne CA", lat: 33.921, lon: -118.328, country: "USA", operator: "SpaceX", type: "STARLINK", status: "АКТИВНО", notes: "Primary Starlink PoP; California" },
+  { name: "Starlink Gateway – Brewster WA", lat: 48.131, lon: -119.783, country: "USA", operator: "SpaceX", type: "STARLINK", status: "АКТИВНО", notes: "Starlink PoP; Pacific Northwest" },
+  { name: "Starlink Gateway – Lanarkshire UK", lat: 55.700, lon: -3.800, country: "UK", operator: "SpaceX", type: "STARLINK", status: "АКТИВНО", notes: "European Starlink PoP" },
+  { name: "Starlink Gateway – Bochum DE", lat: 51.482, lon: 7.219, country: "Germany", operator: "SpaceX", type: "STARLINK", status: "АКТИВНО", notes: "Central Europe Starlink PoP" },
+  { name: "Starlink Gateway – Punta Arenas CL", lat: -53.163, lon: -70.916, country: "Chile", operator: "SpaceX", type: "STARLINK", status: "АКТИВНО", notes: "Southern hemisphere Starlink PoP" },
+  { name: "Starlink Gateway – Awarua NZ", lat: -46.529, lon: 168.378, country: "New Zealand", operator: "SpaceX", type: "STARLINK", status: "АКТИВНО", notes: "NZ Starlink PoP" },
   // Other
-  { name: "ISRO Telemetry Bangalore", lat: 12.971, lon: 77.594, country: "India", operator: "ISRO", type: "MISSION_CONTROL", status: "ACTIVE", notes: "ISRO mission control; Chandrayaan, Mangalyaan" },
-  { name: "JAXA Tsukuba Space Center", lat: 36.056, lon: 140.125, country: "Japan", operator: "JAXA", type: "MISSION_CONTROL", status: "ACTIVE", notes: "JAXA mission control; ISS KIBO module" },
-  { name: "Dongara Ground Station", lat: -29.047, lon: 115.349, country: "Australia", operator: "KSAT / Intelsat", type: "COMMERCIAL", status: "ACTIVE", notes: "Indian Ocean coverage" },
-  { name: "Redu Ground Station", lat: 50.002, lon: 5.146, country: "Belgium", operator: "ESA", type: "GEO", status: "ACTIVE", notes: "ARTEMIS, ASTRA, telecom satellites" },
-  { name: "Dongfang Space Port", lat: 19.614, lon: 110.951, country: "China", operator: "CASC", type: "MISSION_CONTROL", status: "ACTIVE", notes: "Wenchang tracking station" },
-  { name: "Yakima Research Station", lat: 46.572, lon: -120.462, country: "USA", operator: "NSA", type: "SIGINT", status: "ACTIVE", notes: "NSA SIGINT collection" },
-  { name: "Leitrim Station", lat: 45.328, lon: -75.812, country: "Canada", operator: "CSE", type: "SIGINT", status: "ACTIVE", notes: "Canadian SIGINT; Five Eyes" },
-  { name: "Medvezhyi Ozera", lat: 55.921, lon: 38.180, country: "Russia", operator: "Roscosmos / MoD", type: "MILITARY_CONTROL", status: "ACTIVE", notes: "Russian satellite control" },
-  { name: "Kourou Ground Station", lat: 5.251, lon: -52.805, country: "French Guiana", operator: "ESA", type: "GEO_LEO", status: "ACTIVE", notes: "Co-located with Ariane launch site" },
+  { name: "ISRO Telemetry Bangalore", lat: 12.971, lon: 77.594, country: "India", operator: "ISRO", type: "MISSION_CONTROL", status: "АКТИВНО", notes: "ISRO mission control; Chandrayaan, Mangalyaan" },
+  { name: "JAXA Tsukuba Space Center", lat: 36.056, lon: 140.125, country: "Japan", operator: "JAXA", type: "MISSION_CONTROL", status: "АКТИВНО", notes: "JAXA mission control; ISS KIBO module" },
+  { name: "Dongara Ground Station", lat: -29.047, lon: 115.349, country: "Australia", operator: "KSAT / Intelsat", type: "COMMERCIAL", status: "АКТИВНО", notes: "Indian Ocean coverage" },
+  { name: "Redu Ground Station", lat: 50.002, lon: 5.146, country: "Belgium", operator: "ESA", type: "GEO", status: "АКТИВНО", notes: "ARTEMIS, ASTRA, telecom satellites" },
+  { name: "Dongfang Space Port", lat: 19.614, lon: 110.951, country: "China", operator: "CASC", type: "MISSION_CONTROL", status: "АКТИВНО", notes: "Wenchang tracking station" },
+  { name: "Yakima Research Station", lat: 46.572, lon: -120.462, country: "USA", operator: "NSA", type: "SIGINT", status: "АКТИВНО", notes: "NSA SIGINT collection" },
+  { name: "Leitrim Station", lat: 45.328, lon: -75.812, country: "Canada", operator: "CSE", type: "SIGINT", status: "АКТИВНО", notes: "Canadian SIGINT; Five Eyes" },
+  { name: "Medvezhyi Ozera", lat: 55.921, lon: 38.180, country: "Russia", operator: "Roscosmos / MoD", type: "MILITARY_CONTROL", status: "АКТИВНО", notes: "Russian satellite control" },
+  { name: "Kourou Ground Station", lat: 5.251, lon: -52.805, country: "French Guiana", operator: "ESA", type: "GEO_LEO", status: "АКТИВНО", notes: "Co-located with Ariane launch site" },
 ];
 
 // ─── OSINT Satellite Imagery Sources ─────────────────────────────────────────
@@ -3548,7 +3548,7 @@ export default function Orbit() {
     const scene = sceneRef.current;
     if (missionAoiRef.current) { scene.remove(missionAoiRef.current); missionAoiRef.current = null; }
     const missions = (missionsQuery.data as any[]) ?? [];
-    const activeMissions = missions.filter((m: any) => m.status === 'ACTIVE' && m.aoiLat != null && m.aoiLon != null);
+    const activeMissions = missions.filter((m: any) => m.status === 'АКТИВНО' && m.aoiLat != null && m.aoiLon != null);
     if (activeMissions.length === 0) return;
     const group = new THREE.Group();
     group.name = 'missionAoi';
@@ -3949,7 +3949,7 @@ export default function Orbit() {
             className="w-full flex items-center gap-2 px-3 py-2 hover:bg-foreground/5 transition-all">
             <span className="font-mono text-[9px] tracking-widest text-green-500/80">▸ ENVIRONMENT</span>
             {(showWindLayer || showFireLayer || showOceanLayer || showHeatLayer) && (
-              <span className="ml-auto font-mono text-[9px] px-1 rounded" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>ACTIVE</span>
+              <span className="ml-auto font-mono text-[9px] px-1 rounded" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>АКТИВНО</span>
             )}
           </button>
           {leftSections.environment && (
@@ -3980,9 +3980,9 @@ export default function Orbit() {
           <button onClick={() => setLeftSections(s => ({ ...s, missions: !s.missions }))}
             className="w-full flex items-center gap-2 px-3 py-2 hover:bg-foreground/5 transition-all">
             <span className="font-mono text-[9px] tracking-widest text-purple-400/80">▸ MISSIONS</span>
-            {missionsQuery.data && (missionsQuery.data as any[]).filter((m: any) => m.status === 'ACTIVE').length > 0 && (
+            {missionsQuery.data && (missionsQuery.data as any[]).filter((m: any) => m.status === 'АКТИВНО').length > 0 && (
               <span className="ml-auto font-mono text-[9px] px-1 rounded" style={{ background: 'rgba(168,85,247,0.15)', color: '#a855f7' }}>
-                {(missionsQuery.data as any[]).filter((m: any) => m.status === 'ACTIVE').length} ACTIVE
+                {(missionsQuery.data as any[]).filter((m: any) => m.status === 'АКТИВНО').length} АКТИВНО
               </span>
             )}
           </button>
@@ -3994,9 +3994,9 @@ export default function Orbit() {
                 (missionsQuery.data as any[]).slice(0, 4).map((m: any) => (
                   <div key={m.id} className="flex items-center gap-2 py-1 border-b last:border-0" style={{ borderColor: 'oklch(from var(--foreground) l c h / 0.06)' }}>
                     <div className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ background: m.status === 'ACTIVE' ? '#22c55e' : m.status === 'PLANNING' ? '#f59e0b' : '#6b7280' }} />
-                    <span className="font-mono text-[10px] flex-1 truncate" style={{ color: m.status === 'ACTIVE' ? 'oklch(from var(--foreground) l c h / 0.7)' : 'oklch(from var(--foreground) l c h / 0.3)' }}>{m.name}</span>
-                    <span className="font-mono text-[9px]" style={{ color: m.status === 'ACTIVE' ? '#22c55e' : '#6b7280' }}>{m.status}</span>
+                      style={{ background: m.status === 'АКТИВНО' ? '#22c55e' : m.status === 'PLANNING' ? '#f59e0b' : '#6b7280' }} />
+                    <span className="font-mono text-[10px] flex-1 truncate" style={{ color: m.status === 'АКТИВНО' ? 'oklch(from var(--foreground) l c h / 0.7)' : 'oklch(from var(--foreground) l c h / 0.3)' }}>{m.name}</span>
+                    <span className="font-mono text-[9px]" style={{ color: m.status === 'АКТИВНО' ? '#22c55e' : '#6b7280' }}>{m.status}</span>
                   </div>
                 ))
               )}

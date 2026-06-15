@@ -566,12 +566,12 @@ export default function VerifyTab({ region, initialArticleId }: VerifyTabProps) 
     return () => clearTimeout(t);
   }, [search]);
 
-  const { data: searchResults, isLoading: searching } = trpc.articles.list.useQuery(
+  const { data: searchResults, isЗагрузка: searching } = trpc.articles.list.useQuery(
     { region, limit: 20, search: debouncedSearch || undefined },
     { enabled: debouncedSearch.length >= 2, staleTime: 30000 }
   );
 
-  const { data: article, isLoading: loadingDetail } = trpc.articles.detail.useQuery(
+  const { data: article, isЗагрузка: loadingDetail } = trpc.articles.detail.useQuery(
     { id: selectedId! },
     { enabled: selectedId !== null, staleTime: 60000 }
   );
@@ -829,7 +829,7 @@ export default function VerifyTab({ region, initialArticleId }: VerifyTabProps) 
           <div className="flex items-center gap-2">
             <CheckCircle2 size={16} className="text-primary"/>
             <div>
-              <div className="text-sm font-bold text-foreground tracking-wide">Data Provenance Verifier</div>
+              <div className="text-sm font-bold text-foreground tracking-wide">Проверка подлинности данных Verifier</div>
               <div className="text-[10px] text-muted-foreground/80">Trace any article through all 6 layers of the intelligence pipeline</div>
             </div>
           </div>
@@ -1378,7 +1378,7 @@ export default function VerifyTab({ region, initialArticleId }: VerifyTabProps) 
             {selectedId && loadingDetail && (
               <div className="flex flex-col items-center justify-center h-full gap-3">
                 <Loader2 size={24} className="animate-spin text-primary"/>
-                <div className="text-sm text-muted-foreground/80">Loading article data…</div>
+                <div className="text-sm text-muted-foreground/80">Загрузка article data…</div>
               </div>
             )}
           </div>

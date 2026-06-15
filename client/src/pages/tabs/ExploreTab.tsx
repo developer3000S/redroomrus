@@ -16,23 +16,23 @@ import {
   Orbit, GitMerge, Shuffle, ChevronsUpDown, ChevronsDownUp, Download, Box
 } from "lucide-react";
 
-// ─── Graph Error Boundary ─────────────────────────────────────────────────────
-class GraphErrorBoundary extends Component<
+// ─── Graph Ошибка Boundary ─────────────────────────────────────────────────────
+class GraphОшибкаBoundary extends Component<
   { children: React.ReactNode; onReset?: () => void },
-  { hasError: boolean; errorMsg: string }
+  { hasОшибка: boolean; errorMsg: string }
 > {
   constructor(props: any) {
     super(props);
-    this.state = { hasError: false, errorMsg: '' };
+    this.state = { hasОшибка: false, errorMsg: '' };
   }
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, errorMsg: error?.message ?? 'Unknown error' };
+  static getDerivedStateFromОшибка(error: Ошибка) {
+    return { hasОшибка: true, errorMsg: error?.message ?? 'Unknown error' };
   }
-  componentDidCatch(error: Error, info: React.ErrorInfo) {
-    console.error('[GraphErrorBoundary]', error, info);
+  componentDidCatch(error: Ошибка, info: React.ОшибкаInfo) {
+    console.error('[GraphОшибкаBoundary]', error, info);
   }
   render() {
-    if (this.state.hasError) {
+    if (this.state.hasОшибка) {
       return (
         <div className="flex items-center justify-center h-full">
           <div className="text-center space-y-3 max-w-xs">
@@ -40,7 +40,7 @@ class GraphErrorBoundary extends Component<
             <div className="text-sm font-semibold text-foreground">Graph rendering error</div>
             <div className="text-xs text-muted-foreground font-mono bg-muted/30 rounded p-2 text-left">{this.state.errorMsg}</div>
             <button
-              onClick={() => { this.setState({ hasError: false, errorMsg: '' }); this.props.onReset?.(); }}
+              onClick={() => { this.setState({ hasОшибка: false, errorMsg: '' }); this.props.onReset?.(); }}
               className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/30 text-xs font-semibold hover:bg-primary/20 transition-all">
               Retry
             </button>
@@ -78,7 +78,7 @@ function TimelineBar({ region, onDateSelect, selectedDate, onSummary }: {
   onSummary?: (s: { total: number; hostile: number; positive: number; peak: string | null; peakCount: number }) => void;
 }) {
   const [days, setDays] = React.useState<14 | 30>(14);
-  const { data: timeline, isLoading } = trpc.articles.timeline.useQuery({ region, days });
+  const { data: timeline, isЗагрузка } = trpc.articles.timeline.useQuery({ region, days });
 
   const totalSignals = timeline?.reduce((s, d) => s + d.count, 0) ?? 0;
   const totalHostile = timeline?.reduce((s, d) => s + d.negative, 0) ?? 0;
@@ -93,7 +93,7 @@ function TimelineBar({ region, onDateSelect, selectedDate, onSummary }: {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalSignals, totalHostile, totalPositive, peakDay?.date]);
 
-  if (isLoading) return (
+  if (isЗагрузка) return (
     <div className="space-y-1.5">
       <div className="flex items-center gap-3">
         {[60, 40, 50].map((w, i) => <div key={i} className="h-2 bg-foreground/5 rounded animate-pulse" style={{ width: `${w}px` }}/>)}
@@ -896,7 +896,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
   const [graphOffset, setGraphOffset] = useState(0);
   const GRAPH_PAGE_SIZE = 500;
   // Accumulated graph data across Load More pages
-  const [accumulatedGraphData, setAccumulatedGraphData] = useState<{ nodes: any[]; edges: any[]; totalArticles: number } | null>(null);
+  const [accumulatedGraphData, setAccumulatedGraphData] = useState<{ nodes: any[]; edges: any[]; totalСтатьи: number } | null>(null);
 
   // ── Cluster mode state ────────────────────────────────────────────────────────
   // clusterMode: 'cluster' = default (agency clusters), 'signal' = full article nodes
@@ -1080,7 +1080,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
   const saveInvestigationMutation = trpc.investigations.save.useMutation();
 
   // Fetch network graph — loadKey is bumped to force refetch when same query is re-run
-  const { data: rawGraphData, isLoading: graphLoading, refetch: refetchGraph } = trpc.articles.networkGraph.useQuery(
+  const { data: rawGraphData, isЗагрузка: graphЗагрузка, refetch: refetchGraph } = trpc.articles.networkGraph.useQuery(
     {
       region,
       search: activeSearch || undefined,
@@ -1109,7 +1109,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
         return {
           nodes: [...prev.nodes, ...newNodes],
           edges: [...prev.edges, ...newEdges],
-          totalArticles: rawGraphData.totalArticles,
+          totalСтатьи: rawGraphData.totalСтатьи,
         };
       });
     }
@@ -1141,26 +1141,26 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
     const nodeById = new Map<string, any>(rawNodes.map(n => [String(n.id), n]));
 
     // For each agency node, collect its article children
-    const agencyArticles = new Map<string, string[]>(); // agencyId -> [articleId, ...]
+    const agencyСтатьи = new Map<string, string[]>(); // agencyId -> [articleId, ...]
     rawEdges.forEach(e => {
       const from = nodeById.get(String(e.from));
       const to = nodeById.get(String(e.to));
       if (!from || !to) return;
       if (from.type === 'article' && to.type === 'agency') {
-        const list = agencyArticles.get(String(e.to)) ?? [];
+        const list = agencyСтатьи.get(String(e.to)) ?? [];
         if (!list.includes(String(e.from))) list.push(String(e.from));
-        agencyArticles.set(String(e.to), list);
+        agencyСтатьи.set(String(e.to), list);
       } else if (from.type === 'agency' && to.type === 'article') {
-        const list = agencyArticles.get(String(e.from)) ?? [];
+        const list = agencyСтатьи.get(String(e.from)) ?? [];
         if (!list.includes(String(e.to))) list.push(String(e.to));
-        agencyArticles.set(String(e.from), list);
+        agencyСтатьи.set(String(e.from), list);
       }
     });
 
     // Determine which article nodes are visible
     const visibleArticleIds = new Set<string>();
     expandedAgencies.forEach(agencyId => {
-      (agencyArticles.get(agencyId) ?? []).forEach(aid => visibleArticleIds.add(aid));
+      (agencyСтатьи.get(agencyId) ?? []).forEach(aid => visibleArticleIds.add(aid));
     });
 
     // Build output nodes
@@ -1170,12 +1170,12 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
       if (n.type === 'article') {
         if (visibleArticleIds.has(id)) {
           // Show the article node with _agencyId so radial positioning can find the parent cluster hub
-          const parentAgencyId = Array.from(agencyArticles.entries()).find(([, aids]) => aids.includes(id))?.[0];
+          const parentAgencyId = Array.from(agencyСтатьи.entries()).find(([, aids]) => aids.includes(id))?.[0];
           outputNodes.push({ ...n, _agencyId: parentAgencyId ?? null });
         }
         // else: hidden (collapsed into cluster)
       } else if (n.type === 'agency') {
-        const articleCount = agencyArticles.get(id)?.length ?? 0;
+        const articleCount = agencyСтатьи.get(id)?.length ?? 0;
         const isExpanded = expandedAgencies.has(id);
         // Render agency as a large cluster node with count badge
         outputNodes.push({
@@ -1227,12 +1227,12 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
 
       if (fromIsHiddenArticle) {
         // Find agency of this article
-        const agencyId = Array.from(agencyArticles.entries()).find(([, aids]) => aids.includes(fromId))?.[0];
+        const agencyId = Array.from(agencyСтатьи.entries()).find(([, aids]) => aids.includes(fromId))?.[0];
         if (!agencyId) return; // orphan article — skip
         resolvedFrom = agencyId;
       }
       if (toIsHiddenArticle) {
-        const agencyId = Array.from(agencyArticles.entries()).find(([, aids]) => aids.includes(toId))?.[0];
+        const agencyId = Array.from(agencyСтатьи.entries()).find(([, aids]) => aids.includes(toId))?.[0];
         if (!agencyId) return;
         resolvedTo = agencyId;
       }
@@ -1252,10 +1252,10 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
           const rtNode = nodeById.get(rt);
           if (!rfNode || !rtNode) return false;
           const rFrom = (rfNode.type === 'article' && !visibleArticleIds.has(rf))
-            ? (Array.from(agencyArticles.entries()).find(([, aids]) => aids.includes(rf))?.[0] ?? rf)
+            ? (Array.from(agencyСтатьи.entries()).find(([, aids]) => aids.includes(rf))?.[0] ?? rf)
             : rf;
           const rTo = (rtNode.type === 'article' && !visibleArticleIds.has(rt))
-            ? (Array.from(agencyArticles.entries()).find(([, aids]) => aids.includes(rt))?.[0] ?? rt)
+            ? (Array.from(agencyСтатьи.entries()).find(([, aids]) => aids.includes(rt))?.[0] ?? rt)
             : rt;
           return rFrom === resolvedFrom && rTo === resolvedTo && (re.label ?? '') === (e.label ?? '');
         }).length;
@@ -1270,7 +1270,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
       }
     });
 
-    return { nodes: outputNodes, edges: outputEdges, totalArticles: (graphData as any).totalArticles };
+    return { nodes: outputNodes, edges: outputEdges, totalСтатьи: (graphData as any).totalСтатьи };
   }, [graphData, clusterMode, expandedAgencies]);
 
   // Toggle agency cluster expand/collapse
@@ -1457,9 +1457,9 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
   const renderGraphData = clusteredGraphData ?? graphData;
   const nodeCount = renderGraphData?.nodes.filter(n => graphFilter.length === 0 || graphFilter.includes(n.type)).length ?? 0;
   const edgeCount = renderGraphData?.edges.length ?? 0;
-  const totalArticles = (graphData as any)?.totalArticles ?? 0;
+  const totalСтатьи = (graphData as any)?.totalСтатьи ?? 0;
   const loadedArticleNodes = (graphData?.nodes ?? []).filter(n => n.type === 'article').length;
-  const hasMoreSignals = totalArticles > graphOffset + GRAPH_PAGE_SIZE;
+  const hasMoreSignals = totalСтатьи > graphOffset + GRAPH_PAGE_SIZE;
   const clusterNodeCount = clusterMode === 'cluster' ? (renderGraphData?.nodes.filter(n => n.type === 'agency').length ?? 0) : 0;
 
   // Determine the primary node: the node whose label best matches the active search query.
@@ -1562,7 +1562,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
     });
     // Proper irregular plurals for node type group headers
     const pluralLabel: Record<string, string> = {
-      article: 'Articles', agency: 'Agencies', author: 'Authors',
+      article: 'Статьи', agency: 'Agencies', author: 'Authors',
       country: 'Countries', person: 'Persons', organization: 'Organizations',
       facility: 'Facilities', keyword: 'Keywords', unknown: 'Unknown',
     };
@@ -1685,17 +1685,17 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
               <div className="flex items-center gap-1.5 px-2 py-1.5 rounded border border-yellow-400/20 bg-yellow-400/5">
                 <AlertTriangle size={8} className="text-yellow-400/70 flex-shrink-0"/>
                 <span className="text-[8px] font-mono text-yellow-400/60 leading-tight">
-                  {loadedArticleNodes}/{totalArticles} articles loaded. More articles = more memory.
+                  {loadedArticleNodes}/{totalСтатьи} articles loaded. More articles = more memory.
                 </span>
               </div>
               <button
-                disabled={graphLoading}
+                disabled={graphЗагрузка}
                 onClick={() => setGraphOffset(o => o + GRAPH_PAGE_SIZE)}
                 className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded border border-emerald-400/25 bg-emerald-400/8 text-emerald-400/70 text-[9px] font-black font-mono hover:bg-emerald-400/15 hover:text-emerald-400 transition-all disabled:opacity-40 disabled:cursor-not-allowed tracking-wider">
-                {graphLoading ? (
+                {graphЗагрузка ? (
                   <><span className="animate-spin">&#x25CC;</span> LOADING...</>
                 ) : (
-                  <>+ LOAD MORE ARTICLES (+{Math.min(GRAPH_PAGE_SIZE, totalArticles - graphOffset - GRAPH_PAGE_SIZE + GRAPH_PAGE_SIZE)})</>
+                  <>+ LOAD MORE ARTICLES (+{Math.min(GRAPH_PAGE_SIZE, totalСтатьи - graphOffset - GRAPH_PAGE_SIZE + GRAPH_PAGE_SIZE)})</>
                 )}
               </button>
             </div>
@@ -1754,7 +1754,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
               <RefreshCw size={8}/>
             </button>
             <div className="ml-auto flex items-center gap-1.5">
-              {graphLoading && <span className="text-[9px] text-emerald-400/60 font-mono animate-pulse">SCAN...</span>}
+              {graphЗагрузка && <span className="text-[9px] text-emerald-400/60 font-mono animate-pulse">SCAN...</span>}
               <button
                 onClick={() => setShowSavedList(true)}
                 className="flex items-center gap-1 text-[9px] text-muted-foreground/60 hover:text-yellow-400/70 transition-colors font-mono"
@@ -2169,7 +2169,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
               <RefreshCw size={8}/>
             </button>
             <div className="ml-auto flex items-center gap-1.5">
-              {graphLoading && <span className="text-[9px] text-emerald-400/60 font-mono animate-pulse">SCAN...</span>}
+              {graphЗагрузка && <span className="text-[9px] text-emerald-400/60 font-mono animate-pulse">SCAN...</span>}
               <button
                 onClick={() => setShowSavedList(true)}
                 className="flex items-center gap-1 text-[9px] text-muted-foreground/60 hover:text-yellow-400/70 transition-colors font-mono"
@@ -2338,7 +2338,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
         )}
       </div>
 
-      {/* ─── Center: Network Graph + Timeline ────────────────────────────── */}
+      {/* ─── Center: Сетевой граф + Timeline ────────────────────────────── */}
       <div className="flex-1 flex flex-col overflow-hidden">
 
         {/* Timeline — SIGINT Waveform */}
@@ -2396,8 +2396,8 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
 
         {/* Graph */}
           <div className="flex-1 relative overflow-hidden">
-          <GraphErrorBoundary onReset={() => refetchGraph()}>
-          {graphLoading && (
+          <GraphОшибкаBoundary onReset={() => refetchGraph()}>
+          {graphЗагрузка && (
             <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/60 backdrop-blur-sm">
               <div className="flex flex-col items-center gap-3">
                 <div className="relative">
@@ -2425,7 +2425,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
             />
           ) : graphView === '3d' ? (
             <div className="absolute inset-0">
-              <GraphErrorBoundary onReset={() => setGraphView('network')}>
+              <GraphОшибкаBoundary onReset={() => setGraphView('network')}>
                 <ForceGraph3DView
                   nodes={renderGraphData?.nodes ?? []}
                   edges={renderGraphData?.edges ?? []}
@@ -2447,7 +2447,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
                     });
                   }}
                 />
-              </GraphErrorBoundary>
+              </GraphОшибкаBoundary>
             </div>
           ) : (
             <div className="absolute inset-0 p-4">
@@ -2646,7 +2646,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
               </div>
             </div>
           )}
-          </GraphErrorBoundary>
+          </GraphОшибкаBoundary>
         </div>
       </div>
 
@@ -2672,7 +2672,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
               <div className="space-y-2 text-[10px] text-muted-foreground font-mono leading-relaxed">
                 <div className="flex items-start gap-2">
                   <span className="text-red-400/70 flex-shrink-0 mt-0.5">›</span>
-                  <span>Loading thousands of nodes and edges simultaneously consumes significant browser memory and GPU resources.</span>
+                  <span>Загрузка thousands of nodes and edges simultaneously consumes significant browser memory and GPU resources.</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-red-400/70 flex-shrink-0 mt-0.5">›</span>
@@ -2965,7 +2965,7 @@ export default function ExploreTab({ region, initialQuery, onQueryUsed }: Explor
               {articles && articles.length > 0 && (
                 <div className="mt-4 pt-3 border-t border-border/40">
                   <div className="text-[10px] text-muted-foreground font-semibold flex items-center gap-1.5 mb-2">
-                    <Newspaper size={10}/> Matched Articles ({articles.length})
+                    <Newspaper size={10}/> Matched Статьи ({articles.length})
                   </div>
                   <div className="space-y-2">
                     {articles.slice(0, 8).map(article => {

@@ -660,7 +660,7 @@ export default function SurveillancePage() {
       <footer className="h-7 flex items-center px-3 border-t border-border/50 bg-card/80 backdrop-blur-sm shrink-0">
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" style={{ boxShadow: "0 0 6px #f87171" }} />
-          <span className="text-[9px] font-mono font-bold text-red-400/80 uppercase tracking-widest">SVM ACTIVE</span>
+          <span className="text-[9px] font-mono font-bold text-red-400/80 uppercase tracking-widest">SVM АКТИВНО</span>
         </div>
         <div className="flex items-center gap-3 ml-4 text-[9px] font-mono text-muted-foreground">
           <span>{updatedItems.length} TARGETS</span>
@@ -1322,7 +1322,7 @@ function AlertsPanel({ geoAlerts, alertEvents, trackedItems, onDeleteAlert, onTo
       {geoAlerts.length > 0 && (
         <div className="border border-border/30 rounded-lg p-3">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[9px] font-mono font-bold text-foreground/80 uppercase">ACTIVE GEOFENCES ({geoAlerts.length})</span>
+            <span className="text-[9px] font-mono font-bold text-foreground/80 uppercase">АКТИВНО GEOFENCES ({geoAlerts.length})</span>
           </div>
           <div className="space-y-1.5">
             {geoAlerts.map(alert => (

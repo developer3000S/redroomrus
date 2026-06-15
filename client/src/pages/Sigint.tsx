@@ -2307,7 +2307,7 @@ export default function SigintPage() {
                 <span className="text-[10px] font-mono text-primary uppercase tracking-[0.15em] font-bold">COLLECTION LAYERS</span>
               </div>
               <div className="flex items-center gap-2 text-[8px] font-mono text-muted-foreground/60">
-                <span>ACTIVE: {activeLayers.size}/{LAYERS.length}</span>
+                <span>АКТИВНО: {activeLayers.size}/{LAYERS.length}</span>
                 <span>•</span>
                 <span>TOTAL ASSETS: {(stats.aircraft + stats.vessels + stats.cameras + stats.quakes + stats.fires + stats.events).toLocaleString()}</span>
               </div>
@@ -2551,7 +2551,7 @@ export default function SigintPage() {
             {/* Active Filters Status */}
             {(countryFilter || polygonFilter) && (
               <div className="mx-3 mb-2 p-2 bg-gradient-to-r from-cyan-500/5 to-amber-500/5 rounded-md border border-cyan-500/20">
-                <div className="text-[8px] font-mono text-muted-foreground/70 mb-1.5 font-bold tracking-wider">ACTIVE CONSTRAINTS</div>
+                <div className="text-[8px] font-mono text-muted-foreground/70 mb-1.5 font-bold tracking-wider">АКТИВНО CONSTRAINTS</div>
                 {countryFilter && (
                   <div className="mb-1.5">
                     <div className="flex items-center justify-between py-0.5">
@@ -3102,7 +3102,7 @@ export default function SigintPage() {
           <span className="text-border">│</span>
           <span>{(stats.aircraft + stats.vessels + stats.cameras + stats.quakes + stats.fires + stats.events).toLocaleString()} OBJECTS</span>
           {countryFilter && <><span className="text-border">│</span><span className="text-cyan-400">FILTER: {countryFilter}</span></>}
-          {polygonFilter && <><span className="text-border">│</span><span className="text-amber-400">POLYGON ACTIVE</span></>}
+          {polygonFilter && <><span className="text-border">│</span><span className="text-amber-400">POLYGON АКТИВНО</span></>}
           {expandView && <><span className="text-border">│</span><span className="text-emerald-400">EXPANDED (NO CLUSTERS)</span></>}
           <span className="text-border">│</span>
           <span>ADS-B: {aviationQuery.data?.source || "—"}</span>
@@ -4144,7 +4144,7 @@ function CameraFeedPanel({ camera, allCameras, onSelectCamera, highlightLayer, m
           </div>
         </div>
         <DetailRow label="FEED MODE" value={isIframeStream ? '● LIVE — Real-time video stream' : isMjpeg ? `● LIVE — MJPEG proxied (${MJPEG_REFRESH/1000}s frames)` : `◎ PERIODIC — Refreshes every ${PERIODIC_REFRESH / 1000}s`} />
-        <DetailRow label="HEALTH" value={isMjpeg ? (error ? '○ DEAD — Cannot reach' : '● ACTIVE — MJPEG streaming') : feedHealth === 'active' ? '● ACTIVE — Feed updating' : feedHealth === 'stale' ? '◐ STALE — No change >10min' : feedHealth === 'dead' ? '○ DEAD — Cannot reach' : 'Analyzing...'} />
+        <DetailRow label="HEALTH" value={isMjpeg ? (error ? '○ DEAD — Cannot reach' : '● АКТИВНО — MJPEG streaming') : feedHealth === 'active' ? '● АКТИВНО — Feed updating' : feedHealth === 'stale' ? '◐ STALE — No change >10min' : feedHealth === 'dead' ? '○ DEAD — Cannot reach' : 'Analyzing...'} />
         <DetailRow label="CONTENT Δ" value={`${contentChangeCount} unique frames detected`} />
         {lastContentChange && <DetailRow label="LAST CHANGE" value={lastContentChange.toLocaleTimeString()} />}
         <DetailRow label="CITY" value={camera.city} />

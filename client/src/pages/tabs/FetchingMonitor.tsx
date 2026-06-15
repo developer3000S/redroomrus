@@ -138,7 +138,7 @@ function getStageName(stage: PipelineStage): string {
 
 function getStatusStyle(status: string | null): { color: string; bg: string; label: string; border: string } {
   switch (status) {
-    case "running":   return { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",   border: "rgba(56,189,248,0.3)",  label: "● ACTIVE"    };
+    case "running":   return { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",   border: "rgba(56,189,248,0.3)",  label: "● АКТИВНО"    };
     case "completed": return { color: "#34d399", bg: "rgba(52,211,153,0.08)",   border: "rgba(52,211,153,0.3)",  label: "✓ COMPLETE"  };
     case "failed":    return { color: "#f87171", bg: "rgba(248,113,113,0.08)",  border: "rgba(248,113,113,0.3)", label: "✗ FAILED"    };
     case "pending":   return { color: "#fbbf24", bg: "rgba(251,191,36,0.08)",   border: "rgba(251,191,36,0.3)",  label: "◌ QUEUED"    };
@@ -470,7 +470,7 @@ function MiniSparkline({ data, color }: { data: number[]; color: string }) {
 type StageActivity = {
   active: boolean; error: boolean; throughput: number; per5min: number;
   totalCount: number; errorCount: number;
-  lastTitle?: string; lastAgency?: string; lastUrl?: string; lastErrorMsg?: string;
+  lastTitle?: string; lastAgency?: string; lastUrl?: string; lastОшибкаMsg?: string;
   sparkline: number[];
 };
 
@@ -675,10 +675,10 @@ function PipelineFlow({ stageActivity, sseEvents }: { stageActivity: StageActivi
                     )}
 
                     {/* Last error */}
-                    {act.lastErrorMsg && (
+                    {act.lastОшибкаMsg && (
                       <div className="rounded px-2 py-1.5" style={{ background: "rgba(248,113,113,0.06)", border: "1px solid rgba(248,113,113,0.15)" }}>
                         <div className="text-[7px] font-mono tracking-widest mb-0.5" style={{ color: "rgba(248,113,113,0.5)" }}>LAST ERROR</div>
-                        <div className="text-[8px] font-mono truncate" style={{ color: "#f87171" }}>⚠ {act.lastErrorMsg}</div>
+                        <div className="text-[8px] font-mono truncate" style={{ color: "#f87171" }}>⚠ {act.lastОшибкаMsg}</div>
                       </div>
                     )}
                   </div>
@@ -835,21 +835,21 @@ export function FetchingMonitor({ refreshKey }: FetchingMonitorProps) {
       toast.success(`Job #${vars.jobId} terminated`);
       liveQ.refetch(); jobLogQ.refetch();
     },
-    onError: e => toast.error(`Termination failed: ${e.message}`),
+    onОшибка: e => toast.error(`Termination failed: ${e.message}`),
   });
   const cleanupMut = trpc.crawler.cleanupStuck.useMutation({
     onSuccess: () => { toast.success("Stuck operations cleared"); liveQ.refetch(); jobLogQ.refetch(); },
   });
   const clearMut = trpc.crawler.clearOldJobs.useMutation({
     onSuccess: d => { toast.success(`Purged ${d.deleted} old operations`); jobLogQ.refetch(); },
-    onError: e => toast.error("Purge failed", { description: e.message }),
+    onОшибка: e => toast.error("Purge failed", { description: e.message }),
   });
   const replayMut = trpc.agencies.crawlOne.useMutation({
     onSuccess: (_, vars) => {
       toast.success(`Replay dispatched for source #${vars.id}`);
       liveQ.refetch(); jobLogQ.refetch();
     },
-    onError: e => toast.error(`Replay failed: ${e.message}`),
+    onОшибка: e => toast.error(`Replay failed: ${e.message}`),
   });
 
   // Refresh on crawl start — staggered refetches to catch fast-completing jobs
@@ -883,22 +883,22 @@ export function FetchingMonitor({ refreshKey }: FetchingMonitorProps) {
   }, [sseEvents.length]);
 
   // ── Derived state ──────────────────────────────────────────────────────────
-  const ACTIVE_WINDOW = 8000;
+  const АКТИВНО_WINDOW = 8000;
   const [tick, setTickVal] = useState(0);
   const stageActivity = useMemo(() => {
     const now = Date.now();
     return STAGES.map((stage, i) => {
       const allForStage  = sseEvents.filter(e => stageIndexForEvent(e.stage) === i);
       const ERROR_WINDOW = 30000; // errors only highlight for 30s
-      const recent       = allForStage.filter(e => now - e.ts < ACTIVE_WINDOW);
-      const allErrors    = allForStage.filter(e => e.stage === "fetch_fail" || e.stage === "job_fail");
-      const recentErrors = allErrors.filter(e => now - e.ts < ERROR_WINDOW);
+      const recent       = allForStage.filter(e => now - e.ts < АКТИВНО_WINDOW);
+      const allОшибкаs    = allForStage.filter(e => e.stage === "fetch_fail" || e.stage === "job_fail");
+      const recentОшибкаs = allОшибкаs.filter(e => now - e.ts < ERROR_WINDOW);
       const lastWithTitle = [...allForStage].reverse().find(e => e.articleTitle);
-      const lastError    = [...allErrors].reverse()[0];
+      const lastОшибка    = [...allОшибкаs].reverse()[0];
       const perMin       = allForStage.filter(e => e.ts > now - 60000).length;
       const per5min      = allForStage.filter(e => e.ts > now - 300000).length;
       const totalCount   = allForStage.length;
-      const errorCount   = allErrors.length;
+      const errorCount   = allОшибкаs.length;
       // 10-bucket mini-sparkline (last 10 min, 1 min each)
       const sparkline    = Array.from({ length: 10 }, (_, k) => {
         const from = now - (10 - k) * 60000;
@@ -909,7 +909,7 @@ export function FetchingMonitor({ refreshKey }: FetchingMonitorProps) {
       const lastUrl      = [...allForStage].reverse().find(e => e.articleUrl)?.articleUrl;
       return {
         active: recent.length > 0,
-        error: recentErrors.length > 0,
+        error: recentОшибкаs.length > 0,
         throughput: perMin,
         per5min,
         totalCount,
@@ -917,7 +917,7 @@ export function FetchingMonitor({ refreshKey }: FetchingMonitorProps) {
         lastTitle: lastWithTitle?.articleTitle,
         lastAgency,
         lastUrl,
-        lastErrorMsg: lastError?.error ?? lastError?.articleTitle,
+        lastОшибкаMsg: lastОшибка?.error ?? lastОшибка?.articleTitle,
         sparkline,
       };
     });
@@ -946,7 +946,7 @@ export function FetchingMonitor({ refreshKey }: FetchingMonitorProps) {
       .slice(-300);
   }, [sseEvents, feedFilter, jobFilter]);
 
-   const isAnyCrawlActive = parallelCount > 0 || sseEvents.some(e => nowTs - e.ts < ACTIVE_WINDOW && ["fetch_start","parse_item","db_insert"].includes(e.stage));
+   const isAnyCrawlActive = parallelCount > 0 || sseEvents.some(e => nowTs - e.ts < АКТИВНО_WINDOW && ["fetch_start","parse_item","db_insert"].includes(e.stage));
   // System time + tick (drives 'now' updates so stage active state expires correctly)
   const [sysTime, setSysTime] = useState(() => new Date().toLocaleTimeString());
   useEffect(() => {
@@ -1009,7 +1009,7 @@ export function FetchingMonitor({ refreshKey }: FetchingMonitorProps) {
         <div className="flex items-center gap-1.5">
           <Signal size={9} style={{ color: parallelCount > 0 ? "#38bdf8" : "var(--muted-foreground)" }} className={parallelCount > 0 ? "animate-pulse" : ""} />
           <span className="text-[9px] font-mono font-bold tracking-widest" style={{ color: parallelCount > 0 ? "#38bdf8" : "var(--muted-foreground)" }}>
-            {parallelCount} ACTIVE OP{parallelCount !== 1 ? "S" : ""}
+            {parallelCount} АКТИВНО OP{parallelCount !== 1 ? "S" : ""}
           </span>
           {parallelCount > 1 && (
             <span className="text-[8px] font-mono font-black px-1.5 py-0.5 rounded animate-pulse"
@@ -1122,7 +1122,7 @@ export function FetchingMonitor({ refreshKey }: FetchingMonitorProps) {
                 <span className="text-[8px] font-mono font-black px-1.5 py-0.5 rounded animate-pulse"
                   style={{ background: "rgba(129,140,248,0.12)", color: "#818cf8", border: "1px solid rgba(129,140,248,0.25)" }}
                 >
-                  ACTIVE
+                  АКТИВНО
                 </span>
               )}
             </div>
@@ -1214,7 +1214,7 @@ export function FetchingMonitor({ refreshKey }: FetchingMonitorProps) {
                 {runningJobs.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-20 gap-2">
                     <ShieldCheck size={16} style={{ color: "rgba(56,189,248,0.1)" }} />
-                    <span className="text-[9px] font-mono tracking-widest" style={{ color: "var(--muted-foreground)" }}>NO ACTIVE OPERATIONS</span>
+                    <span className="text-[9px] font-mono tracking-widest" style={{ color: "var(--muted-foreground)" }}>NO АКТИВНО OPERATIONS</span>
                   </div>
                 ) : (
                   runningJobs.map(job => {
@@ -1403,7 +1403,7 @@ export function FetchingMonitor({ refreshKey }: FetchingMonitorProps) {
           {!jobLogCollapsed && (
             <>
               <div className="flex-1 min-h-0 overflow-auto" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(56,189,248,0.1) transparent" }}>
-                {jobLogQ.isLoading ? (
+                {jobLogQ.isЗагрузка ? (
                   <div className="flex items-center justify-center h-32 gap-2" style={{ color: "var(--muted-foreground)" }}>
                     <Loader2 size={12} className="animate-spin" />
                     <span className="text-[9px] font-mono tracking-widest">LOADING OPERATIONS…</span>
@@ -1730,19 +1730,19 @@ function WebhooksPanel({ onClose }: { onClose: () => void }) {
   const listQ = trpc.webhooks.list.useQuery();
   const createMut = trpc.webhooks.create.useMutation({
     onSuccess: () => { utils.webhooks.list.invalidate(); setShowForm(false); resetForm(); toast.success("Webhook created"); },
-    onError: e => toast.error(`Create failed: ${e.message}`),
+    onОшибка: e => toast.error(`Create failed: ${e.message}`),
   });
   const updateMut = trpc.webhooks.update.useMutation({
     onSuccess: () => { utils.webhooks.list.invalidate(); setEditId(null); toast.success("Webhook updated"); },
-    onError: e => toast.error(`Update failed: ${e.message}`),
+    onОшибка: e => toast.error(`Update failed: ${e.message}`),
   });
   const deleteMut = trpc.webhooks.delete.useMutation({
     onSuccess: () => { utils.webhooks.list.invalidate(); toast.success("Webhook deleted"); },
-    onError: e => toast.error(`Delete failed: ${e.message}`),
+    onОшибка: e => toast.error(`Delete failed: ${e.message}`),
   });
   const testMut = trpc.webhooks.test.useMutation({
     onSuccess: r => r.ok ? toast.success(`Test fired — HTTP ${r.status}`) : toast.error(`Test failed: ${r.error ?? `HTTP ${r.status}`}`),
-    onError: e => toast.error(`Test error: ${e.message}`),
+    onОшибка: e => toast.error(`Test error: ${e.message}`),
   });
 
   const [showForm, setShowForm] = useState(false);
@@ -1917,7 +1917,7 @@ function WebhooksPanel({ onClose }: { onClose: () => void }) {
 
       {/* Webhook list */}
       <div className="px-4 py-2">
-        {listQ.isLoading ? (
+        {listQ.isЗагрузка ? (
           <div className="text-[9px] font-mono py-4 text-center" style={{ color: "var(--muted-foreground)" }}>LOADING WEBHOOKS...</div>
         ) : hooks.length === 0 ? (
           <div className="text-[9px] font-mono py-4 text-center" style={{ color: "var(--muted-foreground)" }}>
@@ -1969,9 +1969,9 @@ function WebhooksPanel({ onClose }: { onClose: () => void }) {
                 </span>
 
                 {/* Last error */}
-                {wh.lastError && (
+                {wh.lastОшибка && (
                   <span className="shrink-0 text-[7px] font-mono px-1 py-0.5 rounded" style={{ background: "rgba(248,113,113,0.08)", color: "#f87171", border: "1px solid rgba(248,113,113,0.2)", maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {wh.lastError}
+                    {wh.lastОшибка}
                   </span>
                 )}
 

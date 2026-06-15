@@ -85,7 +85,7 @@ function SectionHeader({ label }: { label: string }) {
 export default function CompareTab({ region, onDrillDownCountry }: CompareTabProps) {
   const [mode, setMode] = useState<CompareMode>("countries");
   const [selectedItems, setSelectedItems] = useState<string[]>(["Egypt","Saudi Arabia","Iran"]);
-  const [selectedSources, setSelectedSources] = useState<number[]>([]);
+  const [selectedИсточники, setSelectedИсточники] = useState<number[]>([]);
   const [showAddPanel, setShowAddPanel] = useState(false);
   const [chartType, setChartType] = useState<"bar" | "area" | "radar">("bar");
   const [reportText, setReportText] = useState<string | null>(null);
@@ -110,10 +110,10 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
 
   const addItem = (item: string) => { if (selectedItems.length < 6 && !selectedItems.includes(item)) setSelectedItems(p => [...p, item]); setShowAddPanel(false); };
   const removeItem = (item: string) => setSelectedItems(p => p.filter(i => i !== item));
-  const addSource = (id: number) => { if (selectedSources.length < 6 && !selectedSources.includes(id)) setSelectedSources(p => [...p, id]); setShowAddPanel(false); };
-  const removeSource = (id: number) => setSelectedSources(p => p.filter(i => i !== id));
+  const addSource = (id: number) => { if (selectedИсточники.length < 6 && !selectedИсточники.includes(id)) setSelectedИсточники(p => [...p, id]); setShowAddPanel(false); };
+  const removeSource = (id: number) => setSelectedИсточники(p => p.filter(i => i !== id));
 
-  const countryArticles = useMemo(() => {
+  const countryСтатьи = useMemo(() => {
     const map: Record<string, any[]> = {};
     selectedItems.forEach(c => { map[c] = (articles ?? []).filter(a => a.country === c); });
     return map;
@@ -121,29 +121,29 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
 
   const barData = useMemo(() => selectedItems.map((c, i) => ({
     name: c.substring(0, 10),
-    articles: countryArticles[c]?.length ?? 0,
-    breaking: countryArticles[c]?.filter(a => a.isBreaking).length ?? 0,
+    articles: countryСтатьи[c]?.length ?? 0,
+    breaking: countryСтатьи[c]?.filter(a => a.isBreaking).length ?? 0,
     color: COLORS[i % COLORS.length],
-  })), [selectedItems, countryArticles]);
+  })), [selectedItems, countryСтатьи]);
 
   const radarData = useMemo(() => {
     const dims = ["CONFLICT","ECONOMY","POLITICS","ENERGY","SECURITY","DIPLOMACY"];
     return dims.map(dim => {
       const entry: Record<string, any> = { subject: dim };
       selectedItems.forEach(c => {
-        entry[c] = (countryArticles[c] ?? []).filter(a => {
+        entry[c] = (countryСтатьи[c] ?? []).filter(a => {
           try { return JSON.parse((a.topicsJson as any) ?? "[]").some((t: string) => t.includes(dim)); } catch { return false; }
         }).length;
       });
       return entry;
     });
-  }, [selectedItems, countryArticles]);
+  }, [selectedItems, countryСтатьи]);
 
   const sentimentData = useMemo(() => ["NEGATIVE","NEUTRAL","POSITIVE","MIXED"].map(s => {
     const entry: Record<string, any> = { sentiment: s };
-    selectedItems.forEach(c => { entry[c] = (countryArticles[c] ?? []).filter(a => (a.sentiment || "neutral").toUpperCase() === s).length; });
+    selectedItems.forEach(c => { entry[c] = (countryСтатьи[c] ?? []).filter(a => (a.sentiment || "neutral").toUpperCase() === s).length; });
     return entry;
-  }), [selectedItems, countryArticles]);
+  }), [selectedItems, countryСтатьи]);
 
   const timelineData = useMemo(() => {
     const days: Record<string, Record<string, number>> = {};
@@ -155,22 +155,22 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
       selectedItems.forEach(c => { days[key][c] = 0; });
     }
     selectedItems.forEach(c => {
-      (countryArticles[c] ?? []).forEach(a => {
+      (countryСтатьи[c] ?? []).forEach(a => {
         const d = new Date(a.publishedAt ?? a.createdAt ?? now);
         const key = `${d.getMonth() + 1}/${d.getDate()}`;
         if (days[key]) days[key][c] = (days[key][c] || 0) + 1;
       });
     });
     return Object.entries(days).map(([date, vals]) => ({ date, ...vals }));
-  }, [selectedItems, countryArticles]);
+  }, [selectedItems, countryСтатьи]);
 
   const threatScores = useMemo(() => selectedItems.map((c, i) => {
-    const arts = countryArticles[c] ?? [];
+    const arts = countryСтатьи[c] ?? [];
     const breaking = arts.filter(a => a.isBreaking).length;
     const negative = arts.filter(a => a.sentiment === "negative").length;
     const score = Math.min(100, Math.round((breaking * 3 + negative * 0.5) / Math.max(arts.length, 1) * 100));
     return { country: c, score, breaking, negative, total: arts.length, color: COLORS[i % COLORS.length] };
-  }).sort((a, b) => b.score - a.score), [selectedItems, countryArticles]);
+  }).sort((a, b) => b.score - a.score), [selectedItems, countryСтатьи]);
 
   const modeConfig: Record<CompareMode, { icon: any; label: string }> = {
     countries: { icon: Globe, label: "COUNTRIES" },
@@ -255,7 +255,7 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
                 }));
                 generateReportMutation.mutate({
                   mode,
-                  targets: mode === "sources" ? selectedSources.map(id => agencies?.find(a => a.id === id)?.name ?? String(id)) : selectedItems,
+                  targets: mode === "sources" ? selectedИсточники.map(id => agencies?.find(a => a.id === id)?.name ?? String(id)) : selectedItems,
                   region,
                   articleData,
                 });
@@ -287,7 +287,7 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
               {item}
               <button onClick={() => removeItem(item)} style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", opacity: 0.6, padding: 0, marginLeft: 2 }}><X size={8} /></button>
             </div>
-          )) : selectedSources.map((id, i) => {
+          )) : selectedИсточники.map((id, i) => {
             const ag = agencies?.find(a => a.id === id);
             return (
               <div key={id} style={{
@@ -445,7 +445,7 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
 
             <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(selectedItems.length, 3)}, 1fr)`, gap: 12 }}>
               {selectedItems.map((c, i) => {
-                const arts = countryArticles[c] ?? [];
+                const arts = countryСтатьи[c] ?? [];
                 const topSentiment = Object.entries(
                   arts.reduce((acc: Record<string, number>, a) => { acc[a.sentiment || "neutral"] = (acc[a.sentiment || "neutral"] || 0) + 1; return acc; }, {})
                 ).sort((a, b) => b[1] - a[1])[0]?.[0] || "neutral";
@@ -501,9 +501,9 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
 
         {mode === "sources" && (
           <>
-            {selectedSources.length > 0 && (
-              <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(selectedSources.length, 3)}, 1fr)`, gap: 12 }}>
-                {selectedSources.map((id, i) => {
+            {selectedИсточники.length > 0 && (
+              <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(selectedИсточники.length, 3)}, 1fr)`, gap: 12 }}>
+                {selectedИсточники.map((id, i) => {
                   const ag = agencies?.find(a => a.id === id);
                   if (!ag) return null;
                   const arts = (articles ?? []).filter(a => a.agencyId === id);
@@ -552,7 +552,7 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
                   <tbody>
                     {agencies?.map(ag => {
                       const artCount = (articles ?? []).filter(a => a.agencyId === ag.id).length;
-                      const isSel = selectedSources.includes(ag.id);
+                      const isSel = selectedИсточники.includes(ag.id);
                       return (
                         <tr key={ag.id} style={{ borderBottom: "1px solid oklch(from var(--foreground) l c h / 0.1)", background: isSel ? "rgba(34,211,238,0.04)" : "transparent" }}>
                           <td style={{ padding: "6px 12px", fontWeight: 600, color: "#e5e7eb" }}>{ag.name}</td>
@@ -604,7 +604,7 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
                     <XAxis type="number" tick={<YTick />} axisLine={false} tickLine={false} />
                     <YAxis type="category" dataKey="name" tick={{ fill: "currentColor", fontSize: 8, fontFamily: MONO }} axisLine={false} tickLine={false} width={64} />
                     <Tooltip content={<CustomTooltip />} />
-                    <Bar dataKey="articles" name="Articles" radius={[0,2,2,0]}>
+                    <Bar dataKey="articles" name="Статьи" radius={[0,2,2,0]}>
                       {ALL_TOPICS.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} fillOpacity={0.85} />)}
                     </Bar>
                   </BarChart>
@@ -682,7 +682,7 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
                   <XAxis dataKey="name" tick={<AxisTick />} axisLine={{ stroke: "oklch(from var(--foreground) l c h / 0.1)" }} tickLine={false} />
                   <YAxis tick={<YTick />} axisLine={false} tickLine={false} width={28} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="articles" name="Articles" radius={[2,2,0,0]}>
+                  <Bar dataKey="articles" name="Статьи" radius={[2,2,0,0]}>
                     {ALL_REGIONS.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} fillOpacity={0.85} />)}
                   </Bar>
                 </BarChart>
@@ -725,7 +725,7 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 3, height: 14, background: "#ef4444", boxShadow: "0 0 8px #ef4444" }} />
                 <span style={{ fontFamily: "Orbitron, monospace", fontSize: 10, fontWeight: 700, color: "#ef4444", letterSpacing: "0.15em" }}>INTELLIGENCE BRIEF</span>
-                <span style={{ fontFamily: MONO, fontSize: 8, color: "var(--muted-foreground)", marginLeft: 8 }}>CLASSIFICATION: UNCLASSIFIED // OSINT</span>
+                <span style={{ fontFamily: MONO, fontSize: 8, color: "var(--muted-foreground)", marginLeft: 8 }}>КЛАССИФИКАЦИЯ: UNCLASSIFIED // OSINT</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <button
@@ -766,7 +766,7 @@ export default function CompareTab({ region, onDrillDownCountry }: CompareTabPro
             {/* Footer */}
             <div style={{ padding: "8px 16px", borderTop: "1px solid oklch(from var(--foreground) l c h / 0.1)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span style={{ fontFamily: MONO, fontSize: 8, color: "#4b5563" }}>GENERATED BY OSINT INTELLIGENCE ENGINE // {new Date().toUTCString()}</span>
-              <span style={{ fontFamily: MONO, fontSize: 8, color: "#4b5563" }}>TARGETS: {mode === "sources" ? selectedSources.length : selectedItems.length}</span>
+              <span style={{ fontFamily: MONO, fontSize: 8, color: "#4b5563" }}>TARGETS: {mode === "sources" ? selectedИсточники.length : selectedItems.length}</span>
             </div>
           </div>
         </div>

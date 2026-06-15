@@ -609,7 +609,7 @@ function CrawlerMissionsTab() {
       <div className="grid grid-cols-4 gap-3">
         {[
           { label: "TOTAL MISSIONS", value: missions.length, icon: Radio, color: "#38bdf8" },
-          { label: "ACTIVE", value: missions.filter(m => m.isActive).length, icon: Activity, color: "#34d399" },
+          { label: "АКТИВНО", value: missions.filter(m => m.isActive).length, icon: Activity, color: "#34d399" },
           { label: "CURRENTLY RUNNING", value: missions.filter(m => m.isRunning).length, icon: Cpu, color: "#fbbf24" },
           { label: "TOTAL ARTICLES", value: missions.reduce((s, m) => s + (m.totalArticlesCollected ?? 0), 0).toLocaleString(), icon: Database, color: "#a78bfa" },
         ].map(({ label, value, icon: Icon, color }) => (
@@ -1102,7 +1102,7 @@ function DashboardTab() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <StatCard label="TOTAL USERS" value={stats.totalUsers} icon={<Users className="w-5 h-5" />} />
         <StatCard label="ADMINS" value={stats.roleCounts?.admin || 0} icon={<Shield className="w-5 h-5" />} color="red" />
-        <StatCard label="ACTIVE (7D)" value={stats.activeUsersLast7d} icon={<Activity className="w-5 h-5" />} color="green" />
+        <StatCard label="АКТИВНО (7D)" value={stats.activeUsersLast7d} icon={<Activity className="w-5 h-5" />} color="green" />
         <StatCard label="NEW (7D)" value={stats.recentRegistrations} icon={<BarChart3 className="w-5 h-5" />} color="cyan" />
         <StatCard label="PENDING" value={stats.pendingRegistrations || 0} icon={<UserPlus className="w-5 h-5" />} color="yellow" />
       </div>
@@ -2231,7 +2231,7 @@ function SettingsTab() {
                     <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase ${
                       kh.isActive ? "bg-green-900/30 text-green-400" : khExpired ? "bg-red-900/30 text-red-400" : "bg-gray-800 text-gray-500"
                     }`}>
-                      {kh.isActive ? "ACTIVE" : khExpired ? "EXPIRED" : "ROTATED"}
+                      {kh.isActive ? "АКТИВНО" : khExpired ? "EXPIRED" : "ROTATED"}
                     </span>
                     <span className="text-xs font-mono text-cyan-400">
                       {kh.registrationCount} reg{kh.registrationCount !== 1 ? "s" : ""}

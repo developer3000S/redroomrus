@@ -351,7 +351,7 @@ export default function FeedTab({ region, onExplore, onVerify }: FeedTabProps) {
     return () => clearInterval(t);
   }, [pageVisible]);
 
-  const { data: articles, isLoading, refetch, isFetching } = trpc.articles.list.useQuery(
+  const { data: articles, isЗагрузка, refetch, isFetching } = trpc.articles.list.useQuery(
     { region, topics: selectedTopics.length > 0 ? selectedTopics : undefined, search: search || undefined, limit: 2000, since: articlesSince },
     { refetchInterval: 60000 }
   );
@@ -703,7 +703,7 @@ export default function FeedTab({ region, onExplore, onVerify }: FeedTabProps) {
 
           {/* Article grid */}
           <div className="px-4 pb-4 space-y-2 mt-2">
-            {isLoading ? (
+            {isЗагрузка ? (
               <div className="space-y-2">
                 {[1, 2, 3, 4, 5, 6].map(i => (
                   <div key={i} className="border border-green-500/10 bg-card p-4 animate-pulse">
@@ -722,7 +722,7 @@ export default function FeedTab({ region, onExplore, onVerify }: FeedTabProps) {
                 <div className="border border-green-500/20 p-8 bg-green-500/5">
                   <Terminal size={32} className="text-green-400/30 mb-3 mx-auto" />
                   <div className="text-[11px] font-mono font-bold text-green-400/50 tracking-widest mb-1">NO INTERCEPTS FOUND</div>
-                  <div className="text-[10px] font-mono text-muted-foreground/40 mb-4">ADJUST FILTER PARAMETERS OR CLEAR ACTIVE FILTERS</div>
+                  <div className="text-[10px] font-mono text-muted-foreground/40 mb-4">ADJUST FILTER PARAMETERS OR CLEAR АКТИВНО FILTERS</div>
                   {activeFilterCount > 0 && (
                     <button onClick={clearFilters}
                       className="px-4 py-1.5 border border-green-500/30 text-[10px] font-mono text-green-400 hover:bg-green-500/10 transition-all">
@@ -991,7 +991,7 @@ export default function FeedTab({ region, onExplore, onVerify }: FeedTabProps) {
           <div className="border border-green-500/10 bg-green-500/5 p-2.5">
             <div className="text-[8px] font-mono font-bold text-green-400/50 tracking-widest mb-2">SYSTEM STATUS</div>
             {[
-              { label: "FEED STATUS", value: "ACTIVE", color: "#10b981" },
+              { label: "FEED STATUS", value: "АКТИВНО", color: "#10b981" },
               { label: "TOTAL INTERCEPTS", value: String(articles?.length ?? 0), color: "#06b6d4" },
               { label: "FLASH TRAFFIC", value: String(tierCounts.flash ?? 0), color: "#ef4444" },
               { label: "SOURCES ONLINE", value: String(Object.keys(agencyMap).length), color: "#f59e0b" },

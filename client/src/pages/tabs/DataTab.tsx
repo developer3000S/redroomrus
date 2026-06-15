@@ -21,7 +21,7 @@ const ARCHITECTURE_LAYERS = [
   { id: "sources", label: "DATA SOURCES", color: "#06b6d4", icon: <Globe size={14} />, description: "101 MENA news agencies, UN agencies, OSINT feeds, satellite data", items: ["Al Jazeera", "Reuters MENA", "AFP", "BBC Arabic", "UN OCHA", "ACLED", "OpenStreetMap", "UNHCR", "World Bank", "SIPRI"], count: 101, status: "active" },
   { id: "ingestion", label: "INGESTION LAYER", color: "#8b5cf6", icon: <Radio size={14} />, description: "RSS crawlers, API connectors, web scrapers, Google News RSS", items: ["RSS Parser", "API Gateway", "Web Scraper", "Google News", "GDELT Feed", "Twitter API", "Telegram Monitor"], count: 7, status: "active" },
   { id: "processing", label: "PROCESSING ENGINE", color: "#f59e0b", icon: <Cpu size={14} />, description: "NLP entity extraction, sentiment analysis, topic classification, deduplication", items: ["Entity Extractor", "Sentiment Engine", "Topic Classifier", "Deduplicator", "Geo-Tagger", "Facility Linker"], count: 6, status: "active" },
-  { id: "storage", label: "INTELLIGENCE STORE", color: "#10b981", icon: <Database size={14} />, description: "MySQL database, S3 object storage, graph relationships", items: ["Articles DB", "Facilities DB", "Agencies DB", "Graph Store", "Notifications", "Audit Log"], count: 6, status: "active" },
+  { id: "storage", label: "INTELLIGENCE STORE", color: "#10b981", icon: <Database size={14} />, description: "MySQL database, S3 object storage, graph relationships", items: ["Статьи DB", "Facilities DB", "Agencies DB", "Graph Store", "Notifications", "Audit Log"], count: 6, status: "active" },
   { id: "analytics", label: "ANALYTICS LAYER", color: "#ef4444", icon: <BarChart2 size={14} />, description: "Real-time statistics, trend detection, threat scoring, network analysis", items: ["Trend Engine", "Threat Scorer", "Network Analyzer", "Timeline Builder", "Correlation Engine"], count: 5, status: "active" },
   { id: "presentation", label: "PRESENTATION LAYER", color: "#ec4899", icon: <Layers size={14} />, description: "Live map, network graph, data explorer, comparison tools, news feed", items: ["LIVE Map", "EXPLORE Graph", "COMPARE View", "FEED Reader", "DATA Export"], count: 5, status: "active" },
 ];
@@ -142,7 +142,7 @@ function AlluvialFlow({ topicDist, expanded, showFilters }: { topicDist: any; ex
   const srcCount = agencies.length;
   const tgtCount = topicOrder.filter(t => topicTotals[t] > 0).length;
   const topics = topicOrder.filter(t => topicTotals[t] > 0);
-  const totalArticles = agencies.reduce((s, a) => s + a.total, 0);
+  const totalСтатьи = agencies.reduce((s, a) => s + a.total, 0);
   const totalTopicVol = topics.reduce((s, t) => s + (topicTotals[t] ?? 0), 0);
 
   const nodeH = expanded ? 18 : 14;
@@ -184,7 +184,7 @@ function AlluvialFlow({ topicDist, expanded, showFilters }: { topicDist: any; ex
     <div className="flex flex-col h-full">
       {/* Article count + topic filter chips */}
       <div className="flex items-center justify-between mb-1 flex-shrink-0">
-        <div className="text-[8px] font-mono text-muted-foreground">{totalArticles} articles · click source to lock</div>
+        <div className="text-[8px] font-mono text-muted-foreground">{totalСтатьи} articles · click source to lock</div>
         {filterTopic && (
           <button onClick={() => setFilterTopic(null)} className="text-[8px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-mono">✕ {filterTopic}</button>
         )}
@@ -859,7 +859,7 @@ function AnalyticsSection({ region, articleStats, topicDist }: {
   const sentimentColor = (v: number) =>
     v < -0.3 ? "#ef4444" : v < -0.1 ? "#f59e0b" : v < 0.1 ? "#94a3b8" : "#22c55e";
 
-  const maxArticles = Math.max(...countryHeat.map(c => c.articles));
+  const maxСтатьи = Math.max(...countryHeat.map(c => c.articles));
 
   return (
     <div className="p-6 overflow-y-auto h-full">
@@ -989,7 +989,7 @@ function AnalyticsSection({ region, articleStats, topicDist }: {
                 <div
                   className="h-full rounded transition-all duration-700"
                   style={{
-                    width: `${(c.articles / maxArticles) * 100}%`,
+                    width: `${(c.articles / maxСтатьи) * 100}%`,
                     background: `linear-gradient(90deg, ${THREAT_COLORS[c.threat]}33, ${THREAT_COLORS[c.threat]}99)`,
                     borderRight: `2px solid ${THREAT_COLORS[c.threat]}`,
                   }}
@@ -1032,7 +1032,7 @@ export default function DataTab({ region }: DataTabProps) {
   const [popSortDir, setPopSortDir] = useState<"asc" | "desc">("desc");
   const animRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { data: unSources } = trpc.ref.unSources.useQuery({ region });
+  const { data: unИсточники } = trpc.ref.unИсточники.useQuery({ region });
   const { data: dbGoogleNewsTopics } = trpc.ref.googleNewsTopics.useQuery({ region });
   const { data: agencies } = trpc.agencies.list.useQuery({ region, limit: 200 });
   const { data: facilityStats } = trpc.facilities.stats.useQuery({ region });
@@ -1075,7 +1075,7 @@ export default function DataTab({ region }: DataTabProps) {
     a.country?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredSources = unSources?.filter(s =>
+  const filteredИсточники = unИсточники?.filter(s =>
     !searchQuery || s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (s.category ?? '').toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -1141,7 +1141,7 @@ export default function DataTab({ region }: DataTabProps) {
           {[
             { id: "architecture", label: "Architecture", icon: <Layers size={11} />, badge: null },
             { id: "population", label: "Population", icon: <Users size={11} />, badge: `${populationData.length}` },
-            { id: "sources", label: "UN Sources", icon: <Shield size={11} />, badge: `${unSources?.length ?? 0}` },
+            { id: "sources", label: "UN Источники", icon: <Shield size={11} />, badge: `${unИсточники?.length ?? 0}` },
             { id: "agencies", label: "News Agencies", icon: <Radio size={11} />, badge: `${agencies?.length ?? 0}` },
             { id: "facilities", label: "Facilities", icon: <Building2 size={11} />, badge: `${facilityStats?.total ?? 0}` },
             { id: "google", label: "Google News", icon: <Globe size={11} />, badge: null },
@@ -1172,7 +1172,7 @@ export default function DataTab({ region }: DataTabProps) {
         <div className="p-3 border-t border-border space-y-2">
           <div className="text-[9px] font-mono text-muted-foreground tracking-widest mb-2">// SYSTEM STATS</div>
           {[
-            { label: "Articles", value: articleStats?.total ?? 0, color: "text-primary" },
+            { label: "Статьи", value: articleStats?.total ?? 0, color: "text-primary" },
             { label: "Breaking", value: articleStats?.breaking ?? 0, color: "text-red-400" },
             { label: "Facilities", value: facilityStats?.total ?? 0, color: "text-yellow-400" },
           ].map(s => (
@@ -1321,7 +1321,7 @@ export default function DataTab({ region }: DataTabProps) {
                   { name: "Zod", category: "Validation", color: "#8b5cf6" },
                 ];
                 const CONNECTIONS = [
-                  { from: "L1 Sources", to: "L2 Ingestion", type: "RSS / API pull", count: 101 },
+                  { from: "L1 Источники", to: "L2 Ingestion", type: "RSS / API pull", count: 101 },
                   { from: "L2 Ingestion", to: "L3 Processing", type: "Raw article stream", count: 7 },
                   { from: "L3 Processing", to: "L4 Store", type: "Structured records", count: 6 },
                   { from: "L4 Store", to: "L5 Analytics", type: "DB queries", count: 6 },
@@ -1406,7 +1406,7 @@ export default function DataTab({ region }: DataTabProps) {
             <div className="mb-5">
               <h2 className="text-sm font-bold text-primary mb-1 tracking-wider">POPULATION INTELLIGENCE</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                <span className="text-primary font-semibold">{region}</span> region population, displacement, and humanitarian data. Sources:{" "}
+                <span className="text-primary font-semibold">{region}</span> region population, displacement, and humanitarian data. Источники:{" "}
                 <a href="https://www.unhcr.org/refugee-statistics/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">UNHCR</a>,{" "}
                 <a href="https://dtm.iom.int/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">IOM DTM</a>,{" "}
                 <a href="https://data.worldbank.org/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">World Bank</a>,{" "}
@@ -1604,7 +1604,7 @@ export default function DataTab({ region }: DataTabProps) {
           </div>
         )}
 
-        {/* ── UN Verified Sources ── */}
+        {/* ── UN Verified Источники ── */}
         {activeSection === "sources" && (
           <div className="p-6">
             <div className="mb-5">
@@ -1617,10 +1617,10 @@ export default function DataTab({ region }: DataTabProps) {
             {/* Category summary */}
             <div className="grid grid-cols-4 gap-3 mb-5">
               {[
-                { label: "UN Agencies", count: unSources?.filter(s => s.type === "UN Agency").length ?? 0, color: "#06b6d4" },
-                { label: "Int'l Orgs", count: unSources?.filter(s => s.type === "International Organization").length ?? 0, color: "#8b5cf6" },
-                { label: "Research", count: unSources?.filter(s => s.type === "Research Organization").length ?? 0, color: "#f59e0b" },
-                { label: "API Available", count: unSources?.filter(s => s.apiAvailable).length ?? 0, color: "#22c55e" },
+                { label: "UN Agencies", count: unИсточники?.filter(s => s.type === "UN Agency").length ?? 0, color: "#06b6d4" },
+                { label: "Int'l Orgs", count: unИсточники?.filter(s => s.type === "International Organization").length ?? 0, color: "#8b5cf6" },
+                { label: "Research", count: unИсточники?.filter(s => s.type === "Research Organization").length ?? 0, color: "#f59e0b" },
+                { label: "API Available", count: unИсточники?.filter(s => s.apiAvailable).length ?? 0, color: "#22c55e" },
               ].map(c => (
                 <div key={c.label} className="intel-card p-3 text-center">
                   <div className="text-lg font-bold font-mono" style={{ color: c.color }}>{c.count}</div>
@@ -1641,7 +1641,7 @@ export default function DataTab({ region }: DataTabProps) {
             </div>
 
             <div className="space-y-2">
-              {(filteredSources ?? []).map(source => (
+              {(filteredИсточники ?? []).map(source => (
                 <div key={source.id} className="intel-card p-4 hover:border-primary transition-all">
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0 mt-0.5">
@@ -1706,7 +1706,7 @@ export default function DataTab({ region }: DataTabProps) {
             <div className="grid grid-cols-4 gap-3 mb-5">
               {[
                 { label: "TOTAL AGENCIES", value: agencies?.length ?? 0, color: "#06b6d4" },
-                { label: "RSS ACTIVE", value: agencies?.filter(a => a.rssFeeds && a.rssFeeds.length > 0).length ?? 0, color: "#22c55e" },
+                { label: "RSS АКТИВНО", value: agencies?.filter(a => a.rssFeeds && a.rssFeeds.length > 0).length ?? 0, color: "#22c55e" },
                 { label: "COUNTRIES", value: new Set(agencies?.map(a => a.country).filter(Boolean)).size, color: "#8b5cf6" },
                 { label: "LANGUAGES", value: new Set(agencies?.map(a => a.language).filter(Boolean)).size, color: "#f59e0b" },
               ].map(s => (

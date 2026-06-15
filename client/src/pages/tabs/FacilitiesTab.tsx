@@ -129,7 +129,7 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [search]);
 
-  const { data, isLoading, refetch } = trpc.facilities.search.useQuery({
+  const { data, isЗагрузка, refetch } = trpc.facilities.search.useQuery({
     search: debouncedSearch || undefined,
     type: filterType || undefined,
     region: region !== "Global" ? region : undefined,
@@ -148,7 +148,7 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
   const { data: selectedFac } = trpc.facilities.byId.useQuery(
     { id: selectedId! }, { enabled: !!selectedId, staleTime: 10000 }
   );
-  const { data: facSources } = trpc.facilities.getSources.useQuery(
+  const { data: facИсточники } = trpc.facilities.getИсточники.useQuery(
     { facilityId: selectedId! }, { enabled: !!selectedId }
   );
   const { data: enrichJobs } = trpc.facilities.enrichmentJobs.useQuery(
@@ -165,7 +165,7 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
       utils.facilities.detailedStats.invalidate();
       setSelectedId(null);
     },
-    onError: (e) => toast.error("Delete failed", { description: e.message }),
+    onОшибка: (e) => toast.error("Delete failed", { description: e.message }),
   });
 
   const reenrichMutation = trpc.facilities.triggerReenrichment.useMutation({
@@ -173,12 +173,12 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
       toast.success("Article re-match started", { description: `Scanning all articles for "${d.facilityName}"` });
       utils.facilities.enrichmentJobs.invalidate();
     },
-    onError: (e) => toast.error("Re-match failed", { description: e.message }),
+    onОшибка: (e) => toast.error("Re-match failed", { description: e.message }),
   });
 
   const bulkRematchMutation = trpc.facilities.bulkRematch.useMutation({
     onSuccess: (d) => toast.success(`Bulk re-match launched`, { description: `${d.started} facilities queued for article scanning` }),
-    onError: (e) => toast.error("Bulk re-match failed", { description: e.message }),
+    onОшибка: (e) => toast.error("Bulk re-match failed", { description: e.message }),
   });
 
   const rows = data?.rows ?? [];
@@ -307,7 +307,7 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
 
           {/* Table */}
           <div className="flex-1 overflow-y-auto">
-            {isLoading ? (
+            {isЗагрузка ? (
               <div className="flex items-center justify-center h-24 text-muted-foreground text-[11px] font-mono gap-2">
                 <RefreshCw size={12} className="animate-spin" />LOADING REGISTRY...
               </div>
@@ -458,7 +458,7 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
                     {[
                       { label: "THREAT LEVEL", value: selectedFac.threatLevel?.toUpperCase() ?? "LOW", cls: THREAT_TEXT[selectedFac.threatLevel ?? "low"] },
                       { label: "IMPORTANCE", value: `${selectedFac.importance ?? 5}/10`, cls: "text-primary" },
-                      { label: "STATUS", value: selectedFac.status?.toUpperCase() ?? "ACTIVE", cls: "text-green-400" },
+                      { label: "STATUS", value: selectedFac.status?.toUpperCase() ?? "АКТИВНО", cls: "text-green-400" },
                       { label: "VERIFICATION", value: selectedFac.verificationStatus === "pending_review" ? "PENDING" : (selectedFac.verificationStatus ?? "UNVERIFIED").toUpperCase(), cls: VERIFY_COLORS[selectedFac.verificationStatus ?? "unverified"] },
                     ].map(m => (
                       <div key={m.label} className="bg-card/30 border border-border/50 p-2">
@@ -622,7 +622,7 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
                     <div className="text-muted-foreground text-[10px] italic">No primary source cited</div>
                   )}
                   {/* Additional sources */}
-                  {facSources && facSources.length > 0 && facSources.map(src => (
+                  {facИсточники && facИсточники.length > 0 && facИсточники.map(src => (
                     <div key={src.id} className="p-2.5 bg-card/30 border border-border/40">
                       <a href={src.sourceUrl} target="_blank" rel="noopener noreferrer"
                         className="text-primary hover:underline text-[10px] flex items-center gap-1 truncate mb-0.5">
@@ -634,7 +634,7 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
                       {src.confirmsFields && <div className="text-muted-foreground text-[9px]">Confirms: {src.confirmsFields}</div>}
                     </div>
                   ))}
-                  {(!facSources || facSources.length === 0) && !selectedFac.primarySourceUrl && (
+                  {(!facИсточники || facИсточники.length === 0) && !selectedFac.primarySourceUrl && (
                     <div className="flex flex-col items-center gap-2 py-6 text-muted-foreground">
                       <Link2 size={18} className="opacity-20" />
                       <span className="text-[10px]">No sources attached</span>
@@ -649,7 +649,7 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
                   {(() => {
                     try {
                       const log = JSON.parse(selectedFac.auditLog ?? "[]");
-                      if (!Array.isArray(log) || log.length === 0) throw new Error("empty");
+                      if (!Array.isArray(log) || log.length === 0) throw new Ошибка("empty");
                       return log.slice().reverse().map((entry: any, i: number) => (
                         <div key={i} className="flex items-start gap-3 p-2 bg-card/20 border border-border/30">
                           <div className="w-1 h-full min-h-[20px] bg-primary/30 rounded-full flex-shrink-0 mt-1" />
@@ -685,14 +685,14 @@ function RegistryTab({ onEdit, region }: { onEdit: (id: number) => void; region:
 // ─── Add/Edit Sub-Tab ─────────────────────────────────────────────────────────
 function AddEditTab({ editId, onDone, region }: { editId?: number | null; onDone?: () => void; region?: string }) {
   const [form, setForm] = useState({ ...EMPTY_FORM });
-  const [sources, setSources] = useState<{ url: string; name: string; type: string; confirms: string; reliability: number; notes: string }[]>([]);
+  const [sources, setИсточники] = useState<{ url: string; name: string; type: string; confirms: string; reliability: number; notes: string }[]>([]);
   const [newSource, setNewSource] = useState({ url: "", name: "", type: "official_website", confirms: "", reliability: 80, notes: "" });
   const [showSourceForm, setShowSourceForm] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("basic");
   const utils = trpc.useUtils();
 
   const { data: existingFac } = trpc.facilities.byId.useQuery({ id: editId! }, { enabled: !!editId });
-  const { data: existingSources } = trpc.facilities.getSources.useQuery({ facilityId: editId! }, { enabled: !!editId });
+  const { data: existingИсточники } = trpc.facilities.getИсточники.useQuery({ facilityId: editId! }, { enabled: !!editId });
 
   useEffect(() => {
     if (existingFac) {
@@ -744,10 +744,10 @@ function AddEditTab({ editId, onDone, region }: { editId?: number | null; onDone
       utils.facilities.detailedStats.invalidate();
       if (fac?.id) autoMatchMutation.mutate({ facilityId: fac.id, triggeredBy: "auto-save" });
       setForm({ ...EMPTY_FORM });
-      setSources([]);
+      setИсточники([]);
       onDone?.();
     },
-    onError: (e) => toast.error("Failed to create facility", { description: e.message }),
+    onОшибка: (e) => toast.error("Failed to create facility", { description: e.message }),
   });
 
   const updateMutation = trpc.facilities.update.useMutation({
@@ -759,23 +759,23 @@ function AddEditTab({ editId, onDone, region }: { editId?: number | null; onDone
       if (fac?.id) autoMatchMutation.mutate({ facilityId: fac.id, triggeredBy: "auto-save" });
       onDone?.();
     },
-    onError: (e) => toast.error("Failed to update facility", { description: e.message }),
+    onОшибка: (e) => toast.error("Failed to update facility", { description: e.message }),
   });
 
   const addSourceMutation = trpc.facilities.addSource.useMutation({
     onSuccess: () => {
       toast.success("Source added");
-      utils.facilities.getSources.invalidate({ facilityId: editId! });
+      utils.facilities.getИсточники.invalidate({ facilityId: editId! });
       setNewSource({ url: "", name: "", type: "official_website", confirms: "", reliability: 80, notes: "" });
       setShowSourceForm(false);
     },
-    onError: (e) => toast.error("Failed to add source", { description: e.message }),
+    onОшибка: (e) => toast.error("Failed to add source", { description: e.message }),
   });
 
   const removeSourceMutation = trpc.facilities.removeSource.useMutation({
     onSuccess: () => {
       toast.success("Source removed");
-      utils.facilities.getSources.invalidate({ facilityId: editId! });
+      utils.facilities.getИсточники.invalidate({ facilityId: editId! });
     },
   });
 
@@ -855,7 +855,7 @@ function AddEditTab({ editId, onDone, region }: { editId?: number | null; onDone
         {editId && (
           <button onClick={() => setActiveSection("sources")}
             className={`flex items-center gap-2 px-3 py-2.5 text-[10px] font-mono text-left transition-all border-l-2 ${activeSection === "sources" ? 'border-l-primary text-primary bg-primary/10' : 'border-l-transparent text-muted-foreground hover:text-foreground hover:bg-muted/20'}`}>
-            <Link2 size={10} />Sources
+            <Link2 size={10} />Источники
           </button>
         )}
       </div>
@@ -1163,7 +1163,7 @@ function AddEditTab({ editId, onDone, region }: { editId?: number | null; onDone
             </div>
           )}
 
-          {/* Sources (edit mode only) */}
+          {/* Источники (edit mode only) */}
           {activeSection === "sources" && editId && (
             <div className="space-y-4 max-w-2xl">
               <div className="flex items-center justify-between">
@@ -1237,9 +1237,9 @@ function AddEditTab({ editId, onDone, region }: { editId?: number | null; onDone
                 </div>
               )}
 
-              {existingSources && existingSources.length > 0 ? (
+              {existingИсточники && existingИсточники.length > 0 ? (
                 <div className="space-y-2">
-                  {existingSources.map(src => (
+                  {existingИсточники.map(src => (
                     <div key={src.id} className="p-3 border border-border bg-card/30 flex items-start gap-3">
                       <div className="flex-1 min-w-0">
                         <a href={src.sourceUrl} target="_blank" rel="noopener noreferrer"
@@ -1580,7 +1580,7 @@ function DiscoverTab({ region, onSwitchToPending }: { region: string; onSwitchTo
       utils.facilities.listCandidates.invalidate();
       utils.facilities.candidateStatusCounts.invalidate();
     },
-    onError: (e) => { toast.error("Search failed", { description: e.message }); setSearching(false); },
+    onОшибка: (e) => { toast.error("Search failed", { description: e.message }); setSearching(false); },
   });
 
   const approveMutation = trpc.facilities.approveCandidate.useMutation({
@@ -1595,7 +1595,7 @@ function DiscoverTab({ region, onSwitchToPending }: { region: string; onSwitchTo
       utils.facilities.candidateStatusCounts.invalidate();
       utils.facilities.detailedStats.invalidate();
     },
-    onError: (e) => toast.error("Approval failed", { description: e.message }),
+    onОшибка: (e) => toast.error("Approval failed", { description: e.message }),
   });
 
   const rejectMutation = trpc.facilities.rejectCandidate.useMutation({
@@ -1681,7 +1681,7 @@ function DiscoverTab({ region, onSwitchToPending }: { region: string; onSwitchTo
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1 text-[8px] font-mono text-green-400">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                GROUNDING ACTIVE
+                GROUNDING АКТИВНО
               </div>
               <button
                 onClick={() => setShowHistory(!showHistory)}
@@ -2126,12 +2126,12 @@ function PendingTab({ region }: { region: string }) {
     { region: region !== 'Global' ? region : undefined },
     { staleTime: 10000 }
   );
-  const { data, isLoading, refetch } = trpc.facilities.listCandidates.useQuery({
+  const { data, isЗагрузка, refetch } = trpc.facilities.listCandidates.useQuery({
     reviewStatus: filterStatus || undefined,
     region: region !== 'Global' ? region : undefined,
     limit: 100,
   }, { staleTime: 10000 });
-  const { data: candidateArticlesData, isLoading: articlesLoading } = trpc.facilities.candidateMatchingArticles.useQuery(
+  const { data: candidateСтатьиData, isЗагрузка: articlesЗагрузка } = trpc.facilities.candidateMatchingСтатьи.useQuery(
     { candidateId: selectedId!, limit: 20 },
     { enabled: !!selectedId, staleTime: 60000 }
   );
@@ -2149,7 +2149,7 @@ function PendingTab({ region }: { region: string }) {
       utils.facilities.detailedStats.invalidate();
       setReviewNotes(""); setRegionOverride(""); setThreatOverride(""); setImportanceOverride("");
     },
-    onError: (e) => toast.error("Approval failed", { description: e.message }),
+    onОшибка: (e) => toast.error("Approval failed", { description: e.message }),
   });
   const rejectMutation = trpc.facilities.rejectCandidate.useMutation({
     onSuccess: (_, variables) => {
@@ -2173,7 +2173,7 @@ function PendingTab({ region }: { region: string }) {
       utils.facilities.listCandidates.invalidate();
       setEditingField(null); setEditValues({});
     },
-    onError: (e) => toast.error("Update failed", { description: e.message }),
+    onОшибка: (e) => toast.error("Update failed", { description: e.message }),
   });
   const deleteMutation = trpc.facilities.deleteCandidate.useMutation({
     onSuccess: () => {
@@ -2220,7 +2220,7 @@ function PendingTab({ region }: { region: string }) {
     { value: "rejected", label: "REJECTED", count: statusCounts?.rejected ?? 0, color: "text-red-400" },
   ];
 
-  const filteredArticles = (candidateArticlesData?.articles ?? []).filter(a =>
+  const filteredСтатьи = (candidateСтатьиData?.articles ?? []).filter(a =>
     !articleSearch || a.title?.toLowerCase().includes(articleSearch.toLowerCase()) ||
     a.agencyName?.toLowerCase().includes(articleSearch.toLowerCase())
   );
@@ -2365,7 +2365,7 @@ function PendingTab({ region }: { region: string }) {
 
         {/* List */}
         <div ref={listRef} className="flex-1 overflow-y-auto">
-          {isLoading ? (
+          {isЗагрузка ? (
             <div className="flex items-center justify-center h-32 text-muted-foreground text-xs font-mono">
               <RefreshCw size={12} className="animate-spin mr-2" />LOADING...
             </div>
@@ -2533,7 +2533,7 @@ function PendingTab({ region }: { region: string }) {
                 </div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 pl-4">
                   <div>
-                    <div className="text-[9px] font-mono text-muted-foreground/60 uppercase tracking-widest mb-0.5">Threat Level</div>
+                    <div className="text-[9px] font-mono text-muted-foreground/60 uppercase tracking-widest mb-0.5">Уровень угрозы</div>
                     <select
                       value={threatOverride || selectedRow.threatLevel || 'low'}
                       onChange={e => setThreatOverride(e.target.value)}
@@ -2700,9 +2700,9 @@ function PendingTab({ region }: { region: string }) {
           <div className="flex items-center gap-2 mb-2">
             <FileText size={10} className="text-cyan-400" />
             <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest">Article Evidence</span>
-            {candidateArticlesData?.articles && candidateArticlesData.articles.length > 0 && (
+            {candidateСтатьиData?.articles && candidateСтатьиData.articles.length > 0 && (
               <span className="ml-auto px-1.5 py-0.5 text-[8px] font-mono bg-cyan-500/15 border border-cyan-500/30 text-cyan-400">
-                {candidateArticlesData.articles.length} matches
+                {candidateСтатьиData.articles.length} matches
               </span>
             )}
           </div>
@@ -2726,11 +2726,11 @@ function PendingTab({ region }: { region: string }) {
               <FileText size={24} className="opacity-20" />
               <div className="text-[9px] font-mono text-center">Select a candidate to see matching articles</div>
             </div>
-          ) : articlesLoading ? (
+          ) : articlesЗагрузка ? (
             <div className="flex items-center justify-center h-32 text-muted-foreground text-xs font-mono">
               <RefreshCw size={12} className="animate-spin mr-2" />SCANNING...
             </div>
-          ) : filteredArticles.length === 0 ? (
+          ) : filteredСтатьи.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-48 gap-2 text-muted-foreground/30 px-4">
               <AlertCircle size={20} className="opacity-30" />
               <div className="text-[9px] font-mono text-center">
@@ -2739,7 +2739,7 @@ function PendingTab({ region }: { region: string }) {
             </div>
           ) : (
             <div className="divide-y divide-border/20">
-              {filteredArticles.map((article, i) => (
+              {filteredСтатьи.map((article, i) => (
                 <div key={article.id ?? i} className="px-3 py-2.5 hover:bg-foreground/2 transition-colors group">
                   {/* Source + date */}
                   <div className="flex items-center justify-between mb-1">
@@ -2779,23 +2779,23 @@ function PendingTab({ region }: { region: string }) {
         </div>
 
         {/* Evidence summary footer */}
-        {selectedRow && candidateArticlesData?.articles && candidateArticlesData.articles.length > 0 && (
+        {selectedRow && candidateСтатьиData?.articles && candidateСтатьиData.articles.length > 0 && (
           <div className="flex-shrink-0 border-t border-border/40 px-3 py-2 bg-background">
             <div className="text-[8px] font-mono text-muted-foreground/50 mb-1">EVIDENCE SUMMARY</div>
             <div className="grid grid-cols-3 gap-2 text-center">
               <div>
-                <div className="text-[11px] font-mono text-cyan-400">{candidateArticlesData.articles.length}</div>
+                <div className="text-[11px] font-mono text-cyan-400">{candidateСтатьиData.articles.length}</div>
                 <div className="text-[7px] font-mono text-muted-foreground/40">ARTICLES</div>
               </div>
               <div>
                 <div className="text-[11px] font-mono text-cyan-400">
-                  {new Set(candidateArticlesData.articles.map(a => a.agencyName)).size}
+                  {new Set(candidateСтатьиData.articles.map(a => a.agencyName)).size}
                 </div>
                 <div className="text-[7px] font-mono text-muted-foreground/40">SOURCES</div>
               </div>
               <div>
                 <div className="text-[11px] font-mono text-cyan-400">
-                  {Math.round((candidateArticlesData.articles.reduce((s, a) => s + (a.relevanceScore ?? 0.5), 0) / candidateArticlesData.articles.length) * 100)}%
+                  {Math.round((candidateСтатьиData.articles.reduce((s, a) => s + (a.relevanceScore ?? 0.5), 0) / candidateСтатьиData.articles.length) * 100)}%
                 </div>
                 <div className="text-[7px] font-mono text-muted-foreground/40">AVG REL.</div>
               </div>
