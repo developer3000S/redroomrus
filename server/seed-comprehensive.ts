@@ -2,7 +2,7 @@
  * Comprehensive seed script for GEOINT Platform
  * Populates: 100+ MENA news agencies, 200+ global facilities
  */
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/postgres-js";
 import { newsAgencies, facilities } from "../drizzle/schema";
 import { sql } from "drizzle-orm";
 

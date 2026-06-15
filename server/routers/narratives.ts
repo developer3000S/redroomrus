@@ -3,14 +3,14 @@ import { getDb } from "../db";
 import { narratives, narrativeInvestigations } from "../../drizzle/schema";
 import { eq, desc, and, like, or } from "drizzle-orm";
 import { z } from "zod";
-import mysql from "mysql2/promise";
+import postgres from "postgres";
 import { generateNarrativesForRegion, checkArticleAgainstNarratives, backfillNarrativeLinks } from "../narrativeEngine";
 import { invokeLLM } from "../_core/llm";
 
 // Raw pool for direct SQL (narrative_article_links table not in Drizzle schema yet)
-let _pool: mysql.Pool | null = null;
-function getPool(): mysql.Pool {
-  if (!_pool) _pool = mysql.createPool(process.env.DATABASE_URL!);
+let _pool: ReturnType<typeof postgres> | null = null;
+function getPool() {
+  if (!_pool) _pool = postgres(process.env.DATABASE_URL!);
   return _pool;
 }
 
@@ -360,7 +360,7 @@ export const narrativesRouter = router({
 
       // Fetch recent linked articles for context
       const pool = getPool();
-      const [linkRows] = await pool.query<mysql.RowDataPacket[]>(
+      const linkRows = await pool.unsafe(
         `SELECT nal.support_type, nal.relevance_score, nal.llm_reasoning, nal.matched_keywords,
                 a.title, a.content_summary
          FROM narrative_article_links nal

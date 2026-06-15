@@ -15,30 +15,23 @@ import { eq, desc, and, or, like, gte, lte, inArray, sql } from "drizzle-orm";
  *
  * @module db
  */
-import { drizzle } from "drizzle-orm/mysql2";
-import mysql from "mysql2";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { InsertUser, users, newsAgencies, facilities, articles, crawlJobs, notifications, watchlists, articleFacilityLinks, facilitySources, facilityCandidates, facilityEnrichmentJobs } from "../drizzle/schema";
 import type { InsertNewsAgency, InsertFacility, InsertArticle, InsertFacilitySource, InsertFacilityCandidate, InsertFacilityEnrichmentJob } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { cache, CacheKeys, TTL_STATS, TTL_REFERENCE } from "./cache";
 
 let _db: ReturnType<typeof drizzle> | null = null;
-let _pool: ReturnType<typeof mysql.createPool> | null = null;
+let _pool: ReturnType<typeof postgres> | null = null;
 
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
       // Use connection pool optimized for high concurrency (200K+ users)
-      _pool = mysql.createPool({
-        uri: process.env.DATABASE_URL,
-        connectionLimit: 20,        // Max connections in pool
-        maxIdle: 10,                // Max idle connections
-        idleTimeout: 60000,         // Close idle connections after 60s
-        waitForConnections: true,   // Queue requests when pool is full
-        queueLimit: 200,            // Max queued requests before rejecting
-        enableKeepAlive: true,      // Keep TCP connections alive
-        keepAliveInitialDelay: 10000, // Keep-alive after 10s idle
-        connectTimeout: 10000,      // 10s connection timeout
+      _pool = postgres(process.env.DATABASE_URL, {
+        max: 20,                // Max connections in pool
+        idle_timeout: 60,       // Close idle connections after 60s
       });
       _db = drizzle(_pool);
     } catch (error) {
@@ -75,7 +68,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     else if (user.openId === ENV.ownerOpenId) { values.role = 'admin'; updateSet.role = 'admin'; }
     if (!values.lastSignedIn) values.lastSignedIn = new Date();
     if (Object.keys(updateSet).length === 0) updateSet.lastSignedIn = new Date();
-    await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateSet });
+    await db.insert(users).values(values).onConflictDoUpdate({ target: users.openId, set: updateSet });
   } catch (error) { console.error("[Database] Failed to upsert user:", error); throw error; }
 }
 
@@ -119,7 +112,7 @@ export async function getNewsAgencyById(id: number) {
 export async function upsertNewsAgency(agency: InsertNewsAgency) {
   const db = await getDb();
   if (!db) return null;
-  await db.insert(newsAgencies).values(agency).onDuplicateKeyUpdate({ set: { updatedAt: new Date() } });
+  await db.insert(newsAgencies).values(agency).onConflictDoNothing();
   return agency;
 }
 
@@ -129,7 +122,7 @@ export async function bulkInsertNewsAgencies(agencies: InsertNewsAgency[]) {
   let count = 0;
   for (const agency of agencies) {
     try {
-      await db.insert(newsAgencies).values(agency).onDuplicateKeyUpdate({ set: { name: agency.name, updatedAt: new Date() } });
+      await db.insert(newsAgencies).values(agency).onConflictDoNothing();
       count++;
     } catch (e) { /* skip duplicates */ }
   }
@@ -165,7 +158,7 @@ export async function bulkInsertFacilities(facs: InsertFacility[]) {
   let count = 0;
   for (const fac of facs) {
     try {
-      await db.insert(facilities).values(fac).onDuplicateKeyUpdate({ set: { name: fac.name, updatedAt: new Date() } });
+      await db.insert(facilities).values(fac).onConflictDoNothing();
       count++;
     } catch (e) { /* skip */ }
   }
@@ -256,7 +249,7 @@ export async function insertArticle(article: InsertArticle) {
     await db.insert(articles).values(article);
     return article;
   } catch (e: any) {
-    if (e.code === 'ER_DUP_ENTRY') return null; // duplicate URL
+    if (e.code === '23505') return null; // duplicate URL
     throw e;
   }
 }
@@ -649,24 +642,7 @@ export async function searchSatellitesInDb(query: string, limit = 20): Promise<S
 export async function upsertSatellite(sat: InsertSatellite): Promise<void> {
   const db = await getDb();
   if (!db) return;
-  await db.insert(satellites).values(sat).onDuplicateKeyUpdate({
-    set: {
-      name: sat.name,
-      tle1: sat.tle1,
-      tle2: sat.tle2,
-      category: sat.category,
-      country: sat.country,
-      launchDate: sat.launchDate,
-      launchSite: sat.launchSite,
-      missionDescription: sat.missionDescription,
-      operator: sat.operator,
-      altitude: sat.altitude,
-      inclination: sat.inclination,
-      period: sat.period,
-      eccentricity: sat.eccentricity,
-      lastUpdated: new Date(),
-    }
-  });
+  await db.insert(satellites).values(sat).onConflictDoUpdate({ target: satellites.noradId, set: { name: sat.name, tle1: sat.tle1, tle2: sat.tle2, category: sat.category, country: sat.country, launchDate: sat.launchDate, launchSite: sat.launchSite, missionDescription: sat.missionDescription, operator: sat.operator, altitude: sat.altitude, inclination: sat.inclination, period: sat.period, eccentricity: sat.eccentricity, lastUpdated: new Date() } });
 }
 
 export async function getSatelliteCategories(): Promise<{ category: string; count: number }[]> {

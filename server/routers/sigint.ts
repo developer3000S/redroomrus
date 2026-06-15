@@ -1,6 +1,6 @@
 import { publicProcedure, router } from "../_core/trpc";
 import { z } from "zod";
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/postgres-js";
 import { sigintCameras, countryIntelData, articles } from "../../drizzle/schema";
 import { eq, desc, and } from "drizzle-orm";
 import { getLiveCameras, type LiveCamera } from "./liveCameras";

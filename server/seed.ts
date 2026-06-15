@@ -3,7 +3,7 @@
  * Run with: npx tsx server/seed.ts
  */
 
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/postgres-js";
 import { newsAgencies, facilities } from "../drizzle/schema";
 import { sql } from "drizzle-orm";
 

@@ -3,7 +3,7 @@
  * All URLs point to actual news sources — no placeholders.
  * Reference checker validates each URL before insertion.
  */
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/postgres-js";
 import { articles, newsAgencies } from "../drizzle/schema";
 import { eq, sql } from "drizzle-orm";
 import { checkReference } from "./referenceChecker";

@@ -1,7 +1,7 @@
 /**
  * Sample articles seed for demo/testing purposes
  */
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/postgres-js";
 import { articles, newsAgencies } from "../drizzle/schema";
 import { sql } from "drizzle-orm";
 

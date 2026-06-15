@@ -10,11 +10,11 @@
 import { router, publicProcedure } from "../_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import mysql from "mysql2/promise";
+import postgres from "postgres";
 
-let _pool: mysql.Pool | null = null;
-function getPool(): mysql.Pool {
-  if (!_pool) _pool = mysql.createPool(process.env.DATABASE_URL!);
+let _pool: ReturnType<typeof postgres> | null = null;
+function getPool() {
+  if (!_pool) _pool = postgres(process.env.DATABASE_URL!);
   return _pool;
 }
 
@@ -49,7 +49,7 @@ export const waitingListRouter = router({
     .mutation(async ({ input }) => {
       const pool = getPool();
       // Check for duplicate email
-      const [existing] = await pool.query<mysql.RowDataPacket[]>(
+      const existing = await pool.unsafe(
         "SELECT id FROM waiting_list WHERE email = ? LIMIT 1",
         [input.email]
       );
@@ -102,11 +102,11 @@ export const waitingListRouter = router({
 
       const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 
-      const [rows] = await pool.query<mysql.RowDataPacket[]>(
+      const rows = await pool.unsafe(
         `SELECT * FROM waiting_list ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`,
         [...params, input.limit, offset]
       );
-      const [countRows] = await pool.query<mysql.RowDataPacket[]>(
+      const countRows = await pool.unsafe(
         `SELECT COUNT(*) as total FROM waiting_list ${where}`,
         params
       );
@@ -149,7 +149,7 @@ export const waitingListRouter = router({
   /** Stats summary (owner only) */
   stats: ownerOnly.query(async () => {
     const pool = getPool();
-    const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    const rows = await pool.unsafe(
       `SELECT status, COUNT(*) as count FROM waiting_list GROUP BY status`
     );
     const result: { total: number; pending: number; approved: number; rejected: number } = {

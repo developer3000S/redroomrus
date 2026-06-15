@@ -2,7 +2,7 @@
  * Satellite seeder — populates the `satellites` table from the TLE dataset.
  * Run with: node server/seed-satellites.mjs
  */
-import { createConnection } from "mysql2/promise";
+import postgres from "postgres";
 import { config } from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -309,7 +309,7 @@ async function seed() {
 
   console.log(`Seeding ${records.length} satellites...`);
 
-  // Upsert each satellite (INSERT ... ON DUPLICATE KEY UPDATE)
+  // Upsert each satellite (INSERT ... ON CONFLICT (noradId) DO UPDATE SET)
   let inserted = 0;
   let updated = 0;
   for (const r of records) {

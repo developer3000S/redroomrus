@@ -22,13 +22,13 @@
 
 import { invokeLLM } from "./_core/llm";
 import { getDb } from "./db";
-import mysql from "mysql2/promise";
+import postgres from "postgres";
 
 // Raw MySQL pool for direct SQL queries (bypasses Drizzle ORM)
-let _rawPool: mysql.Pool | null = null;
-function getRawPool(): mysql.Pool {
+let _rawPool: ReturnType<typeof postgres> | null = null;
+function getRawPool() {
   if (!_rawPool) {
-    _rawPool = mysql.createPool(process.env.DATABASE_URL!);
+    _rawPool = postgres(process.env.DATABASE_URL!);
   }
   return _rawPool;
 }
@@ -122,7 +122,7 @@ export async function generateNarrativesForRegion(region: string): Promise<Gener
   const pool = getRawPool();
   const regionFilter = region === "Global" ? "" : "WHERE a.region = ?";
   const regionParams = region === "Global" ? [] : [region];
-  const [articles] = await pool.execute(`
+  const articles = await pool.unsafe(`
     SELECT a.title, a.summary, a.entitiesJson, a.topics, a.country, a.publishedAt,
            ag.name AS agencyName
     FROM articles a
@@ -130,11 +130,11 @@ export async function generateNarrativesForRegion(region: string): Promise<Gener
     ${regionFilter}
     ORDER BY a.publishedAt DESC
     LIMIT 80
-  `, regionParams) as [Array<{
+  `, regionParams) as Array<{
     title: string; summary: string | null; entitiesJson: string | null;
     topics: string | null; country: string | null; publishedAt: number | null;
     agencyName: string | null;
-  }>, unknown];
+  }>;
 
   if (articles.length < 3) {
     // Not enough data — return a minimal placeholder
@@ -248,18 +248,15 @@ export async function checkArticleAgainstNarratives(
 ): Promise<NarrativeArticleMatch[]> {
   // Fetch the article
   const pool = getRawPool();
-  const [artRows] = await pool.execute(
-    `SELECT a.title, a.summary, a.content, a.entitiesJson, a.topics, a.country,
+  const artRows = await pool.unsafe(`SELECT a.title, a.summary, a.content, a.entitiesJson, a.topics, a.country,
             ag.name AS agencyName
      FROM articles a
      LEFT JOIN news_agencies ag ON a.agencyId = ag.id
-     WHERE a.id = ?`,
-    [articleId]
-  ) as [Array<{
+     WHERE a.id = ?`, [articleId]) as Array<{
     title: string; summary: string | null; content: string | null;
     entitiesJson: string | null; topics: string | null; country: string | null;
     agencyName: string | null;
-  }>, unknown];
+  }>;
 
   if (!artRows.length) return [];
   const article = artRows[0];
@@ -267,17 +264,14 @@ export async function checkArticleAgainstNarratives(
   // Fetch active narratives for the region
   const regionNarrativeFilter = region === "Global" ? "" : "AND region = ?";
   const regionNarrativeParams = region === "Global" ? [] : [region];
-  const [narratives] = await pool.execute(
-    `SELECT id, title, description, evidenceKeywords, tags, category, threatLevel
+  const narratives = await pool.unsafe(`SELECT id, title, description, evidenceKeywords, tags, category, threatLevel
      FROM narratives
      WHERE status = 'active' ${regionNarrativeFilter}
-     LIMIT 20`,
-    regionNarrativeParams
-  ) as [Array<{
+     LIMIT 20`, regionNarrativeParams) as Array<{
     id: number; title: string; description: string;
     evidenceKeywords: string | null; tags: string | null;
     category: string; threatLevel: string;
-  }>, unknown];
+  }>;
 
   if (!narratives.length) return [];
 
@@ -437,15 +431,12 @@ Return ONLY valid JSON.`;
  */
 export async function backfillNarrativeLinks(narrativeId: number, limit = 10): Promise<number> {
   const pool = getRawPool();
-  const [narRows] = await pool.execute(
-    `SELECT id, title, description, region, evidenceKeywords, tags, category, threatLevel
-     FROM narratives WHERE id = ? LIMIT 1`,
-    [narrativeId]
-  ) as [Array<{
+  const narRows = await pool.unsafe(`SELECT id, title, description, region, evidenceKeywords, tags, category, threatLevel
+     FROM narratives WHERE id = ? LIMIT 1`, [narrativeId]) as Array<{
     id: number; title: string; description: string; region: string;
     evidenceKeywords: string | null; tags: string | null;
     category: string; threatLevel: string;
-  }>, unknown];
+  }>;
   if (!narRows.length) return 0;
   const nar = narRows[0];
   const keywords = safeParseJson<string[]>(nar.evidenceKeywords, []);
@@ -454,20 +445,17 @@ export async function backfillNarrativeLinks(narrativeId: number, limit = 10): P
   if (!allKeywords.length) return 0;
   const regionFilter = nar.region && nar.region !== "Global" ? "AND a.country = ?" : "";
   const regionParam: string[] = nar.region && nar.region !== "Global" ? [nar.region] : [];
-  const [artRows] = await pool.execute(
-    `SELECT a.id, a.title, a.summary, a.content, a.url, a.country, a.entitiesJson, a.topics,
+  const artRows = await pool.unsafe(`SELECT a.id, a.title, a.summary, a.content, a.url, a.country, a.entitiesJson, a.topics,
             ag.name AS agencyName
      FROM articles a
      LEFT JOIN news_agencies ag ON a.agencyId = ag.id
      WHERE a.title IS NOT NULL ${regionFilter}
      ORDER BY a.publishedAt DESC
-     LIMIT 500`,
-    regionParam
-  ) as [Array<{
+     LIMIT 500`, regionParam) as Array<{
     id: number; title: string; summary: string | null; content: string | null;
     url: string | null; country: string | null; entitiesJson: string | null;
     topics: string | null; agencyName: string | null;
-  }>, unknown];
+  }>;
   if (!artRows.length) return 0;
   const candidates: Array<{
     article: typeof artRows[0];
@@ -566,18 +554,18 @@ Only include articles with finalScore >= 15. Return valid JSON.`;
     if (idx < 0 || idx >= top.length) continue;
     const art = top[idx].article;
     try {
-      await pool.execute(
-        `INSERT INTO narrative_article_links
+      await pool.unsafe(`INSERT INTO narrative_article_links
          (narrativeId, articleId, relevanceScore, matchedKeywords, matchedEntities, supportType, llmReasoning, addedAt)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-         ON DUPLICATE KEY UPDATE
-           relevanceScore = VALUES(relevanceScore),
-           matchedKeywords = VALUES(matchedKeywords),
-           matchedEntities = VALUES(matchedEntities),
-           supportType = VALUES(supportType),
-           llmReasoning = VALUES(llmReasoning),
-           addedAt = VALUES(addedAt)`,
-        [
+         VALUES ( narrative_article_links
+         (narrativeId, articleId, relevanceScore, matchedKeywords, matchedEntities, supportType, llmReasoning, addedAt)
+         , 
+         ON CONFLICT DO UPDATE
+           relevanceScore = EXCLUDED.relevanceScore,
+           matchedKeywords = EXCLUDED.matchedKeywords,
+           matchedEntities = EXCLUDED.matchedEntities,
+           supportType = EXCLUDED.supportType,
+           llmReasoning = EXCLUDED.llmReasoning,
+           addedAt = EXCLUDED.addedAt, 
           narrativeId,
           art.id,
           r.finalScore,
@@ -586,8 +574,23 @@ Only include articles with finalScore >= 15. Return valid JSON.`;
           r.supportType,
           r.reasoning,
           now,
-        ]
-      );
+        , $4, $5, $6, $7, $8)
+         ON CONFLICT DO UPDATE
+           relevanceScore = EXCLUDED.relevanceScore,
+           matchedKeywords = EXCLUDED.matchedKeywords,
+           matchedEntities = EXCLUDED.matchedEntities,
+           supportType = EXCLUDED.supportType,
+           llmReasoning = EXCLUDED.llmReasoning,
+           addedAt = EXCLUDED.addedAt`, [
+          narrativeId,
+          art.id,
+          r.finalScore,
+          JSON.stringify(top[idx].matchedKeywords),
+          JSON.stringify(top[idx].matchedEntities),
+          r.supportType,
+          r.reasoning,
+          now,
+        ]);
       inserted++;
       if (inserted >= limit) break;
     } catch { /* skip */ }
