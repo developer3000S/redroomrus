@@ -119,7 +119,7 @@ export default function SessionIndicator() {
           className="text-[10px] font-mono font-bold tracking-wider"
           style={{ color: statusColor }}
         >
-          AUTH
+          АВТОРИЗОВАН
         </span>
       </button>
 
@@ -141,7 +141,7 @@ export default function SessionIndicator() {
               <div className="flex items-center gap-2">
                 <Shield size={14} style={{ color: statusColor }} />
                 <span className="text-xs font-mono font-bold tracking-wider" style={{ color: statusColor }}>
-                  SESSION ACTIVE
+                  СЕССИЯ АКТИВНА
                 </span>
               </div>
               <button onClick={() => setExpanded(false)} className="text-gray-500 hover:text-white transition-colors">
@@ -168,16 +168,16 @@ export default function SessionIndicator() {
               <div className="flex items-center gap-2 px-3 py-2 rounded" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
                 <Clock size={12} style={{ color: statusColor }} />
                 <div className="flex-1">
-                  <div className="text-[10px] font-mono text-gray-500 uppercase">Time Remaining</div>
+                  <div className="text-[10px] font-mono text-gray-500 uppercase">Осталось времени</div>
                   <div className="text-sm font-mono font-bold" style={{ color: statusColor }}>
-                    {timeLeft || "Calculating..."}
+                    {timeLeft || "Вычисление..."}
                   </div>
                 </div>
                 <button
                   onClick={() => extendSession.mutate()}
                   disabled={extendSession.isPending}
                   className="p-1.5 rounded hover:bg-white/5 transition-colors"
-                  title="Extend session"
+                  title="Продлить сессию"
                 >
                   <RefreshCw size={12} className={`text-gray-400 hover:text-green-400 ${extendSession.isPending ? "animate-spin" : ""}`} />
                 </button>
@@ -186,14 +186,14 @@ export default function SessionIndicator() {
               {/* Session Duration */}
               {session?.sessionDurationMinutes && (
                 <div className="text-[10px] font-mono text-gray-600 px-1">
-                  Session duration: {session.sessionDurationMinutes} minutes
+                  Длительность сессии: {session.sessionDurationMinutes} мин
                 </div>
               )}
 
               {/* De-authenticate Button */}
               <button
                 onClick={() => {
-                  if (confirm("De-authenticate? You will return to public access only.")) {
+                  if (confirm("Выйти? Вы вернетесь к публичному доступу.")) {
                     deauth.mutate();
                   }
                 }}
@@ -206,10 +206,10 @@ export default function SessionIndicator() {
                 }}
               >
                 <LogOut size={12} />
-                {deauth.isPending ? "DE-AUTHENTICATING..." : "DE-AUTHENTICATE"}
+                {deauth.isPending ? "ВЫХОД..." : "ВЫЙТИ ИЗ АККАУНТА"}
               </button>
               <p className="text-[9px] font-mono text-gray-600 text-center">
-                Returns you to public access. No data is lost.
+                Возврат к публичному доступу. Данные не будут утеряны.
               </p>
             </div>
           </div>

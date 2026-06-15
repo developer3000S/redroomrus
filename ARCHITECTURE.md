@@ -1,295 +1,288 @@
-# Redroom V2.4 — System Architecture
+# Redroom V2.4 — Архитектура системы
 
-> **Owlink.ai** — *Stealth Intelligence for Gov and People* · Built by **Alexsai** · [redroom.live](https://redroom.live)
+> **Owlink.ai** — *Скрытая разведка для государственных структур и общества* · Разработано **Alexsai** · [redroom.live](https://redroom.live)
 
-This document describes the technical architecture of the Redroom geopolitical intelligence platform: its system design, data flow, component map, and database schema overview.
-
----
-
-## Table of Contents
-
-1. [High-Level Overview](#high-level-overview)
-2. [Request Lifecycle](#request-lifecycle)
-3. [Frontend Architecture](#frontend-architecture)
-4. [Backend Architecture](#backend-architecture)
-5. [Crawler & Mission System](#crawler--mission-system)
-6. [Authentication & Access Control](#authentication--access-control)
-7. [Database Schema Overview](#database-schema-overview)
-8. [AI & LLM Integration](#ai--llm-integration)
-9. [File Storage](#file-storage)
-10. [Key Design Decisions](#key-design-decisions)
+Данный документ описывает техническую архитектуру платформы геополитической разведки Redroom: проектирование системы, потоки данных, карту компонентов и обзор схемы базы данных.
 
 ---
 
-## High-Level Overview
+## Содержание
 
-Redroom is a **monorepo full-stack application** running as a single Node.js process. The Express server handles both the tRPC API layer and serves the Vite-built React frontend as static assets in production. This keeps deployment simple — one container, one port, no separate CDN configuration required for the core application.
+1. [Общий обзор](#общий-обзор)
+2. [Жизненный цикл запроса](#жизненный-цикл-запроса)
+3. [Архитектура фронтенда](#архитектура-фронтенда)
+4. [Архитектура бэкенда](#архитектура-бэкенда)
+5. [Краулер и система миссий](#краулер-и-система-миссий)
+6. [Аутентификация и контроль доступа](#аутентификация-и-контроль-доступа)
+7. [Обзор схемы базы данных](#обзор-схемы-базы-данных)
+8. [Интеграция с ИИ (LLM)](#интеграция-с-ии-llm)
+9. [Хранилище файлов](#хранилище-файлов)
+10. [Ключевые проектные решения](#ключевые-проектные-решения)
+
+---
+
+## Общий обзор
+
+Redroom представляет собой **полностековое монорепозиторное приложение**, работающее как единый процесс Node.js. Сервер Express обрабатывает API-уровень tRPC и обслуживает собранный на Vite фронтенд React как статические ресурсы в продакшене. Это упрощает развертывание: один контейнер, один порт, не требуется отдельная конфигурация CDN для основного приложения.
 
 ```
-Internet
+Интернет
     │
     ▼
 ┌───────────────────────────────────────────────────────────────────┐
-│                    Node.js Process (port 3000)                    │
+│                    Процесс Node.js (порт 3000)                    │
 │                                                                   │
 │  ┌─────────────────────────────────────────────────────────────┐  │
-│  │                    Express Server                           │  │
-│  │  /api/trpc/*  →  tRPC Router                               │  │
-│  │  /api/oauth/* →  OAuth Callback Handler                    │  │
-│  │  /*           →  Vite Static Assets (production)           │  │
+│  │                    Сервер Express                           │  │
+│  │  /api/trpc/*  →  Роутер tRPC                                │  │
+│  │  /api/oauth/* →  Обработчик колбэков OAuth                  │  │
+│  │  /*           →  Статические ресурсы Vite (продакшн)        │  │
 │  └─────────────────────────────────────────────────────────────┘  │
 │                                                                   │
 │  ┌──────────────────────┐  ┌──────────────────────────────────┐  │
-│  │  Mission Scheduler   │  │  Narrative Engine                │  │
-│  │  (node-cron)         │  │  (background LLM analysis)       │  │
+│  │ Планировщик миссий   │  │   Движок нарративов              │  │
+│  │  (node-cron)         │  │ (фоновый анализ с помощью ИИ)    │  │
 │  └──────────────────────┘  └──────────────────────────────────┘  │
 └───────────────────────────────────────────────────────────────────┘
          │                              │
          ▼                              ▼
 ┌─────────────────┐          ┌──────────────────────┐
-│  MySQL / TiDB   │          │  S3-compatible        │
-│  Database       │          │  Object Storage       │
+│  База данных    │          │  Объектное           │
+│  MySQL / TiDB   │          │  хранилище S3        │
 └─────────────────┘          └──────────────────────┘
 ```
 
 ---
 
-## Request Lifecycle
+## Жизненный цикл запроса
 
-A typical analyst request flows as follows:
+Типичный запрос аналитика проходит следующие этапы:
 
-1. The React client calls a tRPC procedure via `trpc.*.useQuery()` or `trpc.*.useMutation()`.
-2. The tRPC client serialises the call as a JSON POST to `/api/trpc/<procedure>`.
-3. The Express middleware deserialises the request and routes it to the appropriate tRPC router.
-4. The router middleware validates the session cookie (`JWT_SECRET`) and resolves `ctx.user`.
-5. The procedure handler calls a query helper in `server/db.ts` which executes a Drizzle ORM query.
-6. The result is serialised with SuperJSON (preserving `Date` objects) and returned to the client.
-7. The React component receives typed data via the tRPC React Query integration.
+1. Клиент React вызывает процедуру tRPC через `trpc.*.useQuery()` или `trpc.*.useMutation()`.
+2. Клиент tRPC сериализует вызов как JSON POST запрос на эндпоинт `/api/trpc/<процедура>`.
+3. Middleware Express десериализует запрос и направляет его в соответствующий роутер tRPC.
+4. Middleware роутера проверяет сессионную куку (`JWT_SECRET`) и определяет пользователя `ctx.user`.
+5. Обработчик процедуры вызывает хелпер запроса в `server/db.ts`, который выполняет запрос через Drizzle ORM.
+6. Результат сериализуется с помощью SuperJSON (сохраняя объекты `Date`) и возвращается клиенту.
+7. Компонент React получает типизированные данные через интеграцию tRPC и React Query.
 
-For **streaming responses** (LLM-assisted analysis), the server uses Server-Sent Events (SSE) via tRPC subscriptions.
+Для **потоковых ответов** (анализ с помощью ИИ) сервер использует Server-Sent Events (SSE) через подписки tRPC.
 
 ---
 
-## Frontend Architecture
+## Архитектура фронтенда
 
-The frontend is a **React 19 single-page application** built with Vite. Routing is handled by Wouter (lightweight, no React Router dependency).
+Фронтенд представляет собой **одностраничное приложение (SPA) на React 19**, собранное с помощью Vite. Маршрутизация осуществляется библиотекой Wouter (легковесная, без зависимости от React Router).
 
-### Page Structure
+### Структура страниц
 
 ```
-App.tsx (routes)
-├── Home.tsx                  — Landing page and entry point
-├── IntelPlatform.tsx         — Main intelligence dashboard
-│   ├── GlobeRegionSelector   — Three.js 3-D globe with overlays
+App.tsx (маршруты)
+├── Home.tsx                  — Лендинг и точка входа
+├── IntelPlatform.tsx         — Основной дашборд разведки
+│   ├── GlobeRegionSelector   — 3D-глобус на Three.js с наложениями
 │   └── tabs/
-│       ├── LiveTab.tsx       — Real-time article feed
-│       ├── FetchingMonitor.tsx — Crawler status and mission monitor
-│       ├── AnalysisTab.tsx   — Trend analysis and charts
-│       ├── FacilitiesTab.tsx — Facility intelligence map
-│       ├── SigintTab.tsx     — SIGINT signal dashboard
-│       ├── OrbitTab.tsx      — Satellite orbit tracker
-│       └── NarrativesTab.tsx — Narrative detection feed
-├── AdminCMS.tsx              — CMS admin panel (super-admin only)
-└── Orbit.tsx                 — Full-screen orbit visualisation
+│       ├── LiveTab.tsx       — Лента статей в реальном времени
+│       ├── FetchingMonitor.tsx — Статус краулера и монитор миссий
+│       ├── AnalysisTab.tsx   — Анализ трендов и графики
+│       ├── FacilitiesTab.tsx — Карта разведки объектов
+│       ├── SigintTab.tsx     — Панель сигналов SIGINT
+│       ├── OrbitTab.tsx      — Трекер спутниковых орбит
+│       └── NarrativesTab.tsx — Лента обнаруженных нарративов
+├── AdminCMS.tsx              — Панель управления CMS (только супер-админ)
+└── Orbit.tsx                 — Полноэкранная визуализация орбит
 ```
 
-### State Management
+### Управление состоянием
 
-There is no global state management library. All server state is managed by **tRPC + React Query** (via `@tanstack/react-query`). Local UI state uses `useState` and `useReducer`. The authentication state is provided by a `useAuth()` hook that reads from `trpc.auth.me.useQuery()`.
+В проекте не используются сторонние библиотеки управления глобальным состоянием. Все состояние сервера управляется парой **tRPC + React Query** (через `@tanstack/react-query`). Локальное состояние интерфейса использует `useState` и `useReducer`. Состояние аутентификации предоставляется хуком `useAuth()`, который читает данные из `trpc.auth.me.useQuery()`.
 
-### Design System
+### Система дизайна
 
-The UI uses **shadcn/ui** components built on Radix UI primitives, styled with **Tailwind CSS 4**. The design language is a dark, high-contrast intelligence terminal aesthetic — dark backgrounds (`#080000` base), red accent colours, monospaced typography for data values, and subtle glow effects for status indicators.
+Интерфейс использует компоненты **shadcn/ui**, построенные на примитивах Radix UI и стилизованные с помощью **Tailwind CSS 4**. Дизайн выполнен в эстетике «терминала разведки»: темный высококонтрастный фон (базовый `#080000`), красные акцентные цвета, моноширинные шрифты для данных и мягкое свечение индикаторов статуса.
 
 ---
 
-## Backend Architecture
+## Архитектура бэкенда
 
-### Router Hierarchy
+### Иерархия роутеров
 
 ```
 server/routers.ts  (appRouter)
-├── auth.*          — Session management
-├── agencies.*      — News agency CRUD and crawl triggers
-├── articles.*      — Article queries and classification
-├── facilities.*    — Facility intelligence
-├── cms.*           — CMS admin procedures (super-admin)
-├── orbit.*         — Satellite orbit data
-├── sigint.*        — SIGINT signal procedures
-├── missions.*      — Surveillance mission queries
-├── narratives.*    — Narrative detection and tracking
-├── reference.*     — Cross-source reference verification
-├── system.*        — System health and notifications
-└── waitingList.*   — Access request management
+├── auth.*          — Управление сессиями
+├── agencies.*      — CRUD агентств и запуск краулера
+├── articles.*      — Запросы статей и классификация
+├── facilities.*    — Разведка объектов
+├── cms.*           — Админ-процедуры CMS (супер-админ)
+├── orbit.*         — Данные об орбитах спутников
+├── sigint.*        — Процедуры сигналов SIGINT
+├── missions.*      — Запросы миссий наблюдения
+├── narratives.*    — Обнаружение и отслеживание нарративов
+├── reference.*     — Верификация кросс-ссылок
+├── system.*        — Здоровье системы и уведомления
+└── waitingList.*   — Управление запросами доступа
 ```
 
-### Middleware Chain
+### Цепочка Middleware
 
-Each tRPC procedure passes through one or more middleware layers:
+Каждая процедура tRPC проходит через один или несколько слоев middleware:
 
-| Middleware | Purpose |
+| Middleware | Назначение |
 |---|---|
-| `publicProcedure` | No authentication required |
-| `protectedProcedure` | Validates JWT session cookie; injects `ctx.user` |
-| `adminProcedure` | Extends `protectedProcedure`; requires `ctx.user.role === "admin"` |
-| `ownerOnly` (CMS) | Validates `x-sa-token` header; independent of user session |
+| `publicProcedure` | Аутентификация не требуется |
+| `protectedProcedure` | Проверяет JWT сессию; внедряет `ctx.user` |
+| `adminProcedure` | Расширяет `protectedProcedure`; требует `ctx.user.role === "admin"` |
+| `ownerOnly` (CMS) | Проверяет заголовок `x-sa-token`; независимо от сессии пользователя |
 
-### Database Layer (`server/db.ts`)
+### Слой базы данных (`server/db.ts`)
 
-All database access goes through helper functions in `server/db.ts`. These functions accept typed parameters and return raw Drizzle row objects. Procedures in the routers call these helpers rather than constructing queries inline, keeping the router files focused on input validation and response shaping.
+Весь доступ к базе данных осуществляется через функции-хелперы в `server/db.ts`. Эти функции принимают типизированные параметры и возвращают объекты строк Drizzle. Процедуры в роутерах вызывают эти хелперы, не конструируя запросы внутри, что позволяет держать файлы роутеров сфокусированными на валидации входных данных и формировании ответа.
 
 ---
 
-## Crawler & Mission System
+## Краулер и система миссий
 
-The crawl system is the core data ingestion pipeline.
+Система сбора данных является основным конвейером поступления информации.
 
-### Components
+### Компоненты
 
-**`server/crawler.ts`** — The RSS crawl engine. Given a news agency record, it:
-1. Fetches the RSS feed URL with a `RedroomBot/1.0` User-Agent.
-2. Parses the XML feed using `rss-parser`.
-3. Deduplicates articles against the database using URL hash matching.
-4. Scores each article for sentiment (positive / neutral / negative) using keyword heuristics.
-5. Classifies articles by topic, region, and threat level.
-6. Inserts new articles and emits a `newArticle` event on the `crawlEventBus`.
+**`server/crawler.ts`** — Движок RSS-сбора. На основе записи агентства он:
+1. Получает URL RSS-ленты с User-Agent `RedroomBot/1.0`.
+2. Парсит XML с помощью `rss-parser`.
+3. Проверяет статьи на дубликаты по хэшу URL в базе данных.
+4. Оценивает тональность (позитив / нейтрал / негатив) через эвристики ключевых слов.
+5. Классифицирует статьи по теме, региону и уровню угрозы.
+6. Сохраняет новые статьи и генерирует событие `newArticle` в `crawlEventBus`.
 
-**`server/missionScheduler.ts`** — The mission scheduling layer. On startup, it:
-1. Loads all active missions from the `crawl_missions` table.
-2. Registers a `node-cron` job for each mission's cron expression.
-3. When a job fires, it creates a `mission_runs` record, selects matching agencies (filtered by region, topic, and source type), runs the crawler for each agency, and updates the run record with the result.
+**`server/missionScheduler.ts`** — Слой планирования миссий. При запуске он:
+1. Загружает все активные миссии из таблицы `crawl_missions`.
+2. Регистрирует задачу `node-cron` для каждой миссии по её cron-выражению.
+3. При срабатывании задачи создает запись `mission_runs`, выбирает подходящие агентства (отфильтрованные по региону, теме и типу источника), запускает краулер для каждого агентства и обновляет отчет результатом.
 
-**`server/crawlEventBus.ts`** — A lightweight in-process event emitter that bridges the crawler to tRPC subscriptions, allowing the frontend to receive real-time article notifications without polling.
+**`server/crawlEventBus.ts`** — Легковесный обработчик событий внутри процесса, который связывает краулер с подписками tRPC, позволяя фронтенду получать уведомления о новых статьях в реальном времени без опроса (polling).
 
-### Mission Data Flow
+### Поток данных миссии
 
 ```
-crawl_missions table
+Таблица crawl_missions
         │
         ▼
 missionScheduler (node-cron)
-        │  fires on cron schedule
+        │  срабатывает по расписанию
         ▼
-mission_runs (insert: status=running)
+mission_runs (вставка: status=running)
         │
         ▼
-crawler.ts (for each matching agency)
-        │  fetches RSS, parses, deduplicates
+crawler.ts (для каждого агентства)
+        │  сбор RSS, парсинг, дедупликация
         ▼
-articles table (insert new articles)
+Таблица articles (вставка новых статей)
         │
         ▼
 crawlEventBus.emit('newArticle')
         │
         ▼
-tRPC subscription → React client (live feed update)
+tRPC subscription → Клиент React (обновление ленты)
         │
         ▼
-mission_runs (update: status=completed, articleCount, duration)
+mission_runs (обновление: status=completed, кол-во статей, время)
 ```
 
 ---
 
-## Authentication & Access Control
+## Аутентификация и контроль доступа
 
-Redroom uses a **dual-authentication model**:
+Redroom использует **модель двойной аутентификации**:
 
-### User Authentication (Analyst / Admin)
+### Аутентификация пользователя (Аналитик / Админ)
 
-Standard users authenticate via OAuth. The OAuth callback at `/api/oauth/callback` exchanges the authorisation code for user info, creates or updates the user record in the `users` table, and issues a signed JWT session cookie. The cookie is `httpOnly`, `sameSite: lax`, and signed with `JWT_SECRET`.
+Обычные пользователи авторизуются через OAuth. Колбэк по адресу `/api/oauth/callback` обменивает код авторизации на информацию о пользователе, создает или обновляет запись в таблице `users` и выдает подписанную JWT сессионную куку. Кука имеет флаги `httpOnly`, `sameSite: lax` и подписана секретом `JWT_SECRET`.
 
-Authenticated requests have `ctx.user` injected by the tRPC context builder (`server/_core/context.ts`). The `protectedProcedure` middleware throws `UNAUTHORIZED` if no valid session exists.
+Аутентифицированные запросы получают `ctx.user` через конструктор контекста tRPC (`server/_core/context.ts`). Middleware `protectedProcedure` выбрасывает ошибку `UNAUTHORIZED`, если валидная сессия отсутствует.
 
-### Super-Admin Authentication (CMS)
+### Аутентификация супер-админа (CMS)
 
-The CMS uses a completely separate authentication mechanism that does not depend on the user table. A super-admin authenticates by providing the `ADMIN_SECRET_KEY`. On success, the server issues a time-limited base64-encoded token that is stored in `localStorage` and sent as the `x-sa-token` header on all CMS requests.
+CMS использует полностью отдельный механизм аутентификации, не зависящий от таблицы пользователей. Супер-админ авторизуется путем предоставления ключа `ADMIN_SECRET_KEY`. При успехе сервер выдает ограниченный по времени токен в формате base64, который сохраняется в `localStorage` и отправляется в заголовке `x-sa-token` при всех запросах к CMS.
 
-The `ownerOnly` middleware in `server/routers/cms.ts` and `server/routers/waitingList.ts` validates this token independently of the OAuth session. This separation means a compromise of a user account (even an admin account) cannot grant CMS access.
+Middleware `ownerOnly` в `server/routers/cms.ts` и `server/routers/waitingList.ts` проверяет этот токен независимо от сессии OAuth. Это разделение означает, что компрометация учетной записи пользователя (даже администратора) не дает доступа к CMS.
 
-### Role Hierarchy
+### Иерархия ролей
 
 ```
-Public (unauthenticated)
-    └── Analyst (authenticated user, role: "user")
-            └── Admin (authenticated user, role: "admin")
-                    └── Super-Admin (x-sa-token, CMS only)
+Публичный (неавторизованный)
+    └── Аналитик (авторизованный пользователь, роль: "user")
+            └── Админ (авторизованный пользователь, роль: "admin")
+                    └── Супер-админ (x-sa-token, только CMS)
 ```
 
 ---
 
-## Database Schema Overview
+## Обзор схемы базы данных
 
-The schema is defined in `drizzle/schema.ts` using Drizzle ORM. Below is a summary of the primary tables and their relationships. Column-level detail is intentionally omitted here — refer to `drizzle/schema.ts` for the full definition.
+Схема определена в `drizzle/schema.ts` с использованием Drizzle ORM. Ниже приведена сводка основных таблиц и их связей.
 
-### Core Intelligence Tables
+### Основные таблицы разведки
 
-| Table | Key Columns | Relationships |
+| Таблица | Ключевые колонки | Связи |
 |---|---|---|
 | `news_agencies` | id, name, country, region, bias, rssUrl, reliabilityScore | → articles (1:N) |
 | `articles` | id, title, url, publishedAt, sentiment, topics, region, threatLevel | → news_agencies (N:1), → facilities (N:M) |
 | `facilities` | id, name, type, country, lat, lng, classification | → articles (N:M) |
-| `country_intel_data` | countryCode, threatLevel, escalationScore, lastUpdated | — |
+| `country_intel_data`| countryCode, threatLevel, escalationScore, lastUpdated | — |
 
-### Crawl Pipeline Tables
+### Таблицы конвейера сбора данных
 
-| Table | Key Columns | Relationships |
+| Таблица | Ключевые колонки | Связи |
 |---|---|---|
-| `crawl_missions` | id, name, cronExpression, targetRegions, targetTopics, createdBy, isActive | → mission_runs (1:N) |
-| `mission_runs` | id, missionId, startedAt, status, articlesFound, newArticles, triggeredBy | → crawl_missions (N:1) |
+| `crawl_missions` | id, name, cronExpression, targetRegions, targetTopics, isActive | → mission_runs (1:N) |
+| `mission_runs` | id, missionId, startedAt, status, articlesFound, newArticles | → crawl_missions (N:1) |
 | `pipeline_webhooks` | id, url, event, secret, isActive | — |
 
-### Analysis Tables
+### Таблицы анализа
 
-| Table | Key Columns | Relationships |
+| Таблица | Ключевые колонки | Связи |
 |---|---|---|
 | `investigations` | id, title, analystId, status, linkedArticles | → articles (N:M) |
 | `verified_articles` | id, articleId, verificationScore, sources | → articles (N:1) |
 | `sigint_signals` | id, frequency, classification, lat, lng, detectedAt | — |
 
-### Access Management Tables
+---
 
-| Table | Key Columns | Relationships |
-|---|---|---|
-| `users` | id, openId, name, email, role, createdAt | — |
-| `waiting_list` | id, name, email, role, status, notes | — |
+## Интеграция с ИИ (LLM)
+
+Интеграция с LLM используется в двух местах:
+
+**`server/narrativeEngine.ts`** — Периодически анализирует последние статьи для обнаружения скоординированных нарративов, информационных операций и паттернов обмена сообщениями. Он вызывает LLM со структурированным промптом и пакетом заголовков/сводок статей, затем парсит JSON ответ для извлечения кластеров нарративов, уровней уверенности и атрибуции источников.
+
+**Процедуры инлайн-анализа** — Несколько процедур tRPC в `server/routers.ts` используют LLM для задач по запросу: суммаризация статей, генерация оценки угроз и синтез данных из разных источников. Эти вызовы всегда выполняются на стороне сервера, чтобы ключи API не попадали в браузер.
+
+Хелпер LLM (`server/_core/llm.ts`) оборачивает вызовы API логикой повторных попыток, обработки таймаутов и парсинга структурированных JSON ответов.
 
 ---
 
-## AI & LLM Integration
+## Хранилище файлов
 
-The LLM integration is used in two places:
+Хранение файлов использует S3-совместимый API через хелперы в `server/storage.ts`. Два основных хелпера:
 
-**`server/narrativeEngine.ts`** — Periodically analyses recent articles to detect coordinated narratives, information operations, and messaging patterns. It calls the LLM with a structured prompt and a batch of recent article titles/summaries, then parses the JSON response to extract narrative clusters, confidence scores, and source attribution.
+- `storagePut(key, data, contentType?)` — загружает байты в S3 и возвращает публичный URL.
+- `storageGet(key, expiresIn?)` — генерирует подписанный URL для получения приватных объектов.
 
-**Inline analysis procedures** — Several tRPC procedures in `server/routers.ts` use the LLM for on-demand tasks: article summarisation, threat assessment generation, and cross-source synthesis. These are always called server-side to keep API keys out of the browser.
-
-The LLM helper (`server/_core/llm.ts`) wraps the underlying API call with retry logic, timeout handling, and structured JSON response parsing.
-
----
-
-## File Storage
-
-File storage uses an S3-compatible API via the helpers in `server/storage.ts`. The two primary helpers are:
-
-- `storagePut(key, data, contentType?)` — uploads bytes to S3 and returns the public URL.
-- `storageGet(key, expiresIn?)` — generates a presigned GET URL for private objects.
-
-The S3 bucket is configured for public read access on uploaded objects, so returned URLs from `storagePut` can be used directly in `<img>` tags or API responses without additional signing. File keys are constructed with random suffixes to prevent enumeration.
+Бакет S3 настроен для публичного доступа на чтение загруженных объектов, поэтому URL, возвращаемые `storagePut`, можно использовать напрямую в тегах `<img>` или ответах API без дополнительной подписи. Ключи файлов конструируются с использованием случайных суффиксов для предотвращения перебора.
 
 ---
 
-## Key Design Decisions
+## Ключевые проектные решения
 
-**tRPC over REST** — Using tRPC eliminates the need for a separate API contract layer. Types flow end-to-end from the Drizzle schema through the router procedure to the React component with zero manual type definitions. This significantly reduces the surface area for type drift bugs.
+**tRPC вместо REST** — Использование tRPC устраняет необходимость в отдельном слое описания API контрактов. Типы проходят сквозь все приложение: от схемы Drizzle через процедуры роутера до компонентов React без ручного описания типов. Это значительно снижает вероятность ошибок рассогласования типов.
 
-**Single-process deployment** — Running the API and frontend server in a single Node.js process simplifies deployment, eliminates cross-origin complexity, and reduces infrastructure cost. The trade-off is that CPU-intensive background tasks (crawler, narrative engine) share the event loop with request handling. This is mitigated by keeping background tasks lightweight and rate-limited.
+**Развертывание одним процессом** — Работа API и фронтенд-сервера в одном процессе Node.js упрощает деплой, исключает сложности с кросс-доменными запросами (CORS) и снижает затраты на инфраструктуру. Платой за это является разделение ресурсов CPU фоновыми задачами (краулер, движок нарративов) и обработкой запросов. Это минимизируется за счет легковесности фоновых задач и ограничения их частоты.
 
-**Dual authentication** — Separating the CMS super-admin token from the OAuth user session ensures that the CMS is not accessible even if an OAuth provider is compromised or a user account is taken over. The `x-sa-token` is a short-lived, server-signed token that cannot be forged without `ADMIN_SECRET_KEY`.
+**Двойная аутентификация** — Разделение токена супер-админа CMS и пользовательской сессии OAuth гарантирует, что CMS останется недоступной даже в случае компрометации провайдера OAuth или кражи аккаунта пользователя. Токен `x-sa-token` кратковременный и подписывается сервером, его невозможно подделать без `ADMIN_SECRET_KEY`.
 
-**Drizzle ORM over raw SQL** — Drizzle provides type-safe query building with minimal runtime overhead. Unlike heavier ORMs, it does not use a connection pool abstraction — it works directly with the underlying MySQL2 driver, giving full control over connection management and query execution.
+**Drizzle ORM вместо чистого SQL** — Drizzle обеспечивает типобезопасное построение запросов с минимальными накладными расходами во время выполнения. В отличие от тяжелых ORM, он не использует абстракцию пула соединений, а работает напрямую с драйвером MySQL2, давая полный контроль над управлением соединениями.
 
-**Event-driven live feed** — The `crawlEventBus` pattern avoids polling for live article updates. The crawler emits events that are picked up by tRPC subscriptions (SSE), which push updates to connected clients. This keeps the live feed truly real-time without the overhead of WebSocket infrastructure.
+**Живая лента на событиях** — Паттерн `crawlEventBus` позволяет избежать постоянного опроса (polling) для обновления ленты статей. Краулер генерирует события, которые подхватываются подписками tRPC (SSE) и доставляются подключенным клиентам. Это делает ленту по-настоящему живой без накладных расходов на инфраструктуру WebSocket.
 
 ---
 
-*Redroom V2.4 is an initiative of [Owlink.ai](https://owlink.ai) — Stealth Intelligence for Gov and People · Built by Alexsai · © 2024–2026 Alexsai · Owlink.ai*
+*Redroom V2.4 — инициатива [Owlink.ai](https://owlink.ai) — Скрытая разведка для государственных структур и общества · Разработано Alexsai · © 2024–2026 Alexsai · Owlink.ai*

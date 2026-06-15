@@ -38,17 +38,17 @@ export function AuthModal({ isOpen, onClose, onSuccess, defaultMode = "register"
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Something went wrong. Please try again.");
+        setError(data.error || "Что-то пошло не так. Пожалуйста, попробуйте еще раз.");
         return;
       }
 
-      setSuccess(data.message || "Success!");
+      setSuccess(data.message || "Успешно!");
       setTimeout(() => {
         onSuccess();
         onClose();
       }, 800);
     } catch {
-      setError("Network error. Please check your connection.");
+      setError("Ошибка сети. Пожалуйста, проверьте ваше соединение.");
     } finally {
       setLoading(false);
     }
@@ -73,9 +73,9 @@ export function AuthModal({ isOpen, onClose, onSuccess, defaultMode = "register"
             </div>
             <div>
               <h2 className="text-lg font-bold text-white tracking-wide font-mono">
-                {mode === "login" ? "SIGN IN" : "CREATE ACCOUNT"}
+                {mode === "login" ? "ВХОД" : "РЕГИСТРАЦИЯ"}
               </h2>
-              <p className="text-xs text-gray-500 font-mono">REDROOM · SECURE ACCESS</p>
+              <p className="text-xs text-gray-500 font-mono">REDROOM · БЕЗОПАСНЫЙ ДОСТУП</p>
             </div>
           </div>
         </div>
@@ -85,13 +85,13 @@ export function AuthModal({ isOpen, onClose, onSuccess, defaultMode = "register"
           {mode === "register" && (
             <div>
               <label className="block text-xs font-mono text-gray-400 mb-1.5 uppercase tracking-wider">
-                Display Name
+                Отображаемое имя
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Analyst"
+                placeholder="Аналитик"
                 className="w-full px-3 py-2.5 bg-[#111118] border border-gray-800 rounded text-white placeholder-gray-600 font-mono text-sm focus:outline-none focus:border-red-700/60 focus:ring-1 focus:ring-red-900/30 transition-all"
               />
             </div>
@@ -99,7 +99,7 @@ export function AuthModal({ isOpen, onClose, onSuccess, defaultMode = "register"
 
           <div>
             <label className="block text-xs font-mono text-gray-400 mb-1.5 uppercase tracking-wider">
-              Email Address
+              Электронная почта
             </label>
             <input
               type="email"
@@ -113,14 +113,14 @@ export function AuthModal({ isOpen, onClose, onSuccess, defaultMode = "register"
 
           <div>
             <label className="block text-xs font-mono text-gray-400 mb-1.5 uppercase tracking-wider">
-              Password
+              Пароль
             </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={mode === "register" ? "Min 8 characters" : "••••••••"}
+                placeholder={mode === "register" ? "Мин. 8 символов" : "••••••••"}
                 required
                 minLength={mode === "register" ? 8 : undefined}
                 className="w-full px-3 py-2.5 pr-10 bg-[#111118] border border-gray-800 rounded text-white placeholder-gray-600 font-mono text-sm focus:outline-none focus:border-red-700/60 focus:ring-1 focus:ring-red-900/30 transition-all"
@@ -158,12 +158,12 @@ export function AuthModal({ isOpen, onClose, onSuccess, defaultMode = "register"
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                PROCESSING...
+                ОБРАБОТКА...
               </>
             ) : mode === "login" ? (
-              "AUTHENTICATE"
+              "АВТОРИЗОВАТЬСЯ"
             ) : (
-              "CREATE ACCOUNT"
+              "СОЗДАТЬ АККАУНТ"
             )}
           </button>
         </form>
@@ -173,30 +173,30 @@ export function AuthModal({ isOpen, onClose, onSuccess, defaultMode = "register"
           <div className="text-center text-xs font-mono text-gray-500">
             {mode === "login" ? (
               <>
-                No account?{" "}
+                Нет аккаунта?{" "}
                 <button
                   type="button"
                   onClick={() => { setMode("register"); setError(""); setSuccess(""); }}
                   className="text-red-400 hover:text-red-300 underline underline-offset-2"
                 >
-                  Create one
+                  Создать
                 </button>
               </>
             ) : (
               <>
-                Already have an account?{" "}
+                Уже есть аккаунт?{" "}
                 <button
                   type="button"
                   onClick={() => { setMode("login"); setError(""); setSuccess(""); }}
                   className="text-red-400 hover:text-red-300 underline underline-offset-2"
                 >
-                  Sign in
+                  Войти
                 </button>
               </>
             )}
           </div>
           <p className="text-center text-[10px] text-gray-600 mt-3 font-mono">
-            Your data is encrypted and stored securely. No third-party access.
+            Ваши данные зашифрованы и хранятся безопасно. Доступ третьих лиц исключен.
           </p>
         </div>
       </div>

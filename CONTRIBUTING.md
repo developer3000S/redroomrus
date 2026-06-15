@@ -1,89 +1,89 @@
-# Contributing to Redroom V2.4
+# Руководство по разработке Redroom V2.4
 
-Thank you for your interest in contributing to Redroom V2.4. This document explains how to get involved, what we expect from contributors, and how the review process works.
-
----
-
-## Code of Conduct
-
-All contributors are expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md). Please read it before participating.
+Благодарим вас за интерес к участию в разработке Redroom V2.4. В этом документе объясняется, как принять участие, чего мы ожидаем от участников и как устроен процесс проверки.
 
 ---
 
-## Ways to Contribute
+## Кодекс поведения
 
-Contributions are welcome in several forms:
-
-- **Bug reports** — open a GitHub Issue with a clear description, steps to reproduce, and expected vs. actual behaviour.
-- **Feature requests** — open a GitHub Issue describing the use case, the proposed solution, and any alternatives you considered.
-- **Code contributions** — fork the repository, make your changes on a feature branch, and open a Pull Request.
-- **Documentation improvements** — corrections, clarifications, and additions to any `.md` file are always appreciated.
-- **OSINT community feedback** — if you are an analyst or researcher using the platform, your domain expertise is invaluable for shaping the roadmap.
+От всех участников ожидается соблюдение [Кодекса поведения](CODE_OF_CONDUCT.md). Пожалуйста, прочтите его перед началом работы.
 
 ---
 
-## Development Setup
+## Способы участия
 
-Follow the [Quick Start](README.md#quick-start) section in the README to get a local development environment running. The key commands are:
+Мы приветствуем различные формы участия:
+
+- **Отчеты об ошибках** — создайте GitHub Issue с четким описанием, шагами для воспроизведения, а также ожидаемым и фактическим поведением.
+- **Запросы функций** — создайте GitHub Issue с описанием варианта использования, предлагаемого решения и рассмотренных альтернатив.
+- **Вклад в код** — сделайте форк репозитория, внесите изменения в отдельную ветку и откройте Pull Request.
+- **Улучшение документации** — исправления, уточнения и дополнения в любом файле `.md` всегда приветствуются.
+- **Обратная связь от OSINT-сообщества** — если вы аналитик или исследователь, использующий платформу, ваш опыт неоценим для формирования плана развития.
+
+---
+
+## Настройка окружения
+
+Следуйте разделу [Быстрый старт](README.md#быстрый-старт) в README для запуска локальной среды разработки. Основные команды:
 
 ```bash
-pnpm install        # Install all dependencies
-pnpm db:push        # Apply database schema migrations
-pnpm dev            # Start the development server (http://localhost:3000)
-pnpm test           # Run the Vitest test suite
-pnpm build          # Build for production
+pnpm install        # Установка всех зависимостей
+pnpm db:push        # Применение миграций схемы базы данных
+pnpm dev            # Запуск сервера разработки (http://localhost:3000)
+pnpm test           # Запуск тестов Vitest
+pnpm build          # Сборка для продакшена
 ```
 
 ---
 
-## Branch Strategy
+## Стратегия работы с ветками
 
-| Branch | Purpose |
+| Ветка | Назначение |
 |---|---|
-| `main` | Stable, production-ready code |
-| `feature/<name>` | New features |
-| `fix/<name>` | Bug fixes |
-| `docs/<name>` | Documentation-only changes |
+| `main` | Стабильный код, готовый к продакшену |
+| `feature/<название>` | Новые функции |
+| `fix/<название>` | Исправление ошибок |
+| `docs/<название>` | Изменения только в документации |
 
-All pull requests should target `main`. Do not push directly to `main`.
-
----
-
-## Pull Request Guidelines
-
-Before opening a Pull Request, please ensure:
-
-1. **Your branch is up to date** with `main` (`git pull origin main`).
-2. **Tests pass** — run `pnpm test` and ensure all tests pass. If you are adding a new feature, add corresponding Vitest tests in `server/*.test.ts`.
-3. **TypeScript compiles cleanly** — run `pnpm tsc --noEmit` and resolve any type errors.
-4. **No secrets are committed** — double-check that `.env` files, API keys, and private URLs are not included in your diff. The `.gitignore` should catch most cases, but always verify.
-5. **The schema is migrated** — if you changed `drizzle/schema.ts`, run `pnpm db:push` and include the generated migration files in your commit.
-6. **The PR description explains the change** — describe what changed, why, and how to test it.
+Все Pull Request должны быть направлены в ветку `main`. Не пушьте изменения напрямую в `main`.
 
 ---
 
-## Commit Message Convention
+## Правила создания Pull Request
 
-Use the [Conventional Commits](https://www.conventionalcommits.org/) format:
+Перед открытием Pull Request убедитесь, что:
+
+1. **Ваша ветка актуальна** по отношению к `main` (`git pull origin main`).
+2. **Тесты проходят** — запустите `pnpm test` и убедитесь, что все тесты выполнены успешно. При добавлении новой функции добавьте соответствующие тесты Vitest в `server/*.test.ts`.
+3. **TypeScript компилируется без ошибок** — запустите `pnpm tsc --noEmit` и исправьте все ошибки типов.
+4. **Секреты не попали в коммит** — проверьте, что файлы `.env`, ключи API и приватные URL не включены в ваш diff. `.gitignore` должен скрывать большинство случаев, но всегда проверяйте сами.
+5. **Схема БД мигрирована** — если вы изменили `drizzle/schema.ts`, запустите `pnpm db:push` и включите сгенерированные файлы миграций в ваш коммит.
+6. **Описание PR объясняет изменения** — опишите, что изменилось, почему и как это протестировать.
+
+---
+
+## Конвенция сообщений коммитов
+
+Используйте формат [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-<type>(<scope>): <short summary>
+<type>(<scope>): <краткое описание>
 
-[optional body]
-[optional footer]
+[необязательное тело]
+[необязательный футер]
 ```
 
-| Type | When to use |
+| Тип | Когда использовать |
 |---|---|
-| `feat` | A new feature |
-| `fix` | A bug fix |
-| `docs` | Documentation changes only |
-| `style` | Formatting, whitespace (no logic change) |
-| `refactor` | Code restructuring without behaviour change |
-| `test` | Adding or updating tests |
-| `chore` | Build system, dependency updates, tooling |
+| `feat` | Новая функция |
+| `fix` | Исправление ошибки |
+| `docs` | Изменения только в документации |
+| `style` | Форматирование, пробелы (без изменения логики) |
+| `refactor` | Реструктуризация кода без изменения поведения |
+| `test` | Добавление или обновление тестов |
+| `chore` | Система сборки, обновление зависимостей, инструменты |
 
-Examples:
+Примеры:
 
 ```
 feat(crawler): add retry logic with exponential backoff
@@ -93,32 +93,32 @@ docs(architecture): add data flow diagram for crawler pipeline
 
 ---
 
-## What We Will Not Accept
+## Что мы не принимаем
 
-- Code that introduces new dependencies without prior discussion in an Issue.
-- Changes that remove or weaken the dual-authentication model (see [ARCHITECTURE.md](ARCHITECTURE.md#authentication--access-control)).
-- Hardcoded secrets, API keys, private URLs, or database credentials of any kind.
-- Code that stores or transmits personally identifiable information without explicit consent mechanisms.
-- Changes that break the existing Vitest test suite without a clear justification.
-
----
-
-## Reporting Bugs
-
-When filing a bug report, please include:
-
-- The version or commit hash you are running.
-- Your Node.js version (`node --version`) and OS.
-- A minimal reproduction case — the fewer steps to reproduce, the better.
-- The full error message and stack trace if applicable.
-- What you expected to happen and what actually happened.
+- Код, который вводит новые зависимости без предварительного обсуждения в Issue.
+- Изменения, которые удаляют или ослабляют модель двойной аутентификации (см. [ARCHITECTURE.md](ARCHITECTURE.md#authentication--access-control)).
+- Захардкоженные секреты, ключи API, приватные URL или учетные данные базы данных любого рода.
+- Код, который сохраняет или передает персональные данные без явных механизмов согласия.
+- Изменения, которые нарушают существующие тесты Vitest без четкого обоснования.
 
 ---
 
-## Security Issues
+## Сообщение об ошибках
 
-**Do not open public GitHub Issues for security vulnerabilities.** Please follow the responsible disclosure process described in [SECURITY.md](SECURITY.md).
+При создании отчета об ошибке укажите:
+
+- Версию или хэш коммита.
+- Версию Node.js (`node --version`) и ОС.
+- Минимальный пример для воспроизведения — чем меньше шагов, тем лучше.
+- Полное сообщение об ошибке и стек вызовов (если применимо).
+- Что вы ожидали увидеть и что произошло на самом деле.
 
 ---
 
-*Redroom V2.4 is an initiative of [Owlink.ai](https://owlink.ai) — Stealth Intelligence for Gov and People · Built by Alexsai · © 2024–2026 Alexsai · Owlink.ai*
+## Проблемы безопасности
+
+**Не создавайте публичные GitHub Issues для уязвимостей безопасности.** Пожалуйста, следуйте процессу ответственного разглашения, описанному в [SECURITY.md](SECURITY.md).
+
+---
+
+*Redroom V2.4 — инициатива [Owlink.ai](https://owlink.ai) — Скрытая разведка для государственных структур и общества · Разработано Alexsai · © 2024–2026 Alexsai · Owlink.ai*

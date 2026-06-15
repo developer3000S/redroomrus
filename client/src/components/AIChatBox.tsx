@@ -114,10 +114,10 @@ export function AIChatBox({
   messages,
   onSendMessage,
   isLoading = false,
-  placeholder = "Type your message...",
+  placeholder = "Введите ваше сообщение...",
   className,
   height = "600px",
-  emptyStateMessage = "Start a conversation with AI",
+  emptyStateMessage = "Начните беседу с ИИ",
   suggestedPrompts,
 }: AIChatBoxProps) {
   const [input, setInput] = useState("");

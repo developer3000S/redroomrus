@@ -1,352 +1,352 @@
-# Redroom V2.4.1 — Open-Source Geopolitical Intelligence Platform
+# Redroom V2.4.1 — Платформа геополитической разведки на основе открытых источников (OSINT)
 
-> **An initiative of [Owlink.ai](https://owlink.ai)** — *Stealth Intelligence for Gov and People*
-> Built by **Alexsai** · Live at [redroom.live](https://redroom.live)
+> **Инициатива [Owlink.ai](https://owlink.ai)** — *Скрытая разведка для государственных структур и общества*
+> Разработано **Alexsai** · Доступно на [redroom.live](https://redroom.live)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
+[![Лицензия: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
 [![tRPC](https://img.shields.io/badge/tRPC-11-2596BE.svg)](https://trpc.io/)
 
-![Redroom Dashboard](docs/screenshots/redroom-dashboard.webp)
+![Панель управления Redroom](docs/screenshots/redroom-dashboard.webp)
 
-Redroom is a **full-stack OSINT (Open-Source Intelligence) platform** built for geopolitical analysts, researchers, and intelligence professionals. It aggregates, classifies, and visualises open-source news and signals data across global regions — providing a structured, real-time intelligence picture without requiring access to classified systems.
-
----
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Key Features](#key-features)
-3. [Tech Stack](#tech-stack)
-4. [Architecture Overview](#architecture-overview)
-5. [Quick Start](#quick-start)
-6. [Environment Variables](#environment-variables)
-7. [Project Structure](#project-structure)
-8. [Data Models](#data-models)
-9. [API Reference](#api-reference)
-10. [Crawler & Mission System](#crawler--mission-system)
-11. [CMS & Administration](#cms--administration)
-12. [Deployment](#deployment)
-13. [Contributing](#contributing)
-14. [Security](#security)
-15. [License](#license)
+Redroom — это **полнофункциональная OSINT-платформа (разведка по открытым источникам)**, созданная для геополитических аналитиков, исследователей и специалистов по разведке. Она агрегирует, классифицирует и визуализирует новости и сигнальные данные из открытых источников по всем регионам мира, обеспечивая структурированную картину разведки в реальном времени без необходимости доступа к секретным системам.
 
 ---
 
-## Overview
+## Содержание
 
-Redroom provides a **command-and-control style intelligence dashboard** that aggregates open-source news from hundreds of media agencies worldwide, enriches articles with AI-assisted classification, and presents the resulting intelligence picture through a suite of analytical tools.
-
-The platform is designed around the OSINT tradecraft workflow:
-
-1. **Collection** — automated RSS crawlers harvest articles from curated news agencies across all global regions.
-2. **Processing** — articles are parsed, deduplicated, sentiment-scored, and linked to facilities, countries, and threat categories.
-3. **Analysis** — analysts access live feeds, trend dashboards, narrative trackers, satellite orbit data, and SIGINT signal maps.
-4. **Dissemination** — intelligence is surfaced through a structured UI with region-level threat assessments, escalation indicators, and exportable reports.
+1. [Обзор](#обзор)
+2. [Основные возможности](#основные-возможности)
+3. [Технологический стек](#технологический-стек)
+4. [Архитектура](#архитектура)
+5. [Быстрый старт](#быстрый-старт)
+6. [Переменные окружения](#переменные-окружения)
+7. [Структура проекта](#структура-проекта)
+8. [Модели данных](#модели-данных)
+9. [Справочник API](#справочник-api)
+10. [Краулер и система миссий](#краулер-и-система-миссий)
+11. [CMS и администрирование](#cms-и-администрирование)
+12. [Развертывание](#развертывание)
+13. [Участие в разработке](#участие-в-разработке)
+14. [Безопасность](#безопасность)
+15. [Лицензия](#лицензия)
 
 ---
 
-## Key Features
+## Обзор
 
-| Module | Description |
+Redroom предоставляет **панель управления в стиле «командного пункта»**, которая собирает новости из открытых источников от сотен медиа-агентств по всему миру, обогащает статьи классификацией с помощью ИИ и представляет полученную картину разведки через набор аналитических инструментов.
+
+Платформа разработана в соответствии с рабочим процессом OSINT:
+
+1. **Сбор** — автоматизированные RSS-краулеры собирают статьи из отобранных новостных агентств во всех регионах мира.
+2. **Обработка** — статьи анализируются, очищаются от дубликатов, получают оценку тональности и связываются с объектами, странами и категориями угроз.
+3. **Анализ** — аналитики получают доступ к живым лентам, панелям трендов, трекерам нарративов, данным об орбитах спутников и картам сигналов SIGINT.
+4. **Распространение** — разведданные отображаются через структурированный интерфейс с оценкой угроз на уровне регионов, индикаторами эскалации и отчетами.
+
+---
+
+## Основные возможности
+
+| Модуль | Описание |
 |---|---|
-| **Live Intel Feed** | Real-time article stream with sentiment, region, and threat classification |
-| **Globe Selector** | Interactive 3-D globe with region-level threat overlays and animated intelligence indicators |
-| **Crawler Missions** | Scheduled, configurable crawl missions targeting specific regions, topics, and source types |
-| **Facilities Intelligence** | Tracked military, nuclear, energy, and infrastructure facilities with source linking |
-| **Satellite Orbit Tracker** | Real-time orbital data for reconnaissance and communication satellites |
-| **SIGINT Dashboard** | Signal intercept indicators and electronic intelligence summaries |
-| **Narrative Engine** | AI-assisted detection of coordinated narratives and information operations |
-| **Reference Checker** | Cross-source verification and citation integrity scoring |
-| **Waiting List & Access Control** | Role-based access (analyst / admin) with approval workflow |
-| **CMS Admin Panel** | Full content management: agencies, articles, facilities, missions, webhooks |
+| **Лента разведки** | Поток статей в реальном времени с классификацией по тональности, региону и типу угрозы |
+| **Выбор региона (Глобус)** | Интерактивный 3D-глобус с наложением угроз на уровне регионов и анимированными индикаторами |
+| **Миссии краулера** | Настраиваемые миссии по расписанию для сбора данных в конкретных регионах, по темам и типам источников |
+| **Разведка объектов** | Отслеживание военных, ядерных, энергетических и инфраструктурных объектов со ссылками на источники |
+| **Трекер спутников** | Данные об орбитах разведывательных и коммуникационных спутников в реальном времени |
+| **Панель SIGINT** | Индикаторы перехвата сигналов и сводки электронной разведки |
+| **Движок нарративов** | Обнаружение скоординированных нарративов и информационных операций с помощью ИИ |
+| **Проверка ссылок** | Кросс-верификация источников и оценка достоверности цитирования |
+| **Список ожидания и доступ** | Ролевой доступ (аналитик / админ) с процессом одобрения заявок |
+| **Админ-панель CMS** | Полное управление контентом: агентства, статьи, объекты, миссии, вебхуки |
 
 ---
 
-## Tech Stack
+## Технологический стек
 
-| Layer | Technology |
+| Слой | Технология |
 |---|---|
-| **Frontend** | React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Three.js |
-| **Backend** | Node.js, Express 4, tRPC 11 |
-| **Database** | MySQL / TiDB (via Drizzle ORM) |
-| **Build** | Vite 6, pnpm |
-| **Testing** | Vitest |
-| **Schema** | Drizzle Kit (migrations) |
-| **Storage** | S3-compatible object storage |
-| **Authentication** | JWT session cookies + role-based access control |
+| **Фронтенд** | React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Three.js |
+| **Бэкенд** | Node.js, Express 4, tRPC 11 |
+| **База данных** | MySQL / TiDB (через Drizzle ORM) |
+| **Сборка** | Vite 6, pnpm |
+| **Тестирование** | Vitest |
+| **Схема БД** | Drizzle Kit (миграции) |
+| **Хранилище** | S3-совместимое объектное хранилище |
+| **Аутентификация** | JWT сессии + ролевой доступ (RBAC) |
 
 ---
 
-## Architecture Overview
+## Архитектура
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        CLIENT (React 19)                        │
+│                        КЛИЕНТ (React 19)                        │
 │  ┌──────────────┐  ┌──────────────┐  ┌───────────────────────┐ │
-│  │  Globe View  │  │  Intel Feed  │  │  Analysis Dashboards  │ │
-│  │  (Three.js)  │  │  (Live tRPC) │  │  Orbit / SIGINT / CMS │ │
+│  │     Глобус   │  │ Лента данных │  │  Панели анализа       │ │
+│  │  (Three.js)  │  │ (Live tRPC)  │  │ Спутники / SIGINT / CMS│ │
 │  └──────┬───────┘  └──────┬───────┘  └──────────┬────────────┘ │
 │         └─────────────────┴──────────────────────┘             │
-│                        tRPC Client                              │
+│                        tRPC Клиент                              │
 └─────────────────────────────┬───────────────────────────────────┘
-                              │ HTTPS / tRPC over JSON
+                              │ HTTPS / tRPC (JSON)
 ┌─────────────────────────────▼───────────────────────────────────┐
-│                      SERVER (Express + tRPC)                    │
+│                      СЕРВЕР (Express + tRPC)                    │
 │  ┌──────────────┐  ┌──────────────┐  ┌───────────────────────┐ │
-│  │  appRouter   │  │  cmsRouter   │  │  Crawler / Scheduler  │ │
-│  │  (public +   │  │  (admin-only │  │  missionScheduler.ts  │ │
-│  │   protected) │  │   procedures)│  │  crawler.ts           │ │
+│  │  appRouter   │  │  cmsRouter   │  │  Краулер / Планировщик │ │
+│  │ (публичный + │  │ (только для  │  │  missionScheduler.ts  │ │
+│  │ защищенный)  │  │  админов)    │  │  crawler.ts           │ │
 │  └──────┬───────┘  └──────┬───────┘  └──────────┬────────────┘ │
 │         └─────────────────┴──────────────────────┘             │
 │                       server/db.ts                              │
 └─────────────────────────────┬───────────────────────────────────┘
                               │ Drizzle ORM
 ┌─────────────────────────────▼───────────────────────────────────┐
-│                    MySQL / TiDB Database                        │
-│  news_agencies · articles · facilities · crawl_missions         │
-│  mission_runs · investigations · sigint_signals · orbit_data    │
+│                    База данных MySQL / TiDB                     │
+│  агентства · статьи · объекты · миссии краулера                 │
+│  запуски миссий · расследования · сигналы SIGINT · спутники     │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-For the full architecture document, see [ARCHITECTURE.md](ARCHITECTURE.md).
+Полная документация по архитектуре доступна в файле [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 
-## Quick Start
+## Быстрый старт
 
-### Prerequisites
+### Требования
 
 - Node.js ≥ 22
 - pnpm ≥ 9
-- MySQL 8 or TiDB (serverless tier works)
+- MySQL 8 или TiDB
 
-### 1. Clone the repository
+### 1. Клонирование репозитория
 
 ```bash
 git clone https://github.com/Owlinkai/redroom.git
 cd redroom
 ```
 
-### 2. Install dependencies
+### 2. Установка зависимостей
 
 ```bash
 pnpm install
 ```
 
-### 3. Configure environment variables
+### 3. Настройка переменных окружения
 
-Copy the example file and fill in your values:
+Скопируйте пример файла и заполните свои значения:
 
 ```bash
 cp .env.example .env
 ```
 
-See the [Environment Variables](#environment-variables) section for a full description of each variable.
+Подробное описание каждой переменной см. в разделе [Переменные окружения](#переменные-окружения).
 
-### 4. Push the database schema
+### 4. Применение схемы базы данных
 
 ```bash
 pnpm db:push
 ```
 
-This runs `drizzle-kit generate` followed by `drizzle-kit migrate` to apply all schema migrations to your database.
+Эта команда запускает `drizzle-kit generate`, а затем `drizzle-kit migrate` для применения всех миграций схемы к вашей базе данных.
 
-### 5. Start the development server
+### 5. Запуск сервера разработки
 
 ```bash
 pnpm dev
 ```
 
-The application will be available at `http://localhost:3000`.
+Приложение будет доступно по адресу `http://localhost:3000`.
 
 ---
 
-## Environment Variables
+## Переменные окружения
 
-All secrets and configuration values must be provided via environment variables. **Never commit a populated `.env` file.**
+Все секреты и параметры конфигурации должны передаваться через переменные окружения. **Никогда не фиксируйте заполненный файл `.env` в репозитории.**
 
-| Variable | Required | Description |
+| Переменная | Обяз. | Описание |
 |---|---|---|
-| `DATABASE_URL` | ✅ | MySQL / TiDB connection string (`mysql://user:pass@host:port/db`) |
-| `JWT_SECRET` | ✅ | Secret used to sign session cookies (min 32 chars, random) |
-| `ADMIN_SECRET_KEY` | ✅ | Super-admin CMS access key (used for the `x-sa-token` header) |
-| `AIS_API_KEY` | ✅ | AIS (Automatic Identification System) API key for vessel tracking |
-| `VITE_APP_ID` | ✅ | OAuth application ID for user authentication |
-| `OAUTH_SERVER_URL` | ✅ | OAuth backend base URL |
-| `VITE_OAUTH_PORTAL_URL` | ✅ | OAuth login portal URL (frontend) |
-| `BUILT_IN_FORGE_API_URL` | ✅ | LLM / AI service base URL (server-side) |
-| `BUILT_IN_FORGE_API_KEY` | ✅ | Bearer token for LLM / AI service (server-side, never expose to client) |
-| `VITE_FRONTEND_FORGE_API_URL` | ✅ | LLM / AI service base URL (client-side) |
-| `VITE_FRONTEND_FORGE_API_KEY` | ✅ | Bearer token for LLM / AI service (client-side, public-safe scope only) |
-| `VITE_APP_TITLE` | ⬜ | Application display name (default: `Redroom`) |
-| `VITE_APP_LOGO` | ⬜ | URL to application logo image |
-| `OWNER_OPEN_ID` | ⬜ | Owner's OAuth open ID (used for owner-only notifications) |
-| `OWNER_NAME` | ⬜ | Owner's display name |
-| `VITE_ANALYTICS_ENDPOINT` | ⬜ | Analytics collection endpoint URL |
-| `VITE_ANALYTICS_WEBSITE_ID` | ⬜ | Analytics website identifier |
+| `DATABASE_URL` | ✅ | Строка подключения MySQL / TiDB (`mysql://user:pass@host:port/db`) |
+| `JWT_SECRET` | ✅ | Секрет для подписи сессионных куки (минимум 32 символа) |
+| `ADMIN_SECRET_KEY` | ✅ | Ключ доступа к CMS супер-админа (заголовок `x-sa-token`) |
+| `AIS_API_KEY` | ✅ | API ключ AIS для отслеживания судов |
+| `VITE_APP_ID` | ✅ | OAuth ID приложения для аутентификации пользователей |
+| `OAUTH_SERVER_URL` | ✅ | Базовый URL бэкенда OAuth |
+| `VITE_OAUTH_PORTAL_URL` | ✅ | URL портала логина OAuth (фронтенд) |
+| `BUILT_IN_FORGE_API_URL` | ✅ | URL сервиса LLM / ИИ (серверная часть) |
+| `BUILT_IN_FORGE_API_KEY` | ✅ | Токен доступа к LLM / ИИ (серверная часть, не передавать клиенту) |
+| `VITE_FRONTEND_FORGE_API_URL`| ✅ | URL сервиса LLM / ИИ (клиентская часть) |
+| `VITE_FRONTEND_FORGE_API_KEY`| ✅ | Токен доступа к LLM / ИИ (клиентская часть, публичный скоуп) |
+| `VITE_APP_TITLE` | ⬜ | Название приложения (по умолчанию: `Redroom`) |
+| `VITE_APP_LOGO` | ⬜ | URL логотипа приложения |
+| `OWNER_OPEN_ID` | ⬜ | OAuth ID владельца (для уведомлений) |
+| `OWNER_NAME` | ⬜ | Имя владельца для отображения |
+| `VITE_ANALYTICS_ENDPOINT` | ⬜ | URL эндпоинта аналитики |
+| `VITE_ANALYTICS_WEBSITE_ID`| ⬜ | Идентификатор сайта в системе аналитики |
 
-> **Security note:** Variables prefixed with `VITE_` are bundled into the client-side JavaScript and are visible to end users. Never place private API keys or secrets in `VITE_` variables.
+> **Примечание по безопасности:** Переменные с префиксом `VITE_` встраиваются в клиентский JavaScript и видны конечным пользователям. Никогда не помещайте приватные ключи API или секреты в переменные `VITE_`.
 
 ---
 
-## Project Structure
+## Структура проекта
 
 ```
 redroom/
-├── client/                     # React frontend
-│   ├── public/                 # Static assets (favicon, robots.txt)
+├── client/                     # Фронтенд на React
+│   ├── public/                 # Статические ресурсы (favicon, robots.txt)
 │   ├── src/
-│   │   ├── components/         # Reusable UI components
-│   │   │   ├── GlobeRegionSelector.tsx   # 3-D globe with Three.js
-│   │   │   ├── DashboardLayout.tsx       # Sidebar dashboard shell
-│   │   │   ├── AIChatBox.tsx             # AI chat interface
-│   │   │   └── Map.tsx                   # Map integration component
-│   │   ├── pages/              # Page-level route components
-│   │   │   ├── Home.tsx                  # Landing / entry page
-│   │   │   ├── IntelPlatform.tsx         # Main intelligence dashboard
-│   │   │   ├── AdminCMS.tsx              # CMS admin panel
-│   │   │   ├── Orbit.tsx                 # Satellite orbit tracker
-│   │   │   └── tabs/                     # Dashboard tab components
-│   │   ├── contexts/           # React contexts (auth, theme)
-│   │   ├── hooks/              # Custom React hooks
-│   │   ├── lib/trpc.ts         # tRPC client binding
-│   │   ├── App.tsx             # Route definitions
-│   │   └── index.css           # Global styles and design tokens
+│   │   ├── components/         # Компоненты интерфейса
+│   │   │   ├── GlobeRegionSelector.tsx   # 3D-глобус (Three.js)
+│   │   │   ├── DashboardLayout.tsx       # Оболочка дашборда
+│   │   │   ├── AIChatBox.tsx             # Интерфейс ИИ-чата
+│   │   │   └── Map.tsx                   # Компонент карты
+│   │   ├── pages/              # Компоненты страниц
+│   │   │   ├── Home.tsx                  # Главная / Лендинг
+│   │   │   ├── IntelPlatform.tsx         # Основной дашборд разведки
+│   │   │   ├── AdminCMS.tsx              # Панель управления CMS
+│   │   │   ├── Orbit.tsx                 # Трекер спутников
+│   │   │   └── tabs/                     # Компоненты вкладок дашборда
+│   │   ├── contexts/           # Контексты React (авторизация, тема)
+│   │   ├── hooks/              # Пользовательские хуки React
+│   │   ├── lib/trpc.ts         # Привязка tRPC клиента
+│   │   ├── App.tsx             # Определение маршрутов
+│   │   └── index.css           # Глобальные стили
 │
-├── server/                     # Express + tRPC backend
-│   ├── routers/                # Feature-specific tRPC routers
-│   │   ├── cms.ts              # CMS admin procedures
-│   │   ├── orbit.ts            # Satellite orbit data
-│   │   ├── sigint.ts           # SIGINT signal procedures
-│   │   ├── missions.ts         # Surveillance mission procedures
-│   │   ├── narratives.ts       # Narrative engine procedures
-│   │   ├── reference.ts        # Reference checker procedures
-│   │   └── waitingList.ts      # Access request management
-│   ├── routers.ts              # Root router (assembles all sub-routers)
-│   ├── db.ts                   # Drizzle query helpers
-│   ├── crawler.ts              # RSS crawl engine
-│   ├── missionScheduler.ts     # Cron-based crawl mission scheduler
-│   ├── narrativeEngine.ts      # AI narrative detection engine
-│   ├── referenceChecker.ts     # Cross-source reference verification
-│   ├── quotaEnforcement.ts     # Per-user API quota management
-│   ├── rateLimiter.ts          # Request rate limiting
-│   ├── auth.ts                 # Authentication helpers
-│   └── storage.ts              # S3 file storage helpers
+├── server/                     # Бэкенд на Express + tRPC
+│   ├── routers/                # Роутеры tRPC по фичам
+│   │   ├── cms.ts              # Процедуры админки CMS
+│   │   ├── orbit.ts            # Данные об орбитах спутников
+│   │   ├── sigint.ts           # Процедуры SIGINT
+│   │   ├── missions.ts         # Процедуры миссий наблюдения
+│   │   ├── narratives.ts       # Процедуры движка нарративов
+│   │   ├── reference.ts        # Процедуры проверки ссылок
+│   │   └── waitingList.ts      # Управление запросами доступа
+│   ├── routers.ts              # Корневой роутер
+│   ├── db.ts                   # Хелперы запросов Drizzle
+│   ├── crawler.ts              # Движок RSS-краулера
+│   ├── missionScheduler.ts     # Планировщик миссий на базе cron
+│   ├── narrativeEngine.ts      # ИИ-движок обнаружения нарративов
+│   ├── referenceChecker.ts     # Проверка кросс-ссылок в источниках
+│   ├── quotaEnforcement.ts     # Управление квотами API пользователей
+│   ├── rateLimiter.ts          # Ограничение частоты запросов
+│   ├── auth.ts                 # Хелперы аутентификации
+│   └── storage.ts              # Хелперы S3-хранилища
 │
-├── drizzle/                    # Database schema and migrations
-│   ├── schema.ts               # Drizzle table definitions
-│   ├── relations.ts            # Drizzle relation definitions
-│   └── *.sql                   # Migration files
+├── drizzle/                    # Схема базы данных и миграции
+│   ├── schema.ts               # Определения таблиц Drizzle
+│   ├── relations.ts            # Определения отношений Drizzle
+│   └── *.sql                   # Файлы миграций
 │
-├── shared/                     # Shared types and constants
-│   └── const.ts                # Cross-stack constants
+├── shared/                     # Общие типы и константы
+│   └── const.ts                # Константы для всего стека
 │
-├── ARCHITECTURE.md             # Detailed system architecture
-├── CONTRIBUTING.md             # Contribution guidelines
-├── SECURITY.md                 # Security policy and disclosure
-├── CODE_OF_CONDUCT.md          # Community standards
-├── LICENSE                     # MIT License
-└── README.md                   # This file
+├── ARCHITECTURE.md             # Детальная архитектура системы
+├── CONTRIBUTING.md             # Руководство по разработке
+├── SECURITY.md                 # Политика безопасности
+├── CODE_OF_CONDUCT.md          # Кодекс поведения
+├── LICENSE                     # Лицензия MIT
+└── README.md                   # Этот файл
 ```
 
 ---
 
-## Data Models
+## Модели данных
 
-The core data models are defined in `drizzle/schema.ts`. Below is a summary of the primary tables.
+Основные модели данных определены в `drizzle/schema.ts`. Ниже приведена сводка основных таблиц.
 
-| Table | Purpose |
+| Таблица | Назначение |
 |---|---|
-| `news_agencies` | Tracked media sources with region, bias, RSS feeds, and reliability score |
-| `articles` | Crawled and classified news articles with sentiment, topics, and facility links |
-| `facilities` | Military, nuclear, energy, and infrastructure facilities with geolocation |
-| `crawl_missions` | Scheduled crawl configurations with cron schedule, targets, and creator info |
-| `mission_runs` | Execution log for each crawl mission run with status, duration, and article counts |
-| `investigations` | Analyst-created investigation threads linking articles and facilities |
-| `verified_articles` | Articles that have passed cross-source reference verification |
-| `sigint_signals` | SIGINT intercept records with frequency, classification, and geolocation |
-| `country_intel_data` | Aggregated threat and intelligence metrics per country |
-| `pipeline_webhooks` | Configurable outbound webhooks triggered by crawl pipeline stages |
-| `waiting_list` | Access request queue with role, status, and approval workflow |
+| `news_agencies` | Источники СМИ с регионом, предвзятостью, RSS и рейтингом надежности |
+| `articles` | Собранные статьи с тональностью, темами и ссылками на объекты |
+| `facilities` | Военные, ядерные и инфраструктурные объекты с геолокацией |
+| `crawl_missions` | Конфигурации миссий с расписанием cron, целями и автором |
+| `mission_runs` | Логи выполнения каждой миссии: статус, время, количество статей |
+| `investigations` | Ветки расследований аналитиков, связывающие статьи и объекты |
+| `verified_articles` | Статьи, прошедшие проверку по нескольким источникам |
+| `sigint_signals` | Записи перехватов SIGINT с частотой и геолокацией |
+| `country_intel_data`| Агрегированные метрики угроз и разведданных по странам |
+| `pipeline_webhooks` | Настраиваемые вебхуки, срабатывающие на этапах обработки данных |
+| `waiting_list` | Очередь запросов на доступ со статусом и процессом одобрения |
 
-For the full schema with column definitions, see `drizzle/schema.ts`.
+Полную схему с определениями колонок см. в `drizzle/schema.ts`.
 
 ---
 
-## API Reference
+## Справочник API
 
-Redroom uses **tRPC** for all client-server communication. There are no traditional REST endpoints — all procedures are defined in `server/routers.ts` and its sub-routers.
+Redroom использует **tRPC** для всего взаимодействия между клиентом и сервером. Традиционных REST-эндпоинтов нет — все процедуры определены в `server/routers.ts` и вложенных роутерах.
 
-### Procedure Categories
+### Категории процедур
 
-| Namespace | Access Level | Description |
+| Пространство имен | Уровень доступа | Описание |
 |---|---|---|
-| `auth.*` | Public | Session management (`me`, `logout`) |
-| `agencies.*` | Public / Admin | News agency CRUD and crawl triggers |
-| `articles.*` | Public / Analyst | Article queries, stats, trending topics |
-| `facilities.*` | Public / Admin | Facility CRUD, enrichment, source linking |
-| `cms.*` | Super-Admin | Full CMS management (missions, agencies, webhooks) |
-| `orbit.*` | Analyst | Satellite orbit data and pass predictions |
-| `sigint.*` | Analyst | SIGINT signal queries and analysis |
-| `narratives.*` | Analyst | Narrative detection and tracking |
-| `reference.*` | Analyst | Cross-source reference verification |
-| `waitingList.*` | Public / Owner | Access request submission and management |
+| `auth.*` | Публичный | Управление сессией (`me`, `logout`) |
+| `agencies.*` | Публичный / Админ | CRUD агентств и запуск сбора данных |
+| `articles.*` | Публичный / Аналитик| Запросы статей, статистика, тренды |
+| `facilities.*` | Публичный / Админ | CRUD объектов, обогащение данных |
+| `cms.*` | Супер-админ | Полное управление CMS (миссии, агентства, вебхуки)|
+| `orbit.*` | Аналитик | Данные об орбитах спутников и прогнозы пролетов |
+| `sigint.*` | Аналитик | Запросы и анализ сигналов SIGINT |
+| `narratives.*` | Аналитик | Обнаружение и отслеживание нарративов |
+| `reference.*` | Аналитик | Верификация ссылок в источниках |
+| `waitingList.*` | Публичный / Владелец| Подача и управление запросами на доступ |
 
-### Access Levels
+### Уровни доступа
 
-- **Public** — no authentication required
-- **Analyst** — requires a valid session cookie (authenticated user)
-- **Admin** — requires `role: "admin"` on the user record
-- **Super-Admin** — requires a valid `x-sa-token` header (CMS only)
-
----
-
-## Crawler & Mission System
-
-The crawler system consists of two components:
-
-**`server/crawler.ts`** — the core RSS crawl engine. It fetches RSS feeds from a given news agency, parses articles, deduplicates against the database, scores sentiment, and inserts new records. It emits events on the `crawlEventBus` so the frontend can receive live updates via tRPC subscriptions.
-
-**`server/missionScheduler.ts`** — the mission scheduling layer. Missions are stored in the `crawl_missions` table and define:
-
-- A cron schedule (e.g., `*/30 * * * *` for every 30 minutes)
-- Target regions, countries, topics, and source types
-- Priority and classification level
-- Creator information (which admin created the mission)
-
-When a mission fires, the scheduler creates a `mission_runs` record, selects matching agencies, runs the crawler for each, and updates the run record with the result (articles found, new articles, duration, any errors). Manual triggers record the `triggeredBy: "manual"` flag and the admin username.
+- **Публичный** — аутентификация не требуется.
+- **Аналитик** — требуется валидная сессия (авторизованный пользователь).
+- **Админ** — требуется `role: "admin"` в записи пользователя.
+- **Супер-админ** — требуется валидный заголовок `x-sa-token` (только CMS).
 
 ---
 
-## CMS & Administration
+## Краулер и система миссий
 
-The CMS requires super-admin authentication via a secret key. The route is not published in this documentation. It provides:
+Система сбора данных состоит из двух компонентов:
 
-- **News Agencies** — add, edit, delete, and manually crawl agencies
-- **Articles** — browse, search, and manage the article database
-- **Facilities** — manage tracked facilities and their intelligence sources
-- **Crawler Missions** — create, edit, pause, trigger, and monitor scheduled crawl missions with full run history and creator attribution
-- **Webhooks** — configure outbound webhooks triggered by pipeline events
-- **Waiting List** — review and approve/reject access requests
+**`server/crawler.ts`** — ядро RSS-краулера. Оно получает RSS-ленты агентств, анализирует статьи, проверяет на дубликаты, оценивает тональность и сохраняет новые записи. Генерирует события в `crawlEventBus` для обновлений фронтенда в реальном времени через tRPC подписки.
 
-The CMS uses a dual-authentication model: the super-admin session is established via a secret key (not tied to any user account), providing an additional layer of separation between the public user system and the administrative backend.
+**`server/missionScheduler.ts`** — уровень планирования миссий. Миссии хранятся в таблице `crawl_missions` и определяют:
+
+- Расписание cron (например, `*/30 * * * *` каждые 30 минут).
+- Целевые регионы, страны, темы и типы источников.
+- Приоритет и уровень классификации.
+- Информацию об авторе миссии.
+
+При срабатывании миссии планировщик создает запись `mission_runs`, выбирает подходящие агентства, запускает краулер для каждого и обновляет отчет результатом (найденные статьи, новые статьи, ошибки).
 
 ---
 
-## Deployment
+## CMS и администрирование
 
-Redroom is a single Node.js process that serves both the API and the built frontend assets. It is designed to run on any Node.js-compatible hosting platform.
+CMS требует аутентификации супер-админа через секретный ключ. Доступ предоставляет:
 
-### Build for production
+- **Новостные агентства** — создание, редактирование, удаление и ручной запуск сбора.
+- **Статьи** — поиск и управление базой статей.
+- **Объекты** — управление отслеживаемыми объектами и их источниками.
+- **Миссии краулера** — управление расписанием сбора данных с полной историей запусков.
+- **Вебхуки** — настройка исходящих уведомлений.
+- **Список ожидания** — рассмотрение и одобрение заявок на доступ.
+
+В CMS используется модель двойной аутентификации: сессия супер-админа устанавливается через секретный ключ (не привязана к аккаунту пользователя), что создает дополнительный уровень безопасности между публичной частью и бэкендом управления.
+
+---
+
+## Развертывание
+
+Redroom — это один процесс Node.js, который обслуживает как API, так и собранный фронтенд.
+
+### Сборка для продакшена
 
 ```bash
 pnpm build
 pnpm start
 ```
 
-### Docker (recommended)
+### Docker (рекомендуется)
 
 ```dockerfile
 FROM node:22-alpine
@@ -358,33 +358,33 @@ EXPOSE 3000
 CMD ["pnpm", "start"]
 ```
 
-### Environment
+### Окружение
 
 - **Runtime:** Node.js 22+
-- **Memory:** 512 MiB minimum recommended
-- **Port:** Reads from `PORT` environment variable, defaults to `3000`
-- **Database:** Requires an external MySQL 8 or TiDB instance (connection via `DATABASE_URL`)
+- **Память:** Минимум 512 MiB
+- **Порт:** Переменная `PORT` (по умолчанию `3000`)
+- **База данных:** Внешний экземпляр MySQL 8 или TiDB
 
 ---
 
-## Contributing
+## Участие в разработке
 
-Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
-
----
-
-## Security
-
-Please do not open public GitHub issues for security vulnerabilities. Read [SECURITY.md](SECURITY.md) for the responsible disclosure process.
+Мы приветствуем ваш вклад. Пожалуйста, прочтите [CONTRIBUTING.md](CONTRIBUTING.md) перед созданием Pull Request.
 
 ---
 
-## License
+## Безопасность
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+Пожалуйста, не сообщайте об уязвимостях через публичные Issues. Используйте процесс, описанный в [SECURITY.md](SECURITY.md).
 
 ---
 
-**Redroom V2.4** is an initiative of [Owlink.ai](https://owlink.ai) — *Stealth Intelligence for Gov and People*
+## Лицензия
 
-Built by **Alexsai** · © 2024–2026 Alexsai · Owlink.ai · Live at [redroom.live](https://redroom.live)
+Этот проект лицензирован под **лицензией MIT** — подробности см. в файле [LICENSE](LICENSE).
+
+---
+
+**Redroom V2.4** — инициатива [Owlink.ai](https://owlink.ai)
+
+Разработано **Alexsai** · © 2024–2026 Alexsai · Owlink.ai · [redroom.live](https://redroom.live)

@@ -1,70 +1,70 @@
-# Security Policy
+# Политика безопасности
 
-## Supported Versions
+## Поддерживаемые версии
 
-Security fixes are applied to the latest version on the `main` branch. We do not backport security patches to older releases.
+Исправления безопасности применяются к последней версии в ветке `main`. Мы не переносим патчи безопасности в старые выпуски.
 
-| Version | Supported |
+| Версия | Поддерживается |
 |---|---|
 | Redroom V2.4 (`main`) | ✅ |
-| Older commits | ❌ |
+| Старые коммиты | ❌ |
 
 ---
 
-## Reporting a Vulnerability
+## Сообщение об уязвимости
 
-**Please do not open a public GitHub Issue for security vulnerabilities.** Doing so exposes the vulnerability to all users before a fix is available.
+**Пожалуйста, не создавайте публичные GitHub Issues для уязвимостей безопасности.** Это раскрывает уязвимость всем пользователям до того, как будет готово исправление.
 
-Instead, report security issues by emailing:
+Вместо этого сообщайте о проблемах безопасности по электронной почте:
 
 **security@owlink.ai**
 
-Please include the following in your report:
+Пожалуйста, включите в отчет следующее:
 
-- A clear description of the vulnerability and its potential impact.
-- The affected component(s) — e.g., authentication, crawler, CMS, database layer.
-- Steps to reproduce the issue, including any proof-of-concept code or payloads.
-- Your suggested fix or mitigation, if you have one.
+- Четкое описание уязвимости и её потенциального влияния.
+- Затронутые компоненты — например, аутентификация, краулер, CMS, уровень базы данных.
+- Шаги для воспроизведения проблемы, включая любой код подтверждения концепции (PoC) или полезную нагрузку.
+- Ваше предложение по исправлению или смягчению последствий (если есть).
 
-We will acknowledge your report within **48 hours** and aim to provide a fix or mitigation within **14 days** for critical issues.
-
----
-
-## Responsible Disclosure
-
-We follow a coordinated disclosure model:
-
-1. You report the vulnerability privately to `security@owlink.ai`.
-2. We confirm receipt and begin investigation within 48 hours.
-3. We develop and test a fix.
-4. We release the fix and notify you.
-5. After the fix is deployed, we publicly acknowledge your contribution (unless you prefer to remain anonymous).
-
-We ask that you do not publicly disclose the vulnerability until we have had a reasonable opportunity to address it.
+Мы подтвердим получение вашего отчета в течение **48 часов** и постараемся предоставить исправление или способ защиты в течение **14 дней** для критических проблем.
 
 ---
 
-## Security Architecture Notes
+## Ответственное разглашение
 
-The following design decisions are relevant to the security posture of the platform:
+Мы следуем модели скоординированного разглашения:
 
-**Dual authentication** — The CMS super-admin token (`x-sa-token`) is completely independent of the OAuth user session. Compromising a user account — even an admin account — does not grant CMS access. The `ADMIN_SECRET_KEY` environment variable must be kept secret and rotated if compromised.
+1. Вы сообщаете об уязвимости приватно на `security@owlink.ai`.
+2. Мы подтверждаем получение и начинаем расследование в течение 48 часов.
+3. Мы разрабатываем и тестируем исправление.
+4. Мы выпускаем исправление и уведомляем вас.
+5. После развертывания исправления мы публично выражаем вам благодарность (если вы не предпочтете остаться анонимным).
 
-**Environment variable isolation** — Variables prefixed with `VITE_` are bundled into the client-side JavaScript and are visible to end users. Private API keys and secrets must never be placed in `VITE_` variables. The `BUILT_IN_FORGE_API_KEY` (LLM service key) is server-side only and is never exposed to the client.
-
-**Session cookies** — Session cookies are `httpOnly` and `sameSite: lax`. They are signed with `JWT_SECRET`. If `JWT_SECRET` is compromised, all active sessions must be considered invalid and the secret must be rotated immediately (which invalidates all existing sessions).
-
-**Database access** — The database is accessed only from the server process via `DATABASE_URL`. The connection string must never be exposed to the client or committed to version control.
-
-**No secrets in git** — The `.gitignore` excludes `.env` files, `server/_core/`, `references/`, and other platform-internal directories. Always verify your diff before committing to ensure no secrets are included.
+Мы просим вас не разглашать информацию об уязвимости публично до тех пор, пока у нас не будет разумной возможности её устранить.
 
 ---
 
-## Known Limitations
+## Примечания по архитектуре безопасности
 
-- The rate limiter (`server/rateLimiter.ts`) is in-process and resets on server restart. For production deployments with multiple instances, a distributed rate limiter (e.g., Redis-backed) should be used.
-- The crawler User-Agent (`RedroomBot/1.0`) identifies the platform to target servers. Operators should be aware that crawled sources can observe and block this User-Agent.
+Следующие проектные решения важны для обеспечения безопасности платформы:
+
+**Двойная аутентификация** — Токен супер-админа CMS (`x-sa-token`) полностью независим от пользовательской сессии OAuth. Компрометация учетной записи пользователя (даже администратора) не дает доступа к CMS. Переменная окружения `ADMIN_SECRET_KEY` должна храниться в секрете и заменяться в случае компрометации.
+
+**Изоляция переменных окружения** — Переменные с префиксом `VITE_` встраиваются в клиентский JavaScript и видны конечным пользователям. Приватные ключи API и секреты никогда не должны помещаться в переменные `VITE_`. Ключ `BUILT_IN_FORGE_API_KEY` (ключ сервиса ИИ) доступен только на стороне сервера и никогда не передается клиенту.
+
+**Сессионные куки** — Куки сессии имеют флаги `httpOnly` и `sameSite: lax`. Они подписаны с помощью `JWT_SECRET`. Если `JWT_SECRET` скомпрометирован, все активные сессии должны считаться недействительными, а секрет должен быть немедленно заменен.
+
+**Доступ к базе данных** — Доступ к базе данных осуществляется только из процесса сервера через `DATABASE_URL`. Строка подключения никогда не должна передаваться клиенту или фиксироваться в системе контроля версий.
+
+**Никаких секретов в Git** — `.gitignore` исключает файлы `.env`, `server/_core/`, `references/` и другие внутренние директории платформы. Всегда проверяйте свои изменения перед коммитом, чтобы убедиться, что в них нет секретов.
 
 ---
 
-*Redroom V2.4 is an initiative of [Owlink.ai](https://owlink.ai) — Stealth Intelligence for Gov and People · Built by Alexsai · © 2024–2026 Alexsai · Owlink.ai*
+## Известные ограничения
+
+- Ограничитель частоты запросов (`server/rateLimiter.ts`) работает внутри процесса и сбрасывается при перезапуске сервера. Для продакшн-развертываний с несколькими экземплярами следует использовать распределенный ограничитель (например, на базе Redis).
+- User-Agent краулера (`RedroomBot/1.0`) идентифицирует платформу для целевых серверов. Операторам следует помнить, что источники могут отслеживать и блокировать этот User-Agent.
+
+---
+
+*Redroom V2.4 — инициатива [Owlink.ai](https://owlink.ai) — Скрытая разведка для государственных структур и общества · Разработано Alexsai · © 2024–2026 Alexsai · Owlink.ai*

@@ -12,15 +12,15 @@ interface WaitingListModalProps {
 }
 
 const ANALYST_CAPABILITIES = [
-  { icon: Eye, label: "Intel Feeds & SIGINT", desc: "Real-time regional streams, SIGINT/OSINT exploration" },
-  { icon: FileSearch, label: "VERIFY & Narrative", desc: "6-layer source verification, narrative tracking" },
-  { icon: Database, label: "Geopolitical Data", desc: "Facilities, threat assessments, population data" },
+  { icon: Eye, label: "Ленты и SIGINT", desc: "Региональные потоки данных, разведка SIGINT/OSINT" },
+  { icon: FileSearch, label: "АНАЛИЗ и Нарративы", desc: "6-слойная проверка источников, отслеживание нарративов" },
+  { icon: Database, label: "Геополитические данные", desc: "Объекты, оценки угроз, демографические данные" },
 ];
 
 const ADMIN_CAPABILITIES = [
-  { icon: Network, label: "Narrative Curation", desc: "Create, edit, and retire intelligence narratives" },
-  { icon: Database, label: "Data Ingestion", desc: "Agency management, RSS feeds, crawl scheduling" },
-  { icon: ShieldCheck, label: "Platform Operations", desc: "For verified orgs, intel units & institutional partners" },
+  { icon: Network, label: "Курирование нарративов", desc: "Создание, редактирование и архивация нарративов" },
+  { icon: Database, label: "Сбор данных", desc: "Управление агентствами, RSS-лентами, расписание сбора" },
+  { icon: ShieldCheck, label: "Управление платформой", desc: "Для верифицированных орг-ций и институциональных партнеров" },
 ];
 
 export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
@@ -37,12 +37,12 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
   const submitMutation = trpc.waitingList.submit.useMutation({
     onSuccess: (data) => {
       if (data.duplicate) {
-        toast.info("Your email is already on the waiting list. We will be in touch.");
+        toast.info("Ваш email уже в списке ожидания. Мы свяжемся с вами.");
       }
       setSubmitted(true);
     },
     onError: (err) => {
-      toast.error("Submission failed: " + err.message);
+      toast.error("Ошибка при отправке: " + err.message);
     },
   });
 
@@ -97,9 +97,9 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
               <Lock className={`w-4 h-4 ${accentText}`} />
             </div>
             <div>
-              <div className="text-sm font-bold text-white tracking-widest font-mono">REQUEST ACCESS</div>
+              <div className="text-sm font-bold text-white tracking-widest font-mono">ЗАПРОСИТЬ ДОСТУП</div>
               <div className="text-[11px] font-mono" style={{ color: accentColor, opacity: 0.7 }}>
-                REDROOM · AUTHORISED USER WAITING LIST
+                REDROOM · СПИСОК ОЖИДАНИЯ АВТОРИЗОВАННЫХ ПОЛЬЗОВАТЕЛЕЙ
               </div>
             </div>
           </div>
@@ -120,20 +120,20 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
             >
               <CheckCircle2 className={`w-8 h-8 ${accentText}`} />
             </div>
-            <div className="text-white font-bold text-base tracking-widest font-mono mb-1">REQUEST RECEIVED</div>
+            <div className="text-white font-bold text-base tracking-widest font-mono mb-1">ЗАПРОС ПРИНЯТ</div>
             <div className="text-xs font-mono mb-4" style={{ color: accentColor, opacity: 0.6 }}>
-              RECORD STORED · PENDING REVIEW
+              ЗАПИСЬ СОХРАНЕНА · ОЖИДАЕТ ПРОВЕРКИ
             </div>
             <p className="text-sm leading-relaxed max-w-sm mx-auto" style={{ color: "rgba(255,255,255,0.45)" }}>
-              Your request has been recorded. Our team will review your profile and contact you
-              regarding access if granted. Thank you for your interest in Redroom.
+              Ваш запрос был зарегистрирован. Наша команда рассмотрит ваш профиль и свяжется с вами
+              по поводу предоставления доступа. Благодарим за интерес к Redroom.
             </p>
             <button
               onClick={onClose}
               className={`mt-7 px-7 py-2.5 rounded text-xs font-mono font-bold tracking-widest transition-all ${accentText}`}
               style={{ background: accentMuted, border: `1px solid ${accentBorder}` }}
             >
-              CLOSE
+              ЗАКРЫТЬ
             </button>
           </div>
         ) : (
@@ -143,7 +143,7 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
             {/* ── Account Level Selector ── */}
             <div>
               <div className="text-[10px] font-mono font-semibold tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.35)" }}>
-                ACCOUNT LEVEL *
+                УРОВЕНЬ ДОСТУПА *
               </div>
               <div className="flex flex-col gap-2">
                 {(["analyst", "admin"] as const).map((role) => {
@@ -152,10 +152,10 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
                   const roleAccentMuted = role === "analyst" ? "rgba(0,200,255,0.1)" : "rgba(251,191,36,0.08)";
                   const roleText = role === "analyst" ? "text-cyan-400" : "text-amber-400";
                   const roleCaps = role === "analyst" ? ANALYST_CAPABILITIES : ADMIN_CAPABILITIES;
-                  const roleLabel = role === "analyst" ? "INTELLIGENCE ANALYST" : "PLATFORM ADMINISTRATOR";
+                  const roleLabel = role === "analyst" ? "АНАЛИТИК РАЗВЕДКИ" : "АДМИНИСТРАТОР ПЛАТФОРМЫ";
                   const roleTagline = role === "analyst"
-                    ? "Researchers · Journalists · Policy Analysts · Security Professionals"
-                    : "Verified Organisations · Intelligence Units · Institutional Partners";
+                    ? "Исследователи · Журналисты · Полисмейкеры · Профессионалы безопасности"
+                    : "Верифицированные орг-ции · Подразделения разведки · Институциональные партнеры";
 
                   return (
                     <div
@@ -224,13 +224,13 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-[10px] font-mono font-semibold tracking-widest mb-1.5" style={{ color: "rgba(255,255,255,0.35)" }}>
-                  FULL NAME *
+                  ПОЛНОЕ ИМЯ *
                 </label>
                 <input
                   required
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                  placeholder="Your name"
+                  placeholder="Ваше имя"
                   className={`w-full px-3 py-2 rounded text-sm text-white placeholder-gray-700 outline-none focus:ring-1 font-mono ${accentRing}`}
                   style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}
                 />
@@ -255,24 +255,24 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-[10px] font-mono font-semibold tracking-widest mb-1.5" style={{ color: "rgba(255,255,255,0.35)" }}>
-                  ORGANISATION
+                  ОРГАНИЗАЦИЯ
                 </label>
                 <input
                   value={form.company}
                   onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
-                  placeholder="Company / Institution"
+                  placeholder="Компания / Учреждение"
                   className={`w-full px-3 py-2 rounded text-sm text-white placeholder-gray-700 outline-none focus:ring-1 font-mono ${accentRing}`}
                   style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}
                 />
               </div>
               <div>
                 <label className="block text-[10px] font-mono font-semibold tracking-widest mb-1.5" style={{ color: "rgba(255,255,255,0.35)" }}>
-                  PHONE <span style={{ color: "rgba(255,255,255,0.2)" }}>— OPTIONAL</span>
+                  ТЕЛЕФОН <span style={{ color: "rgba(255,255,255,0.2)" }}>— НЕОБЯЗАТЕЛЬНО</span>
                 </label>
                 <input
                   value={form.phone}
                   onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                  placeholder="+1 555 000 0000"
+                  placeholder="+7 000 000 0000"
                   className={`w-full px-3 py-2 rounded text-sm text-white placeholder-gray-700 outline-none focus:ring-1 font-mono ${accentRing}`}
                   style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}
                 />
@@ -282,13 +282,13 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
             {/* ── Contribution ── */}
             <div>
               <label className="block text-[10px] font-mono font-semibold tracking-widest mb-1.5" style={{ color: "rgba(255,255,255,0.35)" }}>
-                HOW CAN YOU CONTRIBUTE?
+                ВАШ ВКЛАД В ПРОЕКТ
               </label>
               <textarea
                 rows={3}
                 value={form.contribution}
                 onChange={(e) => setForm((f) => ({ ...f, contribution: e.target.value }))}
-                placeholder="Describe your background, expertise, or how you intend to use or contribute to the platform..."
+                placeholder="Опишите ваш опыт, компетенции или то, как вы планируете использовать платформу или участвовать в её развитии..."
                 className={`w-full px-3 py-2 rounded text-sm text-white placeholder-gray-700 outline-none focus:ring-1 font-mono resize-none ${accentRing}`}
                 style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}
               />
@@ -300,7 +300,7 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
               style={{ borderColor: "rgba(255,255,255,0.06)" }}
             >
               <p className="text-[10px] font-mono leading-relaxed sm:max-w-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
-                No confirmation email will be sent. Our team will verify and contact you if access is granted.
+                Письмо с подтверждением не отправляется. Наша команда свяжется с вами, если доступ будет одобрен.
               </p>
               <button
                 type="submit"
@@ -312,7 +312,7 @@ export function WaitingListModal({ open, onClose }: WaitingListModalProps) {
                   boxShadow: submitMutation.isPending ? "none" : `0 0 16px ${accentMuted}`,
                 }}
               >
-                {submitMutation.isPending ? "SUBMITTING…" : "SUBMIT REQUEST"}
+                {submitMutation.isPending ? "ОТПРАВКА…" : "ОТПРАВИТЬ ЗАПРОС"}
               </button>
             </div>
           </form>

@@ -1,56 +1,56 @@
-# Code of Conduct
+# Кодекс поведения
 
-## Our Pledge
+## Наше обязательство
 
-Redroom V2.4 is an open-source initiative of Owlink.ai (Stealth Intelligence for Gov and People), built by Alexsai to support the OSINT and geopolitical research community. We are committed to maintaining a welcoming, respectful, and professional environment for all contributors, regardless of background, experience level, or affiliation.
+Redroom V2.4 — это инициатива [Owlink.ai](https://owlink.ai) с открытым исходным кодом («Скрытая разведка для государственных структур и общества»), созданная Alexsai для поддержки сообщества OSINT и геополитических исследований. Мы стремимся поддерживать дружелюбную, уважительную и профессиональную среду для всех участников, независимо от их происхождения, уровня опыта или принадлежности.
 
-We pledge to make participation in this project a harassment-free experience for everyone.
-
----
-
-## Our Standards
-
-**Expected behaviour:**
-
-- Communicate respectfully and professionally in all project spaces (Issues, Pull Requests, discussions).
-- Provide constructive, evidence-based feedback on code and ideas.
-- Accept constructive criticism gracefully and use it to improve your work.
-- Focus on what is best for the project and the broader OSINT community.
-- Show empathy and patience toward other contributors.
-
-**Unacceptable behaviour:**
-
-- Harassment, intimidation, or personal attacks of any kind.
-- Discriminatory language or imagery related to race, gender, religion, nationality, sexual orientation, disability, or any other protected characteristic.
-- Publishing others' private information (doxxing) without explicit consent.
-- Deliberate disruption of discussions or the development process.
-- Using the project or its infrastructure for illegal activities, including unauthorised access to systems or collection of data in violation of applicable law.
+Мы обязуемся сделать участие в этом проекте свободным от преследований и оскорблений для всех.
 
 ---
 
-## OSINT Ethics
+## Наши стандарты
 
-Redroom aggregates and analyses **open-source** information — data that is publicly available and legally accessible. Contributors are expected to uphold the following principles:
+**Ожидаемое поведение:**
 
-- **Legality first** — only collect, process, and display information that is legally accessible in the relevant jurisdiction. Do not add features that facilitate unauthorised access to private systems or data.
-- **Source attribution** — always credit the original source of information. Do not present aggregated OSINT as original intelligence.
-- **Privacy by design** — avoid building features that could facilitate surveillance of private individuals. The platform is intended for geopolitical and institutional analysis, not personal tracking.
-- **Accuracy over speed** — when in doubt about the accuracy of a data source or classification, err on the side of caution. Misinformation in an intelligence context can have serious consequences.
+- Уважительное и профессиональное общение во всех пространствах проекта (Issues, Pull Requests, обсуждения).
+- Предоставление конструктивной, основанной на фактах обратной связи по коду и идеям.
+- Спокойное принятие конструктивной критики и использование её для улучшения своей работы.
+- Фокус на том, что лучше для проекта и широкого сообщества OSINT.
+- Проявление сочувствия и терпения по отношению к другим участникам.
 
----
+**Неприемлемое поведение:**
 
-## Enforcement
-
-Instances of unacceptable behaviour may be reported to the project maintainers at **conduct@owlink.ai**. All reports will be reviewed promptly and treated with confidentiality.
-
-Maintainers have the right and responsibility to remove, edit, or reject contributions that do not align with this Code of Conduct, and to temporarily or permanently ban contributors who engage in unacceptable behaviour.
-
----
-
-## Attribution
-
-This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 2.1.
+- Преследования, запугивания или личные нападки любого рода.
+- Дискриминационные высказывания или изображения, связанные с расой, полом, религией, национальностью, сексуальной ориентацией, инвалидностью или любой другой защищенной характеристикой.
+- Публикация личной информации других лиц (доксинг) без явного согласия.
+- Умышленное нарушение дискуссий или процесса разработки.
+- Использование проекта или его инфраструктуры для незаконной деятельности, включая несанкционированный доступ к системам или сбор данных в нарушение действующего законодательства.
 
 ---
 
-*Redroom V2.4 is an initiative of [Owlink.ai](https://owlink.ai) — Stealth Intelligence for Gov and People · Built by Alexsai · © 2024–2026 Alexsai · Owlink.ai*
+## Этика OSINT
+
+Redroom агрегирует и анализирует информацию из **открытых источников** — данные, которые публично доступны и законно получены. От участников ожидается соблюдение следующих принципов:
+
+- **Законность превыше всего** — собирайте, обрабатывайте и отображайте только ту информацию, которая доступна законно в соответствующей юрисдикции. Не добавляйте функции, облегчающие несанкционированный доступ к частным системам или данным.
+- **Атрибуция источников** — всегда указывайте первоисточник информации. Не представляйте агрегированные данные OSINT как собственные разведданные.
+- **Приватность по умолчанию** — избегайте создания функций, которые могут облегчить слежку за частными лицами. Платформа предназначена для геополитического и институционального анализа, а не для персонального отслеживания.
+- **Точность важнее скорости** — если вы сомневаетесь в точности источника данных или классификации, будьте осторожны. Дезинформация в контексте разведки может иметь серьезные последствия.
+
+---
+
+## Применение правил
+
+О случаях неприемлемого поведения можно сообщить мейнтейнерам проекта по адресу **conduct@owlink.ai**. Все отчеты будут рассмотрены оперативно и конфиденциально.
+
+Мейнтейнеры имеют право и обязанность удалять, редактировать или отклонять вклады, которые не соответствуют настоящему Кодексу поведения, а также временно или навсегда блокировать участников, чье поведение является неприемлемым.
+
+---
+
+## Атрибуция
+
+Настоящий Кодекс поведения адаптирован из [Contributor Covenant](https://www.contributor-covenant.org/), версия 2.1.
+
+---
+
+*Redroom V2.4 — инициатива [Owlink.ai](https://owlink.ai) — Скрытая разведка для государственных структур и общества · Разработано Alexsai · © 2024–2026 Alexsai · Owlink.ai*

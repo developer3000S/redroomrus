@@ -11,12 +11,12 @@ interface UpgradeButtonProps {
 }
 
 const PREMIUM_FEATURES = [
-  { icon: "🛰️", label: "Air-Gapped Deployment", desc: "Fully isolated sovereign instance" },
-  { icon: "⚡", label: "Real-Time SIGINT Feed", desc: "Live signals intelligence stream" },
-  { icon: "🔗", label: "C4ISR Integration", desc: "Direct command & control wiring" },
-  { icon: "🧠", label: "Custom AI Models", desc: "Fine-tuned on your threat landscape" },
-  { icon: "🔒", label: "SLA & 24/7 Support", desc: "Dedicated analyst support channel" },
-  { icon: "📡", label: "Custom Source Expansion", desc: "Proprietary & classified feeds" },
+  { icon: "🛰️", label: "Изолированное развертывание", desc: "Полностью автономный суверенный экземпляр" },
+  { icon: "⚡", label: "SIGINT-лента в реальном времени", desc: "Живой поток данных радиоэлектронной разведки" },
+  { icon: "🔗", label: "Интеграция C4ISR", desc: "Прямое подключение к системам управления" },
+  { icon: "🧠", label: "Собственные модели ИИ", desc: "Обученные на вашем ландшафте угроз" },
+  { icon: "🔒", label: "SLA и поддержка 24/7", desc: "Выделенный канал поддержки аналитиков" },
+  { icon: "📡", label: "Расширение источников", desc: "Проприетарные и закрытые каналы данных" },
 ];
 
 export function UpgradeButton({ portal, variant = "compact", className = "" }: UpgradeButtonProps) {
@@ -59,7 +59,7 @@ export function UpgradeButton({ portal, variant = "compact", className = "" }: U
       {/* ── The button itself ── */}
       <button
         onClick={handleClick}
-        title="Upgrade to Enterprise — owlink.ai/redroom"
+        title="Перейти на Enterprise — owlink.ai/redroom"
         className="relative flex items-center gap-1.5 px-2 py-0.5 rounded font-mono text-[10px] border transition-all duration-200 overflow-hidden select-none"
         style={{
           background: clicked
@@ -92,7 +92,7 @@ export function UpgradeButton({ portal, variant = "compact", className = "" }: U
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </svg>
         {variant === "compact" && (
-          <span className="hidden sm:inline tracking-widest">UPGRADE</span>
+          <span className="hidden sm:inline tracking-widest">КУПИТЬ</span>
         )}
       </button>
 
@@ -123,11 +123,11 @@ export function UpgradeButton({ portal, variant = "compact", className = "" }: U
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
               <span className="font-mono text-[11px] font-bold tracking-widest" style={{ color: "rgba(251,191,36,1)" }}>
-                ENTERPRISE ACCESS
+                ДОСТУП ENTERPRISE
               </span>
             </div>
             <p className="font-mono text-[10px]" style={{ color: "rgba(156,163,175,0.8)" }}>
-              Unlock the full intelligence stack — owlink.ai/redroom
+              Разблокируйте полный стек разведки — owlink.ai/redroom
             </p>
           </div>
 
@@ -162,10 +162,10 @@ export function UpgradeButton({ portal, variant = "compact", className = "" }: U
             }}
               onClick={handleClick}
             >
-              GET ENTERPRISE ACCESS →
+              ПОЛУЧИТЬ ДОСТУП ENTERPRISE →
             </div>
             <p className="text-center font-mono text-[9px] mt-1.5" style={{ color: "rgba(107,114,128,0.7)" }}>
-              Universities &amp; Research Centers — free
+              Университеты и исследовательские центры — бесплатно
             </p>
           </div>
         </div>

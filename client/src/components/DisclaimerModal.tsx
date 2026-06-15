@@ -14,185 +14,185 @@ type Tab = "howto" | "disclaimer" | "contribute" | "enroll";
 const DEFAULTS: Record<string, string> = {
   // ── Floating button ──────────────────────────────────────────────────────
   "disclaimer.visible": "true",
-  "disclaimer.button.tooltip": "Responsible Use Agreement",
+  "disclaimer.button.tooltip": "Соглашение об ответственном использовании",
 
   // ── Header ───────────────────────────────────────────────────────────────
   "disclaimer.header.title": "REDROOM",
-  "disclaimer.header.subtitle": "OPEN SOURCE INTELLIGENCE PLATFORM — RESPONSIBLE USE AGREEMENT",
-  "disclaimer.footer.version": "REDROOM V2.4 · OWLINK.AI · OPEN SOURCE · MIT LICENSE · © ALEXSAI",
+  "disclaimer.header.subtitle": "ПЛАТФОРМА РАЗВЕДКИ ПО ОТКРЫТЫМ ИСТОЧНИКАМ — СОГЛАШЕНИЕ ОБ ОТВЕТСТВЕННОМ ИСПОЛЬЗОВАНИИ",
+  "disclaimer.footer.version": "REDROOM V2.4 · OWLINK.AI · ОТКРЫТЫЙ ИСХОДНЫЙ КОД · ЛИЦЕНЗИЯ MIT · © ALEXSAI",
 
   // ── Tab labels & visibility ───────────────────────────────────────────────
   "disclaimer.tab.howto.visible": "true",
-  "disclaimer.tab.howto.label": "📖 HOW TO USE",
+  "disclaimer.tab.howto.label": "📖 ИНСТРУКЦИЯ",
   "disclaimer.tab.disclaimer.visible": "true",
-  "disclaimer.tab.disclaimer.label": "⚠ DISCLAIMER & TERMS",
+  "disclaimer.tab.disclaimer.label": "⚠ ПРАВИЛА И ОТКАЗ",
   "disclaimer.tab.contribute.visible": "true",
-  "disclaimer.tab.contribute.label": "🤝 CONTRIBUTE",
+  "disclaimer.tab.contribute.label": "🤝 УЧАСТИЕ",
   "disclaimer.tab.enroll.visible": "true",
-  "disclaimer.tab.enroll.label": "🎓 ENROLL",
+  "disclaimer.tab.enroll.label": "🎓 ОБУЧЕНИЕ",
 
   // ── HOW TO USE tab ────────────────────────────────────────────────────────
-  "howto.intro": "Redroom is designed as a professional OSINT research workstation — a single platform that aggregates publicly available global intelligence signals for analysts, journalists, and researchers.",
+  "howto.intro": "Redroom спроектирован как профессиональная рабочая станция для OSINT-исследований — единая платформа, которая агрегирует общедоступные мировые разведданные для аналитиков, журналистов и исследователей.",
 
   // SIGINT Map section
-  "howto.sigint.title": "SIGINT Map Portal",
+  "howto.sigint.title": "Портал карты SIGINT",
   "howto.sigint.icon": "🌍",
   "howto.sigint.tips": JSON.stringify([
-    "Enable layers selectively to avoid information overload",
-    "Use the country filter (F) to focus on a specific region",
-    "Draw a polygon to isolate a geographic area of interest",
-    "Click any marker to access detailed intelligence including route data, vessel metadata, and camera feeds",
-    "Use Surveillance Mode (SVM) to monitor up to 10 specific items simultaneously",
+    "Включайте слои выборочно, чтобы избежать информационной перегрузки",
+    "Используйте фильтр по странам (F), чтобы сфокусироваться на конкретном регионе",
+    "Нарисуйте многоугольник, чтобы изолировать интересующую географическую область",
+    "Нажмите на любой маркер для доступа к детальной информации, включая данные о маршрутах, метаданные судов и записи камер",
+    "Используйте режим наблюдения (SVM) для одновременного мониторинга до 10 конкретных объектов",
   ]),
   "howto.sigint.signals": JSON.stringify([
-    { label: "✈ Live Aircraft", count: "10,000+" },
-    { label: "🚢 AIS Vessels", count: "15,000+" },
-    { label: "📷 CCTV Cameras", count: "12,000+" },
-    { label: "🌋 Seismic Events", count: "USGS M2.5+" },
-    { label: "🔥 Active Fires", count: "NASA FIRMS" },
-    { label: "⛈ Weather Events", count: "NASA EONET" },
+    { label: "✈ Самолеты онлайн", count: "10,000+" },
+    { label: "🚢 Суда AIS", count: "15,000+" },
+    { label: "📷 Камеры CCTV", count: "12,000+" },
+    { label: "🌋 Сейсмические события", count: "USGS M2.5+" },
+    { label: "🔥 Активные пожары", count: "NASA FIRMS" },
+    { label: "⛈ Погодные события", count: "NASA EONET" },
   ]),
 
   // Orbit section
-  "howto.orbit.title": "Orbit Portal (Space Intelligence)",
+  "howto.orbit.title": "Портал Orbit (Космическая разведка)",
   "howto.orbit.icon": "📡",
-  "howto.orbit.body": "The Orbit portal provides real-time satellite tracking, orbital mechanics visualization, and space weather monitoring. Track active satellites, predict passes over specific locations, and monitor solar weather events that may affect communications infrastructure.",
+  "howto.orbit.body": "Портал Orbit обеспечивает отслеживание спутников в реальном времени, визуализацию орбитальной механики и мониторинг космической погоды. Отслеживайте активные спутники, прогнозируйте пролеты над конкретными локациями и следите за солнечной активностью, которая может повлиять на инфраструктуру связи.",
   "howto.orbit.tips": JSON.stringify([
-    "Use for monitoring satellite constellations relevant to your research area",
-    "Track ISS and other research platforms for academic purposes",
-    "Click any launch site or ground station to see all linked satellites",
-    "Monitor solar weather for communications infrastructure research",
-    "Correlate satellite passes with ground events for investigative research",
+    "Используйте для мониторинга спутниковых группировок, имеющих отношение к вашей области исследований",
+    "Отслеживайте МКС и другие исследовательские платформы в академических целях",
+    "Нажмите на любой космодром или наземную станцию, чтобы увидеть все связанные спутники",
+    "Мониторьте космическую погоду для исследования инфраструктуры связи",
+    "Сопоставляйте пролеты спутников с наземными событиями для проведения расследований",
   ]),
 
   // Main Intel Portal section
-  "howto.intel.title": "Main Intelligence Portal",
+  "howto.intel.title": "Главный портал разведки",
   "howto.intel.icon": "🗞️",
-  "howto.intel.body": "The main portal aggregates geopolitical news from 100+ global sources, performs entity extraction, sentiment analysis, and relationship mapping. Use it to track narratives, identify information patterns, and build evidence-based research reports.",
+  "howto.intel.body": "Главный портал агрегирует геополитические новости из более чем 100 глобальных источников, выполняет извлечение сущностей, анализ тональности и картирование взаимосвязей. Используйте его для отслеживания нарративов, выявления паттернов информации и создания исследовательских отчетов на основе доказательств.",
   "howto.intel.tips": JSON.stringify([
-    "Use the Compare tab to analyze how different sources cover the same event",
-    "Use the Explore tab to map relationships between entities, organizations, and events",
-    "Save investigations for longitudinal research and pattern tracking",
-    "Cross-reference news events with SIGINT map data for multi-domain analysis",
+    "Используйте вкладку «Сравнение», чтобы проанализировать, как разные источники освещают одно и то же событие",
+    "Используйте вкладку «Граф», чтобы построить связи между сущностями, организациями и событиями",
+    "Сохраняйте расследования для долгосрочного анализа и отслеживания паттернов",
+    "Сопоставляйте новостные события с данными карты SIGINT для многодоменного анализа",
   ]),
 
   // Use Cases section
-  "howto.usecases.title": "Recommended Use Cases",
+  "howto.usecases.title": "Рекомендуемые сценарии использования",
   "howto.usecases.icon": "🔬",
   "howto.usecases.items": JSON.stringify([
-    { role: "Investigative Journalist", use: "Track vessel movements near conflict zones, correlate flight patterns with news events, verify claims using open data" },
-    { role: "Academic Researcher", use: "Study geopolitical patterns, analyze media bias across sources, research conflict dynamics using real-time data" },
-    { role: "OSINT Analyst", use: "Multi-domain correlation, entity relationship mapping, pattern-of-life analysis using only public sources" },
-    { role: "Policy Researcher", use: "Monitor global events, track humanitarian crises, analyze regional stability indicators" },
-    { role: "Security Researcher", use: "Study publicly visible infrastructure, analyze open-source threat intelligence, defensive research only" },
-    { role: "Educator", use: "Demonstrate real-world data aggregation, teach open-source research methodology, illustrate geopolitical concepts" },
+    { role: "Журналист-расследователь", use: "Отслеживание движения судов в зонах конфликтов, сопоставление маршрутов полетов с новостными событиями, проверка фактов на основе открытых данных" },
+    { role: "Академический исследователь", use: "Изучение геополитических паттернов, анализ предвзятости СМИ в разных источниках, исследование динамики конфликтов с использованием данных в реальном времени" },
+    { role: "OSINT-аналитик", use: "Многодоменная корреляция, картирование связей между сущностями, анализ образа жизни на основе только открытых источников" },
+    { role: "Исследователь политики", use: "Мониторинг глобальных событий, отслеживание гуманитарных кризисов, анализ индикаторов региональной стабильности" },
+    { role: "Исследователь безопасности", use: "Изучение публично видимой инфраструктуры, анализ данных об угрозах из открытых источников, только защитные исследования" },
+    { role: "Преподаватель", use: "Демонстрация сбора данных в реальном мире, обучение методологии OSINT-исследований, иллюстрация геополитических концепций" },
   ]),
 
   // Ethical OSINT section
-  "howto.ethics.title": "Ethical OSINT Principles",
+  "howto.ethics.title": "Этические принципы OSINT",
   "howto.ethics.icon": "⚠️",
   "howto.ethics.items": JSON.stringify([
-    "Minimize harm: only collect and analyze data necessary for your stated research purpose",
-    "Verify before publishing: independently confirm all findings before sharing publicly",
-    "Protect privacy: avoid identifying or exposing private individuals even if data is technically public",
-    "Transparent methodology: document your data sources and analytical methods",
-    "Respect legal boundaries: understand the laws of your jurisdiction regarding data collection and use",
-    "Secure your research: protect sensitive findings and sources from unauthorized access",
+    "Минимизация вреда: собирайте и анализируйте только те данные, которые необходимы для ваших исследовательских целей",
+    "Проверка перед публикацией: самостоятельно подтверждайте все выводы перед их публичным распространением",
+    "Защита приватности: избегайте идентификации или разоблачения частных лиц, даже если данные технически публичны",
+    "Прозрачность методологии: документируйте источники данных и аналитические методы",
+    "Соблюдение юридических границ: знайте законы вашей юрисдикции в отношении сбора и использования данных",
+    "Безопасность исследований: защищайте конфиденциальные выводы и источники от несанкционированного доступа",
   ]),
 
   // ── DISCLAIMER & TERMS tab ────────────────────────────────────────────────
-  "disclaimer.intro": "REDROOM is a fully open-source intelligence (OSINT) research platform developed for lawful, ethical, and academic purposes only. By accessing this platform, you acknowledge and agree to the following terms in their entirety.",
-  "disclaimer.s1.title": "§1 — OPEN SOURCE DECLARATION",
-  "disclaimer.s1.body": "This platform and all its components, source code, data pipelines, and visualizations are fully open source and publicly available for review. The project is developed with complete transparency and has no affiliation with any government, intelligence agency, military organization, or commercial surveillance entity. The platform aggregates only publicly available data from open sources.",
-  "disclaimer.s2.title": "§2 — PERMITTED USES",
+  "disclaimer.intro": "REDROOM — это полностью открытая (OSINT) исследовательская платформа, разработанная исключительно для законных, этических и академических целей. Получая доступ к этой платформе, вы подтверждаете и соглашаетесь со следующими условиями в полном объеме.",
+  "disclaimer.s1.title": "§1 — ДЕКЛАРАЦИЯ ОБ ОТКРЫТОМ ИСХОДНОМ КОДЕ",
+  "disclaimer.s1.body": "Эта платформа и все её компоненты, исходный код, конвейеры данных и визуализации являются полностью открытыми и общедоступными для аудита. Проект разрабатывается с полной прозрачностью и не имеет отношения к каким-либо правительственным структурам, спецслужбам, военным организациям или коммерческим структурам слежки. Платформа агрегирует только общедоступные данные из открытых источников.",
+  "disclaimer.s2.title": "§2 — РАЗРЕШЕННОЕ ИСПОЛЬЗОВАНИЕ",
   "disclaimer.s2.items": JSON.stringify([
-    "Academic and scientific research in geopolitics, international relations, and conflict studies",
-    "Investigative journalism and fact-checking using publicly available data",
-    "OSINT (Open Source Intelligence) training and methodology development",
-    "Non-profit humanitarian monitoring and crisis awareness",
-    "Educational demonstrations of publicly available data aggregation techniques",
-    "Security research and vulnerability awareness (defensive purposes only)",
-    "Policy analysis and think-tank research",
+    "Академические и научные исследования в области геополитики, международных отношений и конфликтологии",
+    "Журналистские расследования и проверка фактов с использованием общедоступных данных",
+    "Обучение OSINT (разведке по открытым источникам) и разработка методологий",
+    "Некоммерческий гуманитарный мониторинг и информирование о кризисах",
+    "Образовательные демонстрации методов агрегации общедоступных данных",
+    "Исследования в области безопасности (исключительно в оборонительных целях)",
+    "Политический анализ и исследования аналитических центров",
   ]),
-  "disclaimer.s3.title": "§3 — STRICTLY PROHIBITED USES",
+  "disclaimer.s3.title": "§3 — КАТЕГОРИЧЕСКИ ЗАПРЕЩЕННОЕ ИСПОЛЬЗОВАНИЕ",
   "disclaimer.s3.items": JSON.stringify([
-    "Any activity that causes physical, psychological, financial, or reputational harm to individuals, groups, or organizations",
-    "Unauthorized surveillance, stalking, tracking, or monitoring of private individuals without their consent",
-    "Hacking, unauthorized system access, cyberattacks, or any form of digital intrusion",
-    "Facilitating, planning, or executing acts of terrorism, extremism, or political violence",
-    "Targeted harassment, doxxing, or coordinated abuse campaigns against any person or group",
-    "Disinformation campaigns, propaganda creation, or manipulation of public opinion",
-    "Violation of any applicable local, national, or international law or regulation",
-    "Commercial surveillance, profiling, or data brokerage activities",
-    "Any use that violates the privacy rights of individuals under GDPR, CCPA, or equivalent legislation",
-    "Military targeting, weapons development, or offensive intelligence operations",
-    "Discrimination based on race, religion, gender, nationality, sexual orientation, or any protected characteristic",
+    "Любая деятельность, наносящая физический, психологический, финансовый или репутационный вред лицам или организациям",
+    "Несанкционированная слежка, преследование или мониторинг частных лиц без их согласия",
+    "Хакерство, несанкционированный доступ к системам, кибератаки или любая форма цифрового вторжения",
+    "Содействие, планирование или осуществление актов терроризма, экстремизма или политического насилия",
+    "Целевое преследование, доксинг или скоординированные кампании травли против любого человека или группы",
+    "Кампании по дезинформации, создание пропаганды или манипулирование общественным мнением",
+    "Нарушение любых применимых местных, национальных или международных законов или постановлений",
+    "Коммерческая слежка, профилирование или деятельность по продаже данных",
+    "Любое использование, нарушающее права на неприкосновенность частной жизни в соответствии с GDPR или аналогичными законами",
+    "Военное целеуказание, разработка оружия или наступательные разведывательные операции",
+    "Дискриминация по признаку расы, религии, пола, национальности, ориентации или любой защищенной характеристики",
   ]),
-  "disclaimer.s4.title": "§4 — DATA SOURCES & ACCURACY",
-  "disclaimer.s4.body": "All data displayed on this platform is sourced from publicly available APIs and open datasets (adsb.lol, aisstream.io, USGS, NASA FIRMS, NASA EONET, and others). The platform makes no guarantee of data accuracy, completeness, or timeliness. Data must not be used as the sole basis for any decision that could affect human safety or welfare. Users are responsible for independently verifying all information before acting upon it.",
-  "disclaimer.s5.title": "§5 — NO LIABILITY",
-  "disclaimer.s5.body": "The developers and contributors of Redroom platform accept no liability for any misuse, damage, harm, or legal consequences arising from the use of this platform or its data. Users assume full responsibility for their actions and compliance with all applicable laws. The platform is provided \"as is\" without warranty of any kind.",
-  "disclaimer.s6.title": "§6 — RESPONSIBLE DISCLOSURE",
-  "disclaimer.s6.body": "If you identify any data that appears to compromise individual privacy, national security, or public safety, you are obligated to report it immediately to the platform maintainers and refrain from sharing or acting upon such data.",
+  "disclaimer.s4.title": "§4 — ИСТОЧНИКИ ДАННЫХ И ТОЧНОСТЬ",
+  "disclaimer.s4.body": "Все данные, отображаемые на этой платформе, получены из общедоступных API и открытых наборов данных (adsb.lol, aisstream.io, USGS, NASA FIRMS, NASA EONET и др.). Платформа не гарантирует точность, полноту или своевременность данных. Данные не должны использоваться в качестве единственного основания для принятия любых решений, которые могут повлиять на безопасность или благополучие людей. Пользователи несут ответственность за самостоятельную проверку всей информации перед её использованием.",
+  "disclaimer.s5.title": "§5 — ОТСУТСТВИЕ ОТВЕТСТВЕННОСТИ",
+  "disclaimer.s5.body": "Разработчики и участники платформы Redroom не несут ответственности за любое неправомерное использование, ущерб, вред или юридические последствия, возникающие в результате использования этой платформы или её данных. Пользователи принимают на себя полную ответственность за свои действия и соблюдение всех применимых законов. Платформа предоставляется «как есть» без каких-либо гарантий.",
+  "disclaimer.s6.title": "§6 — ОТВЕТСТВЕННОЕ РАЗГЛАШЕНИЕ",
+  "disclaimer.s6.body": "Если вы обнаружите данные, которые могут скомпрометировать частную жизнь, национальную безопасность или общественную безопасность, вы обязаны немедленно сообщить об этом мейнтейнерам платформы и воздержаться от распространения таких данных.",
   "disclaimer.s6.email": "responsible@redroom.live",
-  "disclaimer.s7.title": "§7 — MIT LICENSE & ATTRIBUTION",
-  "disclaimer.s7.body": "MIT License\nCopyright © 2024–2026 Alexsai · Owlink.ai\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND.",
-  "disclaimer.s8.title": "§8 — AGREEMENT",
-  "disclaimer.s8.body": "By accepting these terms, you confirm that you are at least 18 years of age, that you have read and understood all clauses above, and that you will use this platform solely for lawful, ethical, and constructive purposes. This agreement is binding and your continued use of the platform constitutes ongoing acceptance of these terms.",
+  "disclaimer.s7.title": "§7 — ЛИЦЕНЗИЯ MIT И АТРИБУЦИЯ",
+  "disclaimer.s7.body": "Лицензия MIT\nCopyright © 2024–2026 Alexsai · Owlink.ai\n\nНастоящим разрешается бесплатное получение копии данного программного обеспечения любым лицом для использования ПО без ограничений, включая права на использование, копирование, изменение, публикацию, распространение и продажу копий ПО, при условии соблюдения следующих условий:\n\nУказанное выше уведомление об авторских правах и данное уведомление о разрешении должны быть включены во все копии или значительные части Программного обеспечения.\n\nПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ «КАК ЕСТЬ», БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ.",
+  "disclaimer.s8.title": "§8 — СОГЛАШЕНИЕ",
+  "disclaimer.s8.body": "Принимая эти условия, вы подтверждаете, что вам исполнилось 18 лет, что вы прочитали и поняли все вышеперечисленные пункты и что вы будете использовать эту платформу исключительно в законных, этических и конструктивных целях. Это соглашение является обязательным, и ваше дальнейшее использование платформы означает постоянное согласие с этими условиями.",
 
   // Checkboxes
-  "disclaimer.checkbox.noHarm": "I confirm I will not use this platform to harm, harass, stalk, or surveil any individual or group",
-  "disclaimer.checkbox.noHack": "I confirm I will not use this platform for unauthorized access, hacking, cyberattacks, or any illegal activity",
-  "disclaimer.checkbox.researchOnly": "I confirm my use is strictly for research, journalism, education, or other lawful and ethical purposes",
-  "disclaimer.checkbox.noAbuse": "I understand that misuse of this platform may result in legal consequences and I accept full personal responsibility",
+  "disclaimer.checkbox.noHarm": "Я подтверждаю, что не буду использовать эту платформу для нанесения вреда, преследования или слежки за кем-либо",
+  "disclaimer.checkbox.noHack": "Я подтверждаю, что не буду использовать платформу для несанкционированного доступа, взлома или любой незаконной деятельности",
+  "disclaimer.checkbox.researchOnly": "Я подтверждаю, что мое использование ограничивается исследованиями, журналистикой, образованием или иными законными целями",
+  "disclaimer.checkbox.noAbuse": "Я понимаю, что неправомерное использование платформы может привести к юридическим последствиям, и принимаю полную ответственность",
 
   // Accept button
-  "disclaimer.btn.accept": "I ACCEPT — ENTER REDROOM",
-  "disclaimer.btn.notReady": "CHECK ALL BOXES TO CONTINUE",
-  "disclaimer.btn.readDisclaimer": "→ READ DISCLAIMER",
-  "disclaimer.btn.backToHowTo": "← BACK TO HOW TO USE",
+  "disclaimer.btn.accept": "Я ПРИНИМАЮ — ВОЙТИ В REDROOM",
+  "disclaimer.btn.notReady": "ОТМЕТЬТЕ ВСЕ ПУНКТЫ ДЛЯ ПРОДОЛЖЕНИЯ",
+  "disclaimer.btn.readDisclaimer": "→ ЧИТАТЬ СОГЛАШЕНИЕ",
+  "disclaimer.btn.backToHowTo": "← НАЗАД К ИНСТРУКЦИИ",
 
   // Reminder modal
-  "reminder.title": "RESPONSIBLE USE REMINDER",
-  "reminder.body": "You have been using Redroom. Please take a moment to confirm that your current activities remain within the bounds of ethical, lawful, and responsible OSINT research.",
+  "reminder.title": "НАПОМИНАНИЕ ОБ ОТВЕТСТВЕННОМ ИСПОЛЬЗОВАНИИ",
+  "reminder.body": "Вы используете Redroom. Пожалуйста, подтвердите, что ваша текущая деятельность остается в рамках этических, законных и ответственных OSINT-исследований.",
   "reminder.questions": JSON.stringify([
-    "Am I using this data only for lawful research purposes?",
-    "Am I avoiding harm to any individual or group?",
-    "Am I respecting the privacy of private individuals?",
-    "Would I be comfortable explaining my current activity publicly?",
+    "Использую ли я эти данные только в законных исследовательских целях?",
+    "Избегаю ли я нанесения вреда любому лицу или группе лиц?",
+    "Уважаю ли я частную жизнь отдельных людей?",
+    "Было бы мне комфортно публично объяснить свою текущую деятельность?",
   ]),
-  "reminder.btn.confirm": "YES, I AM BEING RESPONSIBLE",
-  "reminder.btn.review": "REVIEW TERMS",
+  "reminder.btn.confirm": "ДА, Я ДЕЙСТВУЮ ОТВЕТСТВЕННО",
+  "reminder.btn.review": "ПРОСМОТРЕТЬ УСЛОВИЯ",
 
   // ── CONTRIBUTE tab ────────────────────────────────────────────────────────
-  "contribute.intro": "Redroom is a community-driven open source project built by and for OSINT researchers, journalists, and analysts.",
-  "contribute.star.title": "Star & Share the Repository",
+  "contribute.intro": "Redroom — это проект с открытым исходным кодом, созданный сообществом для исследователей OSINT, журналистов и аналитиков.",
+  "contribute.star.title": "Поставьте звезду и поделитесь репозиторием",
   "contribute.star.icon": "⭐",
-  "contribute.star.body": "The single most impactful thing you can do is star the GitHub repository and share it with your network. Stars help the project gain visibility in the OSINT and security research community, attract contributors, and signal that the tool is valuable and actively used.",
+  "contribute.star.body": "Самое важное, что вы можете сделать — это поставить звезду репозиторию на GitHub и поделиться им. Звезды помогают проекту стать заметнее в сообществе OSINT и безопасности, привлекают разработчиков и показывают, что инструмент ценен и активно используется.",
   "contribute.github.url": "https://github.com/Owlinkai/redroom",
   "contribute.github.label": "github.com/Owlinkai/redroom",
-  "contribute.github.sublabel": "Star · Fork · Contribute",
-  "contribute.code.title": "How to Contribute Code",
+  "contribute.github.sublabel": "Звезда · Форк · Участие",
+  "contribute.code.title": "Как внести вклад в код",
   "contribute.code.icon": "🛠",
   "contribute.code.steps": JSON.stringify([
-    "Fork the repository and create a feature branch",
-    "Add new data layers, improve existing visualizations, or fix bugs",
-    "Submit a Pull Request with a clear description of your changes",
-    "Follow the existing code style (TypeScript, tRPC, React 19, Tailwind 4)",
-    "All contributions must align with the ethical use principles in the Disclaimer",
+    "Сделайте форк репозитория и создайте ветку для новой функции",
+    "Добавляйте новые слои данных, улучшайте визуализации или исправляйте ошибки",
+    "Отправьте Pull Request с четким описанием ваших изменений",
+    "Соблюдайте существующий стиль кода (TypeScript, tRPC, React 19, Tailwind 4)",
+    "Все вклады должны соответствовать принципам этичного использования из Соглашения",
   ]),
-  "contribute.ideas.title": "Ideas & Feature Requests",
+  "contribute.ideas.title": "Идеи и запросы функций",
   "contribute.ideas.icon": "💡",
-  "contribute.ideas.body": "Have an idea for a new data layer, visualization, or analysis feature? Open a GitHub Issue with the label feature-request. The most upvoted ideas are prioritized in the development roadmap. Current high-priority requests include: additional satellite feeds, dark web monitoring integration, and enhanced entity relationship graphs.",
-  "contribute.spread.title": "Spread the Word",
+  "contribute.ideas.body": "Есть идея для нового слоя данных или функции анализа? Откройте GitHub Issue с меткой feature-request. Самые популярные идеи попадают в приоритет разработки. Сейчас в приоритете: дополнительные спутниковые ленты, интеграция мониторинга даркнета и расширенные графы связей.",
+  "contribute.spread.title": "Расскажите о проекте",
   "contribute.spread.icon": "📣",
   "contribute.spread.items": JSON.stringify([
-    { action: "Share on Twitter/X", detail: "Tag #RedRoomOSINT — helps researchers discover the tool" },
-    { action: "Write a blog post", detail: "Document how you use Redroom in your research workflow" },
-    { action: "Mention in academic work", detail: "Cite the platform in papers, reports, or presentations" },
-    { action: "Recommend to colleagues", detail: "Share with journalists, analysts, and researchers in your network" },
+    { action: "Поделитесь в Twitter/X", detail: "Используйте тег #RedRoomOSINT — это поможет исследователям найти инструмент" },
+    { action: "Напишите статью в блоге", detail: "Задокументируйте, как вы используете Redroom в своем рабочем процессе" },
+    { action: "Упомяните в научной работе", detail: "Цитируйте платформу в статьях, отчетах или презентациях" },
+    { action: "Порекомендуйте коллегам", detail: "Расскажите журналистам и аналитикам в вашей сети о проекте" },
   ]),
-  "contribute.follow.title": "Follow Alexsai",
+  "contribute.follow.title": "Подпишитесь на Alexsai",
   "contribute.follow.icon": "🔗",
   "contribute.linkedin.url": "https://www.linkedin.com/company/alexsai",
   "contribute.linkedin.label": "LinkedIn · Alexsai",
@@ -200,43 +200,43 @@ const DEFAULTS: Record<string, string> = {
   "contribute.twitter.label": "Twitter/X · @alexsai_com",
   "contribute.website.url": "https://alexsai.com",
   "contribute.website.label": "Alexsai.com",
-  "contribute.website.sublabel": "AI Research & Intelligence Tools",
+  "contribute.website.sublabel": "Исследования в области ИИ и инструменты разведки",
   "contribute.upgrade.url": "https://owlink.ai/redroom",
-  "contribute.upgrade.body": "Go beyond the open-source tier — get managed cloud deployment, priority source expansion, custom alert rules, full API access, dedicated support, and C4ISR integration. Enterprise and Sovereign tiers available for governments, newsrooms, and security teams.",
-  "contribute.copyright": "© 2024–2026 Alexsai · Owlink.ai — Stealth Intelligence for Gov and People",
-  "contribute.license": "Redroom V2.4 · Released under the MIT License · Open Source · Built with ❤ for the OSINT community",
+  "contribute.upgrade.body": "Выйдите за рамки открытой версии — получите облачное развертывание, приоритетное расширение источников, настраиваемые правила алертов, полный доступ к API и выделенную поддержку. Доступны уровни Enterprise и Sovereign для правительств и редакций СМИ.",
+  "contribute.copyright": "© 2024–2026 Alexsai · Owlink.ai — Скрытая разведка для государственных структур и общества",
+  "contribute.license": "Redroom V2.4 · Выпущено под лицензией MIT · Открытый исходный код · Создано с ❤ для OSINT-сообщества",
 
   // ── ENROLL tab ────────────────────────────────────────────────────────────
-  "enroll.hero.badge": "UPCOMING FREE TRAINING",
-  "enroll.hero.title": "Discovering Redroom Intelligence",
-  "enroll.hero.subtitle": "A free, hands-on training by Alexsai on the best use of Redroom — from first principles to advanced OSINT tradecraft.",
+  "enroll.hero.badge": "ПРЕДСТОЯЩЕЕ БЕСПЛАТНОЕ ОБУЧЕНИЕ",
+  "enroll.hero.title": "Освоение разведки с Redroom",
+  "enroll.hero.subtitle": "Бесплатный практический тренинг от Alexsai о том, как эффективно использовать Redroom — от основ до продвинутых методик OSINT.",
   "enroll.cta.url": "https://forms.alexsai.com/12356",
-  "enroll.cta.label": "🎓 REGISTER YOUR INTEREST",
-  "enroll.cta.note": "forms.alexsai.com/12356 · Free · No commitment",
-  "enroll.modules.title": "Training Modules",
+  "enroll.cta.label": "🎓 ЗАРЕГИСТРИРОВАТЬ ИНТЕРЕС",
+  "enroll.cta.note": "forms.alexsai.com/12356 · Бесплатно · Без обязательств",
+  "enroll.modules.title": "Модули обучения",
   "enroll.modules.icon": "📚",
   "enroll.modules": JSON.stringify([
-    { num: "01", title: "How It Started", desc: "The origin story of Redroom — why it was built, what problem it solves, and the vision behind a fully open-source global intelligence platform." },
-    { num: "02", title: "Why Now?", desc: "The geopolitical and technological context that makes OSINT more important than ever. The rise of open data, AI, and the democratization of intelligence." },
-    { num: "03", title: "The Technology Stack", desc: "Deep dive into the architecture: real-time data pipelines, ADS-B, AIS, USGS, NASA APIs, tRPC, React 19, Leaflet, Three.js, and the LLM integration layer." },
-    { num: "04", title: "Data & Sources", desc: "Understanding the 10,000+ live aircraft, 15,000+ vessels, 12,000+ CCTV cameras, seismic feeds, fire data, and news aggregation from 100+ global sources." },
-    { num: "05", title: "Investigation Workflows", desc: "Hands-on walkthroughs: tracking a vessel of interest, correlating flight patterns with news events, building entity relationship maps, and saving investigations." },
-    { num: "06", title: "Best Use Cases", desc: "Real-world scenarios from investigative journalism, academic research, humanitarian monitoring, policy analysis, and security research." },
-    { num: "07", title: "Hidden Features & Secrets", desc: "Reveal the advanced features most users never discover: SVM surveillance mode, polygon drawing, cross-layer alerts, time-lapse heatmaps, and keyboard shortcuts." },
-    { num: "08", title: "New Features Reveal", desc: "Exclusive preview of upcoming features and the development roadmap. What's next for Redroom and how the community shapes it." },
-    { num: "09", title: "Secrets of LLMs for Builders", desc: "How to use LLMs to build something similar — prompt engineering for intelligence extraction, structured JSON outputs, entity recognition, and sentiment analysis at scale." },
-    { num: "10", title: "Numbers & Figures", desc: "The data behind the data: signal volumes, refresh rates, API limits, data freshness, accuracy benchmarks, and how to interpret what you see on the map." },
+    { num: "01", title: "Как всё начиналось", desc: "История создания Redroom — зачем он был построен, какую проблему решает и каково видение открытой глобальной платформы разведки." },
+    { num: "02", title: "Почему именно сейчас?", desc: "Геополитический и технологический контекст, делающий OSINT важнее, чем когда-либо. Рост открытых данных, ИИ и демократизация разведки." },
+    { num: "03", title: "Технологический стек", desc: "Глубокое погружение в архитектуру: конвейеры данных, ADS-B, AIS, USGS, API NASA, tRPC, React 19, Leaflet, Three.js и слой интеграции LLM." },
+    { num: "04", title: "Данные и источники", desc: "Разбор 10,000+ самолетов, 15,000+ судов, 12,000+ камер CCTV, сейсмических данных, пожаров и агрегации новостей из 100+ источников." },
+    { num: "05", title: "Рабочие процессы расследований", desc: "Практика: отслеживание подозрительного судна, сопоставление маршрутов полетов с новостями, построение графов связей и сохранение расследований." },
+    { num: "06", title: "Лучшие сценарии использования", desc: "Реальные примеры из журналистских расследований, академической работы, гуманитарного мониторинга и анализа безопасности." },
+    { num: "07", title: "Скрытые функции и секреты", desc: "Разбор продвинутых функций: режим наблюдения SVM, рисование полигонов, кросс-слойные алерты, тепловые карты и горячие клавиши." },
+    { num: "08", title: "Анонс новых функций", desc: "Эксклюзивный обзор будущих обновлений и плана развития. Каким будет Redroom завтра и как сообщество влияет на него." },
+    { num: "09", title: "Секреты LLM для разработчиков", desc: "Как использовать ИИ для создания подобного — промпт-инжиниринг для извлечения данных, структурированный JSON, распознавание сущностей и анализ тональности." },
+    { num: "10", title: "Цифры и показатели", desc: "Данные за данными: объемы сигналов, частота обновления, лимиты API, точность и то, как правильно интерпретировать увиденное на карте." },
   ]),
-  "enroll.bestfor.title": "Best For",
+  "enroll.bestfor.title": "Кому подходит",
   "enroll.bestfor.icon": "🎯",
   "enroll.bestfor.roles": JSON.stringify([
-    "Tech Geeks", "LLM Engineers", "News Agencies",
-    "Researchers", "Engineers", "Governments",
-    "NGOs", "OSINT Advocates", "Responsible AI Advocates",
-    "Investigative Journalists", "Policy Analysts", "Security Researchers",
-    "Educators & Academics", "Individuals Curious About AI & Tech", "Startup Founders",
+    "Технологические гики", "Инженеры ИИ", "Новостные агентства",
+    "Исследователи", "Инженеры", "Государственные структуры",
+    "НКО", "Сторонники OSINT", "Эксперты по этичному ИИ",
+    "Журналисты-расследователи", "Политические аналитики", "Специалисты по безопасности",
+    "Преподаватели и академики", "Интересующиеся технологиями", "Основатели стартапов",
   ]),
-  "enroll.connected.title": "STAY CONNECTED",
+  "enroll.connected.title": "ОСТАВАЙТЕСЬ НА СВЯЗИ",
   "enroll.linkedin.url": "https://www.linkedin.com/company/alexsai",
   "enroll.twitter.url": "https://twitter.com/alexsai_com",
   "enroll.website.url": "https://alexsai.com",
@@ -433,7 +433,7 @@ function DisclaimerModal() {
                   </div>
 
                   <HowToSection icon={c("howto.sigint.icon")} title={c("howto.sigint.title")}>
-                    <p className="mb-2">The SIGINT portal provides a real-time global intelligence map combining:</p>
+                    <p className="mb-2">Портал SIGINT предоставляет глобальную карту разведки в реальном времени, объединяющую:</p>
                     <div className="grid grid-cols-2 gap-2 mb-3">
                       {parseArr<{ label: string; count: string }>(c("howto.sigint.signals")).map(({ label, count }) => (
                         <div key={label} className="flex items-center justify-between px-3 py-1.5 rounded" style={{ background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.15)" }}>
@@ -699,12 +699,12 @@ function DisclaimerModal() {
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,200,255,0.8)" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                       </div>
                       <div>
-                        <div className="text-xs font-bold" style={{ color: "rgba(0,200,255,0.9)" }}>Request Analyst Access</div>
-                        <div className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>Join the waiting list to become an authorised contributor</div>
+                        <div className="text-xs font-bold" style={{ color: "rgba(0,200,255,0.9)" }}>Запросить доступ аналитика</div>
+                        <div className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>Присоединяйтесь к списку ожидания, чтобы стать авторизованным участником</div>
                       </div>
                     </div>
                     <p className="text-xs leading-relaxed mb-3" style={{ color: "rgba(255,255,255,0.6)" }}>
-                      Authorised analysts gain access to advanced intelligence features including the Narrative Checker, verified source submission, and the full OSINT pipeline. Registration is coming soon — join the waiting list to be considered.
+                      Авторизованные аналитики получают доступ к расширенным функциям разведки, включая проверку нарративов, отправку проверенных источников и полный конвейер OSINT. Регистрация скоро откроется — присоединяйтесь к списку ожидания.
                     </p>
                     <button
                       onClick={() => setWaitingListOpen(true)}
@@ -724,8 +724,8 @@ function DisclaimerModal() {
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(248,113,113,0.9)" strokeWidth="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                       </div>
                       <div>
-                        <div className="text-xs font-bold" style={{ color: "rgba(248,113,113,0.95)" }}>Upgrade to Enterprise</div>
-                        <div className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>Unlock the full Owlink · Redroom intelligence suite</div>
+                        <div className="text-xs font-bold" style={{ color: "rgba(248,113,113,0.95)" }}>Перейти на Enterprise</div>
+                        <div className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>Разблокируйте полный набор инструментов Owlink · Redroom</div>
                       </div>
                     </div>
                     <p className="text-xs leading-relaxed mb-3" style={{ color: "rgba(255,255,255,0.65)" }}>
